@@ -1,2 +1,0 @@
-[console_scripts]
-clawpy = clawpy.cli:main
