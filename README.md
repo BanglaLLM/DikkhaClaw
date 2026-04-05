@@ -1,4 +1,2 @@
 # clawpy
-# clawpy
-# clawpy
-# clawpy
+Python rewrite of claude-code
