@@ -238,10 +238,21 @@ class OAuthFlow:
         print(f"\nOpen this URL in your browser:\n")
         print(auth_url)
         print(f"\nAfter authorizing, you'll be redirected to a page with a code.")
-        code = input("Paste the authorization code here: ").strip()
+        print("(Paste the full URL or just the code)")
+        raw = input("Code: ").strip()
 
-        if not code:
+        if not raw:
             raise RuntimeError("No code provided")
+
+        # The callback page may give "CODE#STATE" or a full URL with ?code=...
+        code = raw
+        if "#" in code:
+            code = code.split("#")[0]
+        if "code=" in code:
+            from urllib.parse import parse_qs, urlparse
+            parsed = urlparse(code)
+            params = parse_qs(parsed.query) if parsed.query else parse_qs(parsed.path)
+            code = params.get("code", [code])[0]
 
         tokens = await self._exchange_code(code, redirect_uri)
         tokens = await self._fetch_profile(tokens)
