@@ -13,18 +13,29 @@ from clawpy.tool.permission import PermissionEnforcer, PermissionMode
 from clawpy.tool.registry import ToolRegistry
 
 
-def _build_tools() -> ToolRegistry:
-    """Register all MVP tools."""
+def _build_tools(engine: Engine | None = None) -> ToolRegistry:
+    """Register all tools, passing file_state to tools that need it."""
+    from clawpy.engine.file_state import FileStateTracker
     from clawpy.tool.bash import BashTool
+    from clawpy.tool.file_edit import FileEditTool
     from clawpy.tool.file_read import FileReadTool
+    from clawpy.tool.file_write import FileWriteTool
     from clawpy.tool.glob_tool import GlobTool
     from clawpy.tool.grep_tool import GrepTool
+    from clawpy.tool.list_files import ListFilesTool
+    from clawpy.tool.web_fetch import WebFetchTool
+
+    fs = engine.file_state if engine else FileStateTracker()
 
     registry = ToolRegistry()
     registry.register(BashTool())
-    registry.register(FileReadTool())
+    registry.register(FileReadTool(file_state=fs))
+    registry.register(FileWriteTool(file_state=fs))
+    registry.register(FileEditTool(file_state=fs))
     registry.register(GrepTool())
     registry.register(GlobTool())
+    registry.register(ListFilesTool())
+    registry.register(WebFetchTool())
     return registry
 
 
@@ -42,34 +53,31 @@ def _create_provider(config: Config):  # type: ignore[no-untyped-def]
 def _build_engine(config: Config) -> Engine:
     """Build the full engine with provider, tools, and permission enforcer."""
     provider = _create_provider(config)
-    tools = _build_tools()
     enforcer = PermissionEnforcer(
         mode=PermissionMode(config.permission_mode),
         work_dir=config.work_dir,
         allow_rules=config.allow_tools,
         deny_rules=config.deny_tools,
     )
+    # Create engine first so tools can reference its file_state
     engine = Engine(
         provider=provider,
-        tools=tools,
+        tools=ToolRegistry(),  # Temporary, replaced below
         enforcer=enforcer,
         config=config,
     )
+    engine.tools = _build_tools(engine)
 
     # Set a basic system prompt
-    engine.set_system_prompt(_basic_system_prompt(config))
+    engine.set_system_prompt(_build_system_prompt(config))
     return engine
 
 
-def _basic_system_prompt(config: Config) -> str:
-    """Build a basic system prompt."""
-    return (
-        "You are an interactive coding agent. You help users with software engineering tasks.\n"
-        "You have access to tools for reading files, searching code, and executing commands.\n"
-        "Use the tools available to you to accomplish tasks.\n"
-        f"\nWorking directory: {config.work_dir}\n"
-        "Be concise and direct in your responses."
-    )
+def _build_system_prompt(config: Config) -> str:
+    """Build the full system prompt with memory and environment info."""
+    from clawpy.engine.system_prompt import build_system_prompt
+
+    return build_system_prompt(config.work_dir, config.model)
 
 
 async def run_once(args: argparse.Namespace) -> None:
@@ -116,7 +124,9 @@ async def run_once(args: argparse.Namespace) -> None:
 
 
 async def run_repl(args: argparse.Namespace) -> None:
-    """Interactive REPL mode."""
+    """Interactive REPL mode using prompt_toolkit + rich."""
+    from clawpy.ui.repl import REPL
+
     config = Config.load(args.dir)
     if args.provider:
         config.provider = args.provider
@@ -126,67 +136,8 @@ async def run_repl(args: argparse.Namespace) -> None:
         config.permission_mode = args.permission_mode
 
     engine = _build_engine(config)
-
-    print(f"ClawPy v0.1.0 — {config.provider}:{config.model}")
-    print(f"Working directory: {config.work_dir}")
-    print("Type /quit to exit, /clear to reset conversation.\n")
-
-    while True:
-        try:
-            user_input = input("❯ ")
-        except (EOFError, KeyboardInterrupt):
-            print("\nBye!")
-            break
-
-        user_input = user_input.strip()
-        if not user_input:
-            continue
-
-        # Slash commands
-        if user_input == "/quit":
-            print("Bye!")
-            break
-        if user_input == "/clear":
-            engine.clear()
-            print("Conversation cleared.")
-            continue
-        if user_input == "/model":
-            print(f"Current model: {config.model}")
-            continue
-        if user_input.startswith("/model "):
-            new_model = user_input[7:].strip()
-            config.model = new_model
-            print(f"Model set to: {new_model}")
-            continue
-
-        # Run the turn
-        text_buf = ""
-
-        def on_stream(event: StreamEvent) -> None:
-            nonlocal text_buf
-            if event.type == EventType.DELTA and event.delta:
-                chunk = event.delta.text
-                if chunk:
-                    print(chunk, end="", flush=True)
-                    text_buf += chunk
-            elif event.type == EventType.TOOL_START and event.tool_call:
-                tc = event.tool_call
-                if text_buf and not text_buf.endswith("\n"):
-                    print()
-                print(f"\n⚡ {tc.name}", flush=True)
-
-        try:
-            result = await engine.run_turn(user_input, on_stream=on_stream)
-        except Exception as e:
-            print(f"\nError: {e}", file=sys.stderr)
-            continue
-
-        if text_buf and not text_buf.endswith("\n"):
-            print()
-        print()  # Blank line after response
-
-        if result.error:
-            print(f"Warning: {result.error}", file=sys.stderr)
+    repl = REPL(engine)
+    await repl.run()
 
 
 def main() -> None:

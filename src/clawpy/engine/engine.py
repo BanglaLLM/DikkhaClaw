@@ -12,6 +12,7 @@ from dataclasses import dataclass, field
 from typing import Any, Callable
 
 from clawpy.config.config import Config
+from clawpy.engine.file_state import FileStateTracker
 from clawpy.provider.base import (
     Delta,
     EventType,
@@ -66,13 +67,15 @@ class Engine:
         self.config = config
         self.messages: list[Message] = []
         self.system_prompt: str = ""
+        self.file_state = FileStateTracker()
 
     def set_system_prompt(self, prompt: str) -> None:
         self.system_prompt = prompt
 
     def clear(self) -> None:
-        """Reset conversation history."""
+        """Reset conversation history and file state."""
         self.messages = []
+        self.file_state.clear()
 
     async def run_turn(
         self,

@@ -10,11 +10,15 @@ import os
 from pathlib import Path
 from typing import Any
 
+from clawpy.engine.file_state import FileStateTracker
 from clawpy.tool.base import Permission, RunContext, ToolResult
 
 
 class FileReadTool:
     """Read a file from the local filesystem."""
+
+    def __init__(self, file_state: FileStateTracker | None = None) -> None:
+        self._file_state = file_state
 
     @property
     def name(self) -> str:
@@ -81,6 +85,10 @@ class FileReadTool:
             text = path.read_text(encoding="utf-8", errors="replace")
         except OSError as e:
             return ToolResult(content=f"Error reading file: {e}", is_error=True)
+
+        # Register in file state tracker for edit/write enforcement
+        if self._file_state is not None:
+            self._file_state.register(str(path.resolve()), text)
 
         lines = text.splitlines(keepends=True)
 
