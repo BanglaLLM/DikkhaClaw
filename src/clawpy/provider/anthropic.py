@@ -45,12 +45,50 @@ _DEFAULT_MODELS = [
 
 
 class AnthropicProvider:
-    """Direct Anthropic Messages API provider with SSE streaming."""
+    """Direct Anthropic Messages API provider with SSE streaming.
+
+    Supports both API key auth and OAuth (Claude subscription) auth.
+    """
 
     def __init__(self, cfg: ProviderConfig) -> None:
         self._api_key = cfg.api_key or os.environ.get("ANTHROPIC_API_KEY", "")
+        self._auth_token: str = ""  # OAuth access token (Claude subscription)
         self._base_url = (cfg.base_url or _DEFAULT_BASE_URL).rstrip("/")
         self._client = httpx.AsyncClient(timeout=httpx.Timeout(300.0, connect=10.0))
+
+        # If no API key, try OAuth tokens
+        if not self._api_key:
+            self._try_load_oauth()
+
+    def _try_load_oauth(self) -> None:
+        """Try to load OAuth tokens from stored credentials."""
+        try:
+            from clawpy.auth.oauth import load_tokens, refresh_tokens
+            tokens = load_tokens()
+            if tokens is None:
+                return
+            if tokens.is_expired and tokens.refresh_token:
+                import asyncio
+                try:
+                    tokens = asyncio.get_event_loop().run_until_complete(
+                        refresh_tokens(tokens)
+                    )
+                except Exception:
+                    # Can't refresh synchronously in async context — will refresh lazily
+                    pass
+            self._auth_token = tokens.access_token
+        except Exception:
+            pass
+
+    async def _ensure_valid_token(self) -> None:
+        """Refresh OAuth token if expired."""
+        if not self._auth_token:
+            return
+        from clawpy.auth.oauth import load_tokens, refresh_tokens
+        tokens = load_tokens()
+        if tokens and tokens.is_expired and tokens.refresh_token:
+            tokens = await refresh_tokens(tokens)
+            self._auth_token = tokens.access_token
 
     @property
     def name(self) -> str:
@@ -60,11 +98,17 @@ class AnthropicProvider:
         return _DEFAULT_MODELS
 
     def _headers(self) -> dict[str, str]:
-        return {
-            "x-api-key": self._api_key,
+        headers: dict[str, str] = {
             "anthropic-version": _API_VERSION,
             "content-type": "application/json",
         }
+        if self._auth_token:
+            # OAuth (Claude subscription) — uses Bearer token
+            headers["Authorization"] = f"Bearer {self._auth_token}"
+        else:
+            # API key auth
+            headers["x-api-key"] = self._api_key
+        return headers
 
     def _build_body(self, request: Request) -> dict[str, Any]:
         """Convert neutral Request to Anthropic API request body."""
@@ -132,6 +176,7 @@ class AnthropicProvider:
 
     async def stream(self, request: Request) -> AsyncIterator[StreamEvent]:
         """Stream a request to the Anthropic API, yielding neutral StreamEvents."""
+        await self._ensure_valid_token()
         body = self._build_body(request)
         body["stream"] = True
 
@@ -272,6 +317,7 @@ class AnthropicProvider:
 
     async def send(self, request: Request) -> Response:
         """Non-streaming request."""
+        await self._ensure_valid_token()
         body = self._build_body(request)
 
         resp = await self._client.post(

@@ -84,6 +84,65 @@ def _build_system_prompt(config: Config) -> str:
     return build_system_prompt(config.work_dir, config.model)
 
 
+async def do_login(args: argparse.Namespace) -> None:
+    """Login with Claude subscription via OAuth."""
+    from clawpy.auth.oauth import OAuthFlow, is_logged_in, load_tokens
+
+    if is_logged_in():
+        tokens = load_tokens()
+        if tokens and tokens.email:
+            print(f"Already logged in as {tokens.email}")
+            resp = input("Re-authenticate? (y/n): ").strip().lower()
+            if resp != "y":
+                return
+
+    flow = OAuthFlow()
+    try:
+        tokens = await flow.login(manual=args.manual)
+        email = tokens.email or tokens.account_uuid or "unknown"
+        print(f"\nLogged in as: {email}")
+        print("You can now use ClawPy with your Claude subscription.")
+        print("Run 'clawpy' to start.")
+    except RuntimeError as e:
+        print(f"Login failed: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
+def do_logout() -> None:
+    """Remove stored OAuth credentials."""
+    from clawpy.auth.oauth import clear_tokens, is_logged_in
+
+    if not is_logged_in():
+        print("Not logged in.")
+        return
+    clear_tokens()
+    print("Logged out. Stored credentials removed.")
+
+
+def do_status() -> None:
+    """Show authentication status."""
+    from clawpy.auth.oauth import load_tokens
+
+    tokens = load_tokens()
+    if tokens is None:
+        print("Not logged in.")
+        print("Run 'clawpy login' to authenticate with your Claude subscription.")
+        print("Or set ANTHROPIC_API_KEY for API key auth.")
+        return
+
+    import time
+    email = tokens.email or tokens.account_uuid or "unknown"
+    expired = tokens.is_expired
+    remaining = max(0, int(tokens.expires_at - time.time()))
+    mins = remaining // 60
+
+    print(f"Logged in as: {email}")
+    print(f"Token: {'EXPIRED' if expired else f'valid ({mins}m remaining)'}")
+    print(f"Scopes: {', '.join(tokens.scopes)}")
+    if tokens.organization_uuid:
+        print(f"Organization: {tokens.organization_uuid}")
+
+
 async def run_once(args: argparse.Namespace) -> None:
     """Non-interactive mode: run a single prompt and exit."""
     config = Config.load(args.dir)
@@ -166,9 +225,21 @@ def main() -> None:
     run_parser = sub.add_parser("run", help="Non-interactive single prompt")
     run_parser.add_argument("prompt", nargs="?", help="Prompt text (or pipe via stdin)")
 
+    login_parser = sub.add_parser("login", help="Login with Claude subscription")
+    login_parser.add_argument("--manual", action="store_true", help="Manual code entry (no browser auto-open)")
+
+    sub.add_parser("logout", help="Remove stored credentials")
+    sub.add_parser("status", help="Show auth status")
+
     args = parser.parse_args()
 
-    if args.command == "run":
+    if args.command == "login":
+        asyncio.run(do_login(args))
+    elif args.command == "logout":
+        do_logout()
+    elif args.command == "status":
+        do_status()
+    elif args.command == "run":
         asyncio.run(run_once(args))
     else:
         asyncio.run(run_repl(args))
