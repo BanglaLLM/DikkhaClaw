@@ -101,10 +101,13 @@ class AnthropicProvider:
         headers: dict[str, str] = {
             "anthropic-version": _API_VERSION,
             "content-type": "application/json",
+            "x-app": "cli",
+            "User-Agent": "claude-cli/0.1.0 (clawpy, cli)",
         }
         if self._auth_token:
-            # OAuth (Claude subscription) — uses Bearer token
+            # OAuth (Claude subscription) — Bearer token + required beta header
             headers["Authorization"] = f"Bearer {self._auth_token}"
+            headers["anthropic-beta"] = "oauth-2025-04-20,interleaved-thinking-2025-05-14"
         else:
             # API key auth
             headers["x-api-key"] = self._api_key
