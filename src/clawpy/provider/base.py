@@ -8,7 +8,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum, auto
-from typing import Any, AsyncIterator, Protocol, runtime_checkable
+from collections.abc import AsyncIterator
+from typing import Any, Protocol, runtime_checkable
 
 from clawpy.types import ContentBlock, ToolCall
 
@@ -96,7 +97,7 @@ class Provider(Protocol):
     @property
     def name(self) -> str: ...
 
-    async def stream(self, request: Request) -> AsyncIterator[StreamEvent]: ...
+    def stream(self, request: Request) -> AsyncIterator[StreamEvent]: ...
 
     async def send(self, request: Request) -> Response: ...
 

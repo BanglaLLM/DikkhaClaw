@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-from typing import Callable
+from typing import Any, Callable
 
 from clawpy.config.config import ProviderConfig
 from clawpy.provider.base import Provider
 
-ProviderFactory = Callable[[ProviderConfig], Provider]
+ProviderFactory = Callable[[ProviderConfig], Any]  # Returns Provider-compatible
 
 _registry: dict[str, ProviderFactory] = {}
 
@@ -22,7 +22,8 @@ def create(name: str, cfg: ProviderConfig) -> Provider:
     if name not in _registry:
         available = ", ".join(sorted(_registry)) or "(none)"
         raise ValueError(f"Unknown provider: {name!r}. Available: {available}")
-    return _registry[name](cfg)
+    provider: Provider = _registry[name](cfg)
+    return provider
 
 
 def available() -> list[str]:
