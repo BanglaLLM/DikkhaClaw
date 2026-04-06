@@ -29,7 +29,7 @@ class Config:
 
     # Provider
     provider: str = "anthropic"
-    model: str = "claude-sonnet-4-20250514"
+    model: str = "claude-opus-4-6"
     api_key: str = ""
     base_url: str = ""
 
