@@ -41,3 +41,47 @@
 | compare_providers | Same — listed dirs but never read anthropic.py or openai.py to compare |
 
 **Key insight:** The model needs to be prompted more aggressively to "read files after finding them" rather than stopping at directory listings. The system prompt could be improved.
+
+---
+
+## Gemini 3 Pro Preview — Run 1
+
+**Result: 0/9 passed (0%)**
+
+All 9 cases: model calls one tool correctly, but after receiving the tool result, the second LLM call returns empty text. The agentic loop completes (tool result is fed back), but the model produces no text response.
+
+**Root cause:** Gemini 3-pro-preview returns HTTP 400 when receiving tool results in the OpenAI-compat format. The tool-use → tool-result → follow-up pattern is broken for this model version.
+
+| Metric | Value |
+|--------|-------|
+| Passed | 0/9 |
+| Tokens | 9,771 |
+| Time | 331s (one case hit 300s timeout) |
+| Tool calls | 8 |
+
+---
+
+## Gemini 3.1 Pro Preview — Run 1
+
+**Result: 0/9 passed (0%)**
+
+Same issue as Gemini 3 Pro Preview — tools are called but no text follows.
+
+| Metric | Value |
+|--------|-------|
+| Passed | 0/9 |
+| Tokens | 11,001 |
+| Time | 32.5s |
+| Tool calls | 9 |
+
+---
+
+## Model Comparison
+
+| Model | Passed | Tokens | Time | Tool Calls | Agentic Loop Works? |
+|-------|--------|--------|------|------------|---------------------|
+| **gemini-2.5-pro** | **5/9 (56%)** | 32,826 | 90s | 20 | ✅ Yes |
+| gemini-3-pro-preview | 0/9 (0%) | 9,771 | 331s | 8 | ❌ Tool results rejected |
+| gemini-3.1-pro-preview | 0/9 (0%) | 11,001 | 33s | 9 | ❌ Tool results rejected |
+
+**Conclusion:** Only Gemini 2.5 Pro currently works with agentic tool-use via the OpenAI-compat endpoint. The newer Gemini 3.x preview models have breaking issues with tool result formatting. This may improve as these models exit preview.

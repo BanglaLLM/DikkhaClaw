@@ -146,7 +146,7 @@ def build_read_only_engine(provider_name: str, model: str, api_key: str, work_di
         model=model,
         work_dir=work_dir,
         permission_mode="bypass",
-        max_tokens=4096,
+        max_tokens=16384,
     )
 
     provider_cfg = ProviderConfig(api_key=api_key, model=model)
