@@ -169,7 +169,7 @@ class OpenAIProvider:
         body: dict[str, Any] = {
             "model": request.model,
             "messages": self._convert_messages(request),
-            "max_tokens": request.max_tokens,
+            "max_completion_tokens": request.max_tokens,
             "stream": True,
             "stream_options": {"include_usage": True},
         }
@@ -325,7 +325,7 @@ class OpenAIProvider:
         body: dict[str, Any] = {
             "model": request.model,
             "messages": self._convert_messages(request),
-            "max_tokens": request.max_tokens,
+            "max_completion_tokens": request.max_tokens,
         }
         tools = self._convert_tools(request.tools)
         if tools:
