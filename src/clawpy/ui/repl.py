@@ -150,6 +150,34 @@ class REPL:
                         "[yellow]Entered plan mode (read-only, no edits allowed).[/yellow]"
                     )
 
+            case "/login":
+                import asyncio
+                from clawpy.auth.oauth import OAuthFlow
+                try:
+                    flow = OAuthFlow()
+                    tokens = asyncio.get_event_loop().run_until_complete(
+                        flow.login(manual=True)
+                    )
+                    email = tokens.email or tokens.account_uuid or "unknown"
+                    self.console.print(f"[green]Logged in as: {email}[/green]")
+                except Exception as e:
+                    self.console.print(f"[red]Login failed: {e}[/red]")
+
+            case "/logout":
+                from clawpy.auth.oauth import clear_tokens
+                clear_tokens()
+                self.console.print("[green]Logged out.[/green]")
+
+            case "/status":
+                from clawpy.auth.oauth import load_tokens
+                tokens = load_tokens()
+                if tokens:
+                    email = tokens.email or tokens.account_uuid or "unknown"
+                    expired = "EXPIRED" if tokens.is_expired else "valid"
+                    self.console.print(f"Logged in as: [bold]{email}[/bold] (token: {expired})")
+                else:
+                    self.console.print("Not logged in. Use /login or clawpy login")
+
             case "/help":
                 self._show_help()
 
@@ -181,6 +209,9 @@ class REPL:
             ("/context", "Show context window usage"),
             ("/compact", "Compact conversation history"),
             ("/plan", "Toggle plan mode (read-only)"),
+            ("/login", "Login with Claude subscription"),
+            ("/logout", "Remove stored credentials"),
+            ("/status", "Show auth status"),
         ]
         self.console.print("[bold]Available commands:[/bold]")
         for cmd, desc in commands:
