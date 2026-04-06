@@ -1,6 +1,6 @@
-"""Interactive REPL with prompt_toolkit input and rich streaming output.
+"""ClawPy interactive REPL.
 
-Slash commands mimic Claude Code's UI where practical.
+Own visual identity — amber/orange theme, claw branding, unique layout.
 """
 
 from __future__ import annotations
@@ -13,7 +13,6 @@ from prompt_toolkit import PromptSession
 from prompt_toolkit.history import InMemoryHistory
 from rich.console import Console
 from rich.panel import Panel
-from rich.rule import Rule
 from rich.table import Table
 from rich.text import Text
 
@@ -21,51 +20,71 @@ from clawpy.engine.engine import Engine
 from clawpy.engine.token_budget import get_context_window
 from clawpy.provider.base import EventType, StreamEvent, Usage
 
+# ---- Branding ----
+
+_BRAND = "ClawPy"
+_VERSION = "0.1.0"
+_ACCENT = "dark_orange3"  # Our signature color (amber/orange)
+_DIM = "dim"
+_CLAW = "🐾"
+
 # ---- Model catalog ----
 
 _MODEL_CATALOG: list[dict[str, str]] = [
-    {"alias": "opus", "id": "claude-opus-4-6", "name": "Opus 4.6", "desc": "Most capable for complex work"},
-    {"alias": "opus[1m]", "id": "claude-opus-4-6[1m]", "name": "Opus 4.6 (1M context)", "desc": "Most capable, extended context"},
-    {"alias": "sonnet", "id": "claude-sonnet-4-6", "name": "Sonnet 4.6", "desc": "Best for everyday tasks"},
-    {"alias": "sonnet[1m]", "id": "claude-sonnet-4-6[1m]", "name": "Sonnet 4.6 (1M context)", "desc": "Extended context"},
-    {"alias": "haiku", "id": "claude-haiku-4-5-20251001", "name": "Haiku 4.5", "desc": "Fastest for quick answers"},
-    {"alias": "gpt-4o", "id": "gpt-4o", "name": "GPT-4o", "desc": "OpenAI flagship"},
-    {"alias": "gpt-4o-mini", "id": "gpt-4o-mini", "name": "GPT-4o Mini", "desc": "OpenAI fast & cheap"},
-    {"alias": "gemini-2.5-pro", "id": "gemini-2.5-pro", "name": "Gemini 2.5 Pro", "desc": "Google flagship, 1M context"},
-    {"alias": "gemini-2.5-flash", "id": "gemini-2.5-flash", "name": "Gemini 2.5 Flash", "desc": "Google fast"},
-    {"alias": "deepseek-chat", "id": "deepseek-chat", "name": "DeepSeek Chat", "desc": "DeepSeek V3"},
-    {"alias": "deepseek-reasoner", "id": "deepseek-reasoner", "name": "DeepSeek Reasoner", "desc": "DeepSeek R1 with reasoning"},
+    # Anthropic
+    {"alias": "opus", "id": "claude-opus-4-6", "label": "Opus 4.6", "tier": "anthropic", "note": "Deep reasoning, complex tasks"},
+    {"alias": "opus[1m]", "id": "claude-opus-4-6[1m]", "label": "Opus 4.6 (1M)", "tier": "anthropic", "note": "Extended context window"},
+    {"alias": "sonnet", "id": "claude-sonnet-4-6", "label": "Sonnet 4.6", "tier": "anthropic", "note": "Balanced speed and quality"},
+    {"alias": "sonnet[1m]", "id": "claude-sonnet-4-6[1m]", "label": "Sonnet 4.6 (1M)", "tier": "anthropic", "note": "Extended context window"},
+    {"alias": "haiku", "id": "claude-haiku-4-5-20251001", "label": "Haiku 4.5", "tier": "anthropic", "note": "Fast, lightweight"},
+    # OpenAI
+    {"alias": "gpt-4o", "id": "gpt-4o", "label": "GPT-4o", "tier": "openai", "note": "OpenAI flagship"},
+    {"alias": "gpt-4o-mini", "id": "gpt-4o-mini", "label": "GPT-4o Mini", "tier": "openai", "note": "Fast and affordable"},
+    # Google
+    {"alias": "gemini-2.5-pro", "id": "gemini-2.5-pro", "label": "Gemini 2.5 Pro", "tier": "gemini", "note": "1M context, multimodal"},
+    {"alias": "gemini-2.5-flash", "id": "gemini-2.5-flash", "label": "Gemini 2.5 Flash", "tier": "gemini", "note": "Speed optimized"},
+    # DeepSeek
+    {"alias": "deepseek-chat", "id": "deepseek-chat", "label": "DeepSeek V3", "tier": "deepseek", "note": "Open-weight flagship"},
+    {"alias": "deepseek-reasoner", "id": "deepseek-reasoner", "label": "DeepSeek R1", "tier": "deepseek", "note": "Chain-of-thought reasoning"},
 ]
 
-_EFFORT_SYMBOLS = {"low": "○", "medium": "◐", "high": "●", "max": "◉"}
+_TIER_COLORS = {
+    "anthropic": "medium_purple3",
+    "openai": "green3",
+    "gemini": "dodger_blue1",
+    "deepseek": "cyan3",
+    "ollama": "bright_white",
+}
 
 
 def _resolve_model(name: str) -> str:
-    """Resolve alias to full model ID."""
     lower = name.lower().strip()
     for m in _MODEL_CATALOG:
-        if lower in (m["alias"].lower(), m["id"].lower(), m["name"].lower()):
+        if lower in (m["alias"].lower(), m["id"].lower(), m["label"].lower()):
             return m["id"]
-    return name  # Return as-is if not a known alias
+    return name
 
 
 def _get_model_info(model_id: str) -> dict[str, str] | None:
-    """Get catalog entry for a model ID."""
     for m in _MODEL_CATALOG:
         if model_id == m["id"] or model_id == m["alias"]:
             return m
     return None
 
 
+def _format_ctx(tokens: int) -> str:
+    if tokens >= 1_000_000:
+        return f"{tokens // 1_000_000}M"
+    return f"{tokens // 1000}K"
+
+
 class REPL:
-    """Interactive REPL with streaming output."""
+    """ClawPy interactive REPL."""
 
     def __init__(self, engine: Engine, console: Console | None = None) -> None:
         self.engine = engine
         self.console = console or Console()
-        self.session: PromptSession[str] = PromptSession(
-            history=InMemoryHistory(),
-        )
+        self.session: PromptSession[str] = PromptSession(history=InMemoryHistory())
         self._session_id = uuid.uuid4().hex[:12]
         self._start_time = time.time()
         self._total_input_tokens = 0
@@ -73,20 +92,22 @@ class REPL:
         self._turn_count = 0
 
     async def run(self) -> None:
-        """Main REPL loop."""
         cfg = self.engine.config
-        model_info = _get_model_info(cfg.model)
-        model_display = model_info["name"] if model_info else cfg.model
+        info = _get_model_info(cfg.model)
+        model_label = info["label"] if info else cfg.model
 
-        self.console.print(f"[bold]ClawPy v0.1.0[/bold] — {model_display}")
-        self.console.print(f"Working directory: {cfg.work_dir}")
-        self.console.print("Type [bold]/help[/bold] for commands, [bold]/quit[/bold] to exit.\n")
+        # Banner
+        self.console.print()
+        self.console.print(f"  [{_ACCENT} bold]{_CLAW} {_BRAND}[/{_ACCENT} bold]  [dim]v{_VERSION}[/dim]")
+        self.console.print(f"  [{_DIM}]{cfg.work_dir}[/{_DIM}]")
+        self.console.print(f"  [{_DIM}]model: {model_label} via {cfg.provider}[/{_DIM}]")
+        self.console.print()
 
         while True:
             try:
-                user_input = await self.session.prompt_async("❯ ")
+                user_input = await self.session.prompt_async(f"🐾 ")
             except (EOFError, KeyboardInterrupt):
-                self.console.print("\nBye!")
+                self.console.print(f"\n[{_ACCENT}]See you later![/{_ACCENT}]")
                 break
 
             user_input = user_input.strip()
@@ -94,15 +115,13 @@ class REPL:
                 continue
 
             if user_input.startswith("/"):
-                should_quit = self._handle_slash(user_input)
-                if should_quit:
+                if self._handle_slash(user_input):
                     break
                 continue
 
             await self._run_turn(user_input)
 
     async def _run_turn(self, user_input: str) -> None:
-        """Execute a turn with streaming output."""
         text_buf = ""
 
         def on_stream(event: StreamEvent) -> None:
@@ -116,9 +135,7 @@ class REPL:
                     if event.tool_call:
                         if text_buf and not text_buf.endswith("\n"):
                             print()
-                        self.console.print(
-                            f"\n[blue]⚡ {event.tool_call.name}[/blue]", highlight=False
-                        )
+                        self.console.print(f"  [{_ACCENT}]>> {event.tool_call.name}[/{_ACCENT}]")
                 case EventType.TOOL_END:
                     pass
                 case EventType.ERROR:
@@ -140,30 +157,28 @@ class REPL:
 
         if result.usage.input_tokens > 0 or result.usage.output_tokens > 0:
             self.console.print(
-                f"[dim]tokens: {result.usage.input_tokens}↓ {result.usage.output_tokens}↑[/dim]"
+                f"  [{_DIM}]{result.usage.input_tokens}in {result.usage.output_tokens}out[/{_DIM}]"
             )
-
         print()
 
         if result.error:
-            self.console.print(f"[yellow]Warning: {result.error}[/yellow]")
+            self.console.print(f"[yellow]  {result.error}[/yellow]")
 
     def _handle_slash(self, raw: str) -> bool:
-        """Handle slash commands. Returns True if REPL should exit."""
         parts = raw.split(maxsplit=1)
         cmd = parts[0].lower()
         args = parts[1] if len(parts) > 1 else ""
 
         match cmd:
             case "/quit" | "/exit" | "/q":
-                self.console.print("Bye!")
+                self.console.print(f"[{_ACCENT}]See you later![/{_ACCENT}]")
                 return True
             case "/clear":
                 self.engine.clear()
                 self._total_input_tokens = 0
                 self._total_output_tokens = 0
                 self._turn_count = 0
-                self.console.print("[green]Conversation cleared.[/green]")
+                self.console.print(f"[{_ACCENT}]Conversation cleared.[/{_ACCENT}]")
             case "/model":
                 self._cmd_model(args)
             case "/context":
@@ -171,7 +186,7 @@ class REPL:
             case "/status":
                 self._cmd_status()
             case "/compact":
-                self.console.print("[yellow]Manual compact not yet implemented.[/yellow]")
+                self.console.print(f"[{_DIM}]Manual compact not yet implemented.[/{_DIM}]")
             case "/plan":
                 self._cmd_plan()
             case "/login":
@@ -179,12 +194,11 @@ class REPL:
             case "/logout":
                 from clawpy.auth.oauth import clear_tokens
                 clear_tokens()
-                self.console.print("[green]Logged out.[/green]")
+                self.console.print(f"[{_ACCENT}]Logged out.[/{_ACCENT}]")
             case "/help":
                 self._cmd_help()
             case _:
-                self.console.print(f"Unknown command: {cmd}. Type /help for available commands.")
-
+                self.console.print(f"[{_DIM}]Unknown command: {cmd}. Try /help[/{_DIM}]")
         return False
 
     # ---- /model ----
@@ -194,162 +208,160 @@ class REPL:
             resolved = _resolve_model(args)
             self.engine.config.model = resolved
             info = _get_model_info(resolved)
-            display = info["name"] if info else resolved
-            desc = f" · {info['desc']}" if info else ""
-            self.console.print(f"Model set to: [bold]{display}[/bold]{desc}")
+            label = info["label"] if info else resolved
+            note = f"  [{_DIM}]{info['note']}[/{_DIM}]" if info else ""
+            self.console.print(f"  [{_ACCENT}]model[/{_ACCENT}] {label}{note}")
             return
 
-        # Show model selector
-        self.console.print(Rule("Select model"))
+        # Show model picker grouped by provider
+        self.console.print()
         self.console.print(
-            "[dim]Switch between models. Use /model <name> to set directly.[/dim]\n"
+            Panel(
+                self._render_model_list(),
+                title=f"[{_ACCENT} bold]Models[/{_ACCENT} bold]",
+                subtitle=f"[{_DIM}]/model <alias> to switch[/{_DIM}]",
+                border_style=_ACCENT,
+                padding=(1, 2),
+            )
         )
 
+    def _render_model_list(self) -> str:
         current = self.engine.config.model
-        provider = self.engine.config.provider
+        lines: list[str] = []
 
-        # Filter models by provider
-        models_to_show = []
+        # Group by tier
+        tiers: dict[str, list[dict[str, str]]] = {}
         for m in _MODEL_CATALOG:
-            mid = m["id"].lower()
-            if provider == "anthropic" and ("claude" in mid or "haiku" in mid):
-                models_to_show.append(m)
-            elif provider == "openai" and "gpt" in mid:
-                models_to_show.append(m)
-            elif provider == "gemini" and "gemini" in mid:
-                models_to_show.append(m)
-            elif provider == "deepseek" and "deepseek" in mid:
-                models_to_show.append(m)
-            elif provider == "ollama":
-                pass  # Ollama models are custom
+            tiers.setdefault(m["tier"], []).append(m)
 
-        # If no match (e.g. ollama), show all
-        if not models_to_show:
-            models_to_show = _MODEL_CATALOG
+        tier_names = {"anthropic": "Anthropic", "openai": "OpenAI", "gemini": "Google Gemini", "deepseek": "DeepSeek"}
 
-        for i, m in enumerate(models_to_show, 1):
-            is_current = m["id"] == current or m["alias"] == current
-            marker = "[bold green]→[/bold green]" if is_current else " "
-            name_style = "bold" if is_current else ""
-            ctx = get_context_window(m["id"])
-            ctx_str = f"{ctx // 1000}K" if ctx < 1_000_000 else f"{ctx // 1_000_000}M"
-            self.console.print(
-                f"  {marker} {i}. [{name_style}]{m['name']:<28}[/{name_style}] "
-                f"{m['desc']} · {ctx_str} context"
-            )
+        for tier, models in tiers.items():
+            color = _TIER_COLORS.get(tier, "white")
+            lines.append(f"[{color} bold]{tier_names.get(tier, tier)}[/{color} bold]")
+            for m in models:
+                is_current = m["id"] == current or m["alias"] == current
+                marker = f"[{_ACCENT}]>[/{_ACCENT}]" if is_current else " "
+                ctx = _format_ctx(get_context_window(m["id"]))
+                bold = " bold" if is_current else ""
+                lines.append(
+                    f"  {marker} [{color}{bold}]{m['label']:<24}[/{color}{bold}] "
+                    f"[{_DIM}]{m['note']:<30} {ctx}[/{_DIM}]"
+                )
+            lines.append("")
 
-        self.console.print(
-            f"\n[dim]Current: [bold]{current}[/bold] · "
-            f"Use /model <name or number> to switch[/dim]"
-        )
+        # Aliases
+        aliases = ", ".join(f"{m['alias']}" for m in _MODEL_CATALOG)
+        lines.append(f"[{_DIM}]aliases: {aliases}[/{_DIM}]")
 
-        # Handle number input
-        if models_to_show:
-            self.console.print(
-                "[dim]Aliases: " + ", ".join(m["alias"] for m in models_to_show) + "[/dim]"
-            )
+        return "\n".join(lines)
 
     # ---- /status ----
 
     def _cmd_status(self) -> None:
-        self.console.print(Rule("Status"))
-
+        # Gather info
         cfg = self.engine.config
-        model_info = _get_model_info(cfg.model)
-        model_display = f"{model_info['name']} · {model_info['desc']}" if model_info else cfg.model
+        info = _get_model_info(cfg.model)
+        model_label = info["label"] if info else cfg.model
+        model_note = info["note"] if info else ""
 
-        # Auth info
-        auth_method = "API Key"
-        email = ""
-        org = ""
+        auth_line = "API Key"
+        email_line = ""
         try:
             from clawpy.auth.oauth import load_tokens
             tokens = load_tokens()
             if tokens and tokens.access_token:
-                auth_method = "Claude Subscription (OAuth)"
-                email = tokens.email or tokens.account_uuid or ""
-                org = tokens.organization_uuid or ""
+                auth_line = "Claude Subscription"
+                email_line = tokens.email or tokens.account_uuid or ""
+                if tokens.is_expired:
+                    auth_line += " [red](expired)[/red]"
         except Exception:
             pass
-        if not email and cfg.api_key:
-            auth_method = f"API Key ({cfg.provider})"
+        if not email_line and cfg.api_key:
+            auth_line = f"{cfg.provider.title()} API Key"
 
         elapsed = time.time() - self._start_time
-        mins = int(elapsed) // 60
+        total_tok = self._total_input_tokens + self._total_output_tokens
 
-        table = Table(show_header=False, box=None, padding=(0, 2))
-        table.add_column(style="dim", width=20)
+        rows = [
+            ("session", self._session_id),
+            ("uptime", f"{int(elapsed) // 60}m {int(elapsed) % 60}s"),
+            ("", ""),
+            ("auth", auth_line),
+        ]
+        if email_line:
+            rows.append(("account", email_line))
+        rows += [
+            ("", ""),
+            ("model", f"{model_label}  [{_DIM}]{model_note}[/{_DIM}]"),
+            ("provider", cfg.provider),
+            ("permissions", cfg.permission_mode),
+            ("tools", f"{len(self.engine.tools)} loaded"),
+            ("", ""),
+            ("turns", str(self._turn_count)),
+            ("tokens", f"{total_tok:,} total  [{_DIM}]{self._total_input_tokens:,}in {self._total_output_tokens:,}out[/{_DIM}]"),
+        ]
+
+        table = Table(show_header=False, box=None, padding=(0, 1), expand=False)
+        table.add_column(style=_ACCENT, width=14, justify="right")
         table.add_column()
+        for key, val in rows:
+            table.add_row(key, val)
 
-        table.add_row("Version", "ClawPy 0.1.0")
-        table.add_row("Session ID", self._session_id)
-        table.add_row("Working dir", cfg.work_dir)
-        table.add_row("Login method", auth_method)
-        if email:
-            table.add_row("Email", email)
-        if org:
-            table.add_row("Organization", org)
-        table.add_row("", "")
-        table.add_row("Model", model_display)
-        table.add_row("Provider", cfg.provider)
-        table.add_row("Permission mode", cfg.permission_mode)
-        table.add_row("Tools", str(len(self.engine.tools)))
-        table.add_row("", "")
-        table.add_row("Session duration", f"{mins}m {int(elapsed) % 60}s")
-        table.add_row("Turns", str(self._turn_count))
-        table.add_row("Total tokens", f"{self._total_input_tokens + self._total_output_tokens:,}")
-        table.add_row("  Input", f"{self._total_input_tokens:,}")
-        table.add_row("  Output", f"{self._total_output_tokens:,}")
-
-        self.console.print(table)
         self.console.print()
+        self.console.print(Panel(table, title=f"[{_ACCENT} bold]{_CLAW} {_BRAND}[/{_ACCENT} bold]", border_style=_ACCENT, padding=(1, 2)))
 
     # ---- /context ----
 
     def _cmd_context(self) -> None:
-        self.console.print(Rule("Context Usage"))
-
         model = self.engine.config.model
         ctx_window = get_context_window(model)
         msg_count = len(self.engine.messages)
+        info = _get_model_info(model)
+        model_label = info["label"] if info else model
 
         # Estimate tokens
         sys_tokens = len(self.engine.system_prompt) // 4
         msg_tokens = sum(
-            sum(len(b.text) + len(b.thinking) + (50 if b.tool_call else 0) + len(b.tool_result.content if b.tool_result else "") for b in m.content)
+            sum(
+                len(b.text) + len(b.thinking)
+                + (50 if b.tool_call else 0)
+                + len(b.tool_result.content if b.tool_result else "")
+                for b in m.content
+            )
             for m in self.engine.messages
         ) // 4
-        tool_schema_tokens = len(self.engine.tools) * 100  # ~100 tokens per tool schema
-        total_est = sys_tokens + msg_tokens + tool_schema_tokens
+        tool_tokens = len(self.engine.tools) * 100
+        total = sys_tokens + msg_tokens + tool_tokens
 
-        pct = min(100, (total_est / ctx_window) * 100) if ctx_window > 0 else 0
+        pct = min(100.0, (total / ctx_window) * 100) if ctx_window > 0 else 0.0
 
-        # Progress bar
-        bar_width = 50
-        filled = int(bar_width * pct / 100)
-        bar_color = "green" if pct < 70 else ("yellow" if pct < 90 else "red")
-        bar = f"[{bar_color}]{'█' * filled}[/{bar_color}][dim]{'░' * (bar_width - filled)}[/dim]"
+        # Build bar with our accent color
+        bar_w = 40
+        filled = int(bar_w * pct / 100)
+        if pct < 50:
+            fill_color = "green"
+        elif pct < 80:
+            fill_color = _ACCENT
+        else:
+            fill_color = "red"
+        bar = f"[{fill_color}]{'━' * filled}[/{fill_color}][{_DIM}]{'╌' * (bar_w - filled)}[/{_DIM}]"
 
-        model_info = _get_model_info(model)
-        model_name = model_info["name"] if model_info else model
-        ctx_str = f"{ctx_window // 1000}K" if ctx_window < 1_000_000 else f"{ctx_window // 1_000_000}M"
+        lines: list[str] = []
+        lines.append(f"{bar}  {pct:.0f}%")
+        lines.append(f"[{_DIM}]{model_label} — ~{total:,} / {ctx_window:,} tokens ({_format_ctx(ctx_window)} window)[/{_DIM}]")
+        lines.append("")
+        lines.append(f"  [{_ACCENT}]system[/{_ACCENT}]    ~{sys_tokens:,} tokens")
+        lines.append(f"  [{_ACCENT}]tools[/{_ACCENT}]     ~{tool_tokens:,} tokens  [{_DIM}]({len(self.engine.tools)} schemas)[/{_DIM}]")
+        lines.append(f"  [{_ACCENT}]messages[/{_ACCENT}]  ~{msg_tokens:,} tokens  [{_DIM}]({msg_count} messages)[/{_DIM}]")
 
-        self.console.print(f"  {bar} {pct:.0f}%")
-        self.console.print(f"  [dim]{model_name} · ~{total_est:,}/{ctx_window:,} tokens ({ctx_str} window)[/dim]\n")
-
-        # Breakdown
-        table = Table(show_header=False, box=None, padding=(0, 2))
-        table.add_column(width=3)
-        table.add_column(width=25)
-        table.add_column(justify="right")
-        table.add_column(justify="right", style="dim")
-
-        table.add_row("⛁", "System prompt", f"~{sys_tokens:,}", f"{sys_tokens * 100 // max(total_est, 1)}%")
-        table.add_row("⛁", "Tool schemas", f"~{tool_schema_tokens:,}", f"{tool_schema_tokens * 100 // max(total_est, 1)}%")
-        table.add_row("⛁", f"Messages ({msg_count})", f"~{msg_tokens:,}", f"{msg_tokens * 100 // max(total_est, 1)}%")
-
-        self.console.print(table)
         self.console.print()
+        self.console.print(Panel(
+            "\n".join(lines),
+            title=f"[{_ACCENT} bold]Context[/{_ACCENT} bold]",
+            border_style=_ACCENT,
+            padding=(1, 2),
+        ))
 
     # ---- /plan ----
 
@@ -358,10 +370,10 @@ class REPL:
         current = self.engine.enforcer.mode
         if current == PermissionMode.PLAN:
             self.engine.enforcer.mode = PermissionMode.DEFAULT
-            self.console.print("[green]Exited plan mode.[/green]")
+            self.console.print(f"  [{_ACCENT}]Plan mode off[/{_ACCENT}] — tools unrestricted")
         else:
             self.engine.enforcer.mode = PermissionMode.PLAN
-            self.console.print("[yellow]Entered plan mode (read-only, no edits allowed).[/yellow]")
+            self.console.print(f"  [{_ACCENT}]Plan mode on[/{_ACCENT}] — read-only, no edits")
 
     # ---- /login ----
 
@@ -372,7 +384,7 @@ class REPL:
             flow = OAuthFlow()
             tokens = asyncio.get_event_loop().run_until_complete(flow.login(manual=True))
             email = tokens.email or tokens.account_uuid or "unknown"
-            self.console.print(f"[green]Logged in as: {email}[/green]")
+            self.console.print(f"  [{_ACCENT}]Logged in as {email}[/{_ACCENT}]")
         except Exception as e:
             self.console.print(f"[red]Login failed: {e}[/red]")
 
@@ -380,18 +392,18 @@ class REPL:
 
     def _cmd_help(self) -> None:
         commands = [
-            ("/help", "Show this help"),
-            ("/quit", "Exit the REPL"),
-            ("/clear", "Clear conversation history"),
-            ("/model [name]", "Select model or list available models"),
-            ("/context", "Show context window usage with breakdown"),
-            ("/status", "Show session info, auth, and usage stats"),
-            ("/compact", "Compact conversation history"),
-            ("/plan", "Toggle plan mode (read-only)"),
-            ("/login", "Login with Claude subscription"),
-            ("/logout", "Remove stored credentials"),
+            ("/model [name]", "Pick a model or list all available"),
+            ("/status", "Session info, auth, usage stats"),
+            ("/context", "Context window usage breakdown"),
+            ("/plan", "Toggle read-only plan mode"),
+            ("/clear", "Reset conversation"),
+            ("/compact", "Compress conversation history"),
+            ("/login", "Authenticate with Claude subscription"),
+            ("/logout", "Clear stored credentials"),
+            ("/help", "This help"),
+            ("/quit", "Exit"),
         ]
-        self.console.print("[bold]Available commands:[/bold]\n")
+        self.console.print()
         for cmd, desc in commands:
-            self.console.print(f"  [cyan]{cmd:<20}[/cyan] {desc}")
+            self.console.print(f"  [{_ACCENT}]{cmd:<18}[/{_ACCENT}] {desc}")
         self.console.print()
