@@ -29,6 +29,16 @@ from clawpy.types import ContentBlock, ContentType, ToolCall
 
 _API_VERSION = "2023-06-01"
 _DEFAULT_BASE_URL = "https://api.anthropic.com"
+_CLAWPY_VERSION = "0.1.0"
+
+# Beta headers required for OAuth + Claude Code features
+_OAUTH_BETAS = [
+    "oauth-2025-04-20",
+    "claude-code-20250219",
+    "interleaved-thinking-2025-05-14",
+    "prompt-caching-scope-2026-01-05",
+    "effort-2025-11-24",
+]
 
 _STOP_MAP: dict[str | None, StopReason] = {
     "end_turn": StopReason.END_TURN,
@@ -98,16 +108,18 @@ class AnthropicProvider:
         return _DEFAULT_MODELS
 
     def _headers(self) -> dict[str, str]:
+        import uuid as _uuid
         headers: dict[str, str] = {
             "anthropic-version": _API_VERSION,
             "content-type": "application/json",
             "x-app": "cli",
-            "User-Agent": "claude-cli/0.1.0 (clawpy, cli)",
+            "User-Agent": f"claude-cli/{_CLAWPY_VERSION} (external, cli)",
+            "x-client-request-id": str(_uuid.uuid4()),
         }
         if self._auth_token:
-            # OAuth (Claude subscription) — Bearer token + required beta header
+            # OAuth (Claude subscription) — Bearer token + required beta headers
             headers["Authorization"] = f"Bearer {self._auth_token}"
-            headers["anthropic-beta"] = "oauth-2025-04-20,interleaved-thinking-2025-05-14"
+            headers["anthropic-beta"] = ",".join(_OAUTH_BETAS)
         else:
             # API key auth
             headers["x-api-key"] = self._api_key
@@ -120,14 +132,46 @@ class AnthropicProvider:
             "max_tokens": request.max_tokens,
             "messages": self._convert_messages(request),
         }
+
+        # System prompt — prepend billing header for OAuth
+        system_parts: list[dict[str, Any]] = []
+        if self._auth_token:
+            billing = (
+                f"x-anthropic-billing-header: "
+                f"cc_version={_CLAWPY_VERSION}; cc_entrypoint=cli; cch=00000;"
+            )
+            system_parts.append({"type": "text", "text": billing})
         if request.system:
-            body["system"] = request.system
+            system_parts.append({"type": "text", "text": request.system})
+        if system_parts:
+            body["system"] = system_parts
+
         if request.tools:
             body["tools"] = self._convert_tools(request.tools)
         if request.temperature is not None:
             body["temperature"] = request.temperature
         if request.stop_sequences:
             body["stop_sequences"] = request.stop_sequences
+
+        # Metadata for OAuth — includes account UUID for billing routing
+        if self._auth_token:
+            import json as _json
+            import uuid as _uuid
+            account_uuid = ""
+            try:
+                from clawpy.auth.oauth import load_tokens
+                tokens = load_tokens()
+                if tokens:
+                    account_uuid = tokens.account_uuid
+            except Exception:
+                pass
+            body["metadata"] = {
+                "user_id": _json.dumps({
+                    "account_uuid": account_uuid,
+                    "session_id": str(_uuid.uuid4()),
+                }),
+            }
+
         return body
 
     def _convert_messages(self, request: Request) -> list[dict[str, Any]]:
