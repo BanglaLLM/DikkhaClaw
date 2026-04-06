@@ -12,7 +12,9 @@ from dataclasses import dataclass, field
 from typing import Any, Callable
 
 from clawpy.config.config import Config
+from clawpy.engine.compact import auto_compact
 from clawpy.engine.file_state import FileStateTracker
+from clawpy.engine.token_budget import TokenBudget, get_context_window
 from clawpy.provider.base import (
     Delta,
     EventType,
@@ -68,6 +70,7 @@ class Engine:
         self.messages: list[Message] = []
         self.system_prompt: str = ""
         self.file_state = FileStateTracker()
+        self._compact_failures = 0
 
     def set_system_prompt(self, prompt: str) -> None:
         self.system_prompt = prompt
@@ -76,6 +79,7 @@ class Engine:
         """Reset conversation history and file state."""
         self.messages = []
         self.file_state.clear()
+        self._compact_failures = 0
 
     async def run_turn(
         self,
@@ -95,8 +99,21 @@ class Engine:
         """
         self.messages.append(text_message(Role.USER, user_input))
         total_usage = Usage()
+        budget = TokenBudget(context_window=get_context_window(self.config.model))
 
         for iteration in range(MAX_ITERATIONS):
+            # Auto-compact if approaching context limit
+            if not budget.should_continue() and self._compact_failures < 3:
+                compacted = await auto_compact(
+                    self.messages, self.provider, self.config.model
+                )
+                if compacted is not None:
+                    self.messages = compacted
+                    self._compact_failures = 0
+                    logger.info("Auto-compacted conversation")
+                else:
+                    self._compact_failures += 1
+
             request = Request(
                 model=self.config.model,
                 system=self.system_prompt,
@@ -110,6 +127,7 @@ class Engine:
                 request, on_stream
             )
             total_usage = total_usage + usage
+            budget.record_turn(usage.input_tokens, usage.output_tokens)
             self.messages.append(assistant_msg)
 
             # Check for tool calls
@@ -121,6 +139,16 @@ class Engine:
                     usage=total_usage,
                 )
 
+            # Token budget check after tool use decision
+            if not budget.should_continue():
+                logger.info("Token budget exhausted, ending turn")
+                return TurnResult(
+                    messages=self.messages,
+                    stop_reason=StopReason.MAX_TOKENS,
+                    usage=total_usage,
+                    error="Token budget exhausted",
+                )
+
             # Execute tools with permission checks
             results = await self._execute_tools(tool_calls)
 
@@ -128,9 +156,10 @@ class Engine:
             self.messages.append(tool_result_message(results))
 
             logger.debug(
-                "Iteration %d: %d tool calls, continuing loop",
+                "Iteration %d: %d tool calls, %d tokens remaining",
                 iteration,
                 len(tool_calls),
+                budget.tokens_remaining(),
             )
 
         return TurnResult(
