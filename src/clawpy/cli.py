@@ -41,8 +41,12 @@ def _build_tools(engine: Engine | None = None) -> ToolRegistry:
 
 def _create_provider(config: Config):  # type: ignore[no-untyped-def]
     """Create the appropriate provider based on config."""
-    # Import providers to trigger registration
+    # Import all providers to trigger registration
     import clawpy.provider.anthropic  # noqa: F401
+    import clawpy.provider.openai  # noqa: F401
+    import clawpy.provider.gemini  # noqa: F401
+    import clawpy.provider.ollama  # noqa: F401
+    import clawpy.provider.deepseek  # noqa: F401
 
     from clawpy.provider.registry import create
 
