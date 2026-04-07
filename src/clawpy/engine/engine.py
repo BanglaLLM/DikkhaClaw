@@ -81,6 +81,11 @@ class Engine:
         self.file_state.clear()
         self._compact_failures = 0
 
+    def reload_system_prompt(self) -> None:
+        """Rebuild system prompt (e.g., after memory files change)."""
+        from clawpy.engine.system_prompt import build_system_prompt
+        self.system_prompt = build_system_prompt(self.config.work_dir, self.config.model)
+
     async def run_turn(
         self,
         user_input: str,

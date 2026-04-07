@@ -26,8 +26,9 @@ def build_system_prompt(work_dir: str, model: str) -> str:
         _style_section(),
     ]
 
-    # Dynamic: memory files
-    memory = _load_memory(work_dir)
+    # Dynamic: memory files (using memory module)
+    from clawpy.engine.memory import build_memory_content
+    memory = build_memory_content(work_dir)
     if memory:
         sections.append(memory)
 

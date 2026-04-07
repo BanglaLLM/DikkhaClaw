@@ -192,6 +192,8 @@ class REPL:
                 self._cmd_status()
             case "/usage":
                 self._slash_awaitable = self._cmd_usage()
+            case "/memory" | "/mem":
+                self._cmd_memory(args)
             case "/compact":
                 self.console.print(f"[{_DIM}]Manual compact not yet implemented.[/{_DIM}]")
             case "/plan":
@@ -422,6 +424,124 @@ class REPL:
             padding=(1, 2),
         ))
 
+    # ---- /memory ----
+
+    def _cmd_memory(self, args: str) -> None:
+        from clawpy.engine.memory import (
+            MemoryFile,
+            MemoryType,
+            append_to_memory,
+            discover_all_memory,
+            edit_in_editor,
+            get_project_memory_path,
+        )
+
+        parts = args.split(maxsplit=1)
+        subcmd = parts[0].lower() if parts else ""
+        subargs = parts[1].strip() if len(parts) > 1 else ""
+
+        work_dir = self.engine.config.work_dir
+
+        if not subcmd or subcmd == "list":
+            # Show all memory files
+            files = discover_all_memory(work_dir)
+            lines: list[str] = []
+
+            for mf in files:
+                try:
+                    display = str(mf.path.relative_to(work_dir))
+                except ValueError:
+                    display = str(mf.path)
+
+                if mf.exists:
+                    status = f"[green]{mf.line_count} lines[/green]"
+                    preview = mf.preview.replace("\n", " ")[:60]
+                    if preview:
+                        preview = f"  [{_DIM}]{preview}...[/{_DIM}]"
+                else:
+                    status = f"[{_DIM}]not created[/{_DIM}]"
+                    preview = ""
+
+                type_color = {
+                    MemoryType.GLOBAL: "magenta",
+                    MemoryType.PROJECT: _ACCENT,
+                    MemoryType.PROJECT_LOCAL: "cyan",
+                    MemoryType.PARENT: _DIM,
+                }.get(mf.memory_type, _DIM)
+
+                lines.append(
+                    f"  [{type_color}]{mf.label:<16}[/{type_color}] "
+                    f"{display:<40} {status}{preview}"
+                )
+
+            self.console.print()
+            self.console.print(Panel(
+                "\n".join(lines) if lines else "No memory files found.",
+                title=f"[{_ACCENT} bold]Memory Files[/{_ACCENT} bold]",
+                subtitle=f"[{_DIM}]/memory add <text> | /memory edit | /memory reload[/{_DIM}]",
+                border_style=_ACCENT,
+                padding=(1, 2),
+            ))
+
+        elif subcmd == "add":
+            if not subargs:
+                self.console.print(f"  [{_DIM}]Usage: /memory add <text to remember>[/{_DIM}]")
+                return
+            path = get_project_memory_path(work_dir)
+            append_to_memory(path, subargs)
+            self.console.print(f"  [{_ACCENT}]Added to {path.name}[/{_ACCENT}]")
+            # Auto-reload
+            self.engine.reload_system_prompt()
+            self.console.print(f"  [{_DIM}]System prompt reloaded[/{_DIM}]")
+
+        elif subcmd == "edit":
+            if subargs:
+                # Edit specific file
+                from pathlib import Path
+                target = Path(subargs)
+                if not target.is_absolute():
+                    target = Path(work_dir) / target
+            else:
+                # Default: project memory
+                target = get_project_memory_path(work_dir)
+
+            self.console.print(f"  [{_DIM}]Opening {target} in editor...[/{_DIM}]")
+            if edit_in_editor(target):
+                self.engine.reload_system_prompt()
+                self.console.print(f"  [{_ACCENT}]System prompt reloaded[/{_ACCENT}]")
+            else:
+                self.console.print(f"  [red]Editor not found. Set $EDITOR env var.[/red]")
+
+        elif subcmd == "show":
+            files = discover_all_memory(work_dir)
+            active = [f for f in files if f.exists and f.content.strip()]
+            if not active:
+                self.console.print(f"  [{_DIM}]No memory files with content.[/{_DIM}]")
+                return
+            for mf in active:
+                try:
+                    display = str(mf.path.relative_to(work_dir))
+                except ValueError:
+                    display = str(mf.path)
+                self.console.print(f"\n  [{_ACCENT} bold]{mf.label}: {display}[/{_ACCENT} bold]")
+                # Print content with indentation
+                for line in mf.content.strip().splitlines():
+                    self.console.print(f"  {line}")
+
+        elif subcmd == "reload":
+            self.engine.reload_system_prompt()
+            files = discover_all_memory(work_dir)
+            active = sum(1 for f in files if f.exists)
+            self.console.print(f"  [{_ACCENT}]Reloaded[/{_ACCENT}] {active} memory file(s)")
+
+        else:
+            self.console.print(f"  [{_DIM}]Memory commands:[/{_DIM}]")
+            self.console.print(f"  [{_ACCENT}]/memory[/{_ACCENT}]              List all memory files")
+            self.console.print(f"  [{_ACCENT}]/memory add <text>[/{_ACCENT}]  Add a note to project memory")
+            self.console.print(f"  [{_ACCENT}]/memory edit[/{_ACCENT}]         Open in $EDITOR")
+            self.console.print(f"  [{_ACCENT}]/memory show[/{_ACCENT}]         Print all memory content")
+            self.console.print(f"  [{_ACCENT}]/memory reload[/{_ACCENT}]       Reload into system prompt")
+
     # ---- /plugin ----
 
     def _cmd_plugin(self, args: str) -> None:
@@ -573,6 +693,7 @@ class REPL:
             ("/usage", "Claude subscription usage & rate limits"),
             ("/status", "Session info, auth, usage stats"),
             ("/context", "Context window usage breakdown"),
+            ("/memory [cmd]", "View, edit, add project memory"),
             ("/plan", "Toggle read-only plan mode"),
             ("/clear", "Reset conversation"),
             ("/compact", "Compress conversation history"),
