@@ -35,6 +35,8 @@ class RunContext:
 
     work_dir: str
     ask_user: Callable[[str], Awaitable[str]]
+    task_registry: Any = None  # Optional TaskRegistry — avoids circular import
+    on_agent_event: Callable[[str, str], None] | None = None  # (task_id, message) notifications
 
 
 @runtime_checkable

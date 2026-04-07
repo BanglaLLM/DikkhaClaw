@@ -92,6 +92,13 @@ class REPL:
         self._turn_count = 0
         self._slash_awaitable: Any = None
 
+        # Wire agent event notifications from engine to terminal
+        self.engine.on_agent_event = self._on_agent_event
+
+    def _on_agent_event(self, task_id: str, message: str) -> None:
+        """Called when a background agent has an update."""
+        self.console.print(f"  [{_DIM}][bg {task_id}][/{_DIM}] [{_ACCENT}]{message}[/{_ACCENT}]")
+
     async def run(self) -> None:
         cfg = self.engine.config
         info = _get_model_info(cfg.model)
@@ -201,6 +208,14 @@ class REPL:
                 self._slash_awaitable = self._cmd_dream()
             case "/compact":
                 self.console.print(f"[{_DIM}]Manual compact not yet implemented.[/{_DIM}]")
+            case "/tasks" | "/task":
+                self._cmd_tasks(args)
+            case "/bg":
+                self._cmd_bg(args)
+            case "/fg":
+                self._cmd_fg(args)
+            case "/kill":
+                self._cmd_kill(args)
             case "/plan":
                 self._cmd_plan()
             case "/plugin" | "/plugins":
@@ -428,6 +443,118 @@ class REPL:
             border_style=_ACCENT,
             padding=(1, 2),
         ))
+
+    # ---- /tasks /bg /fg /kill ----
+
+    def _cmd_tasks(self, args: str) -> None:
+        """List tasks or show output of a specific task."""
+        reg = self.engine.task_registry
+        tasks = reg.list_all()
+
+        if args.strip():
+            # Show specific task output
+            task = reg.get(args.strip())
+            if not task:
+                self.console.print(f"  [{_DIM}]Task not found: {args.strip()}[/{_DIM}]")
+                return
+            self.console.print()
+            status_color = {
+                "running": _ACCENT,
+                "completed": "green",
+                "failed": "red",
+                "killed": "red",
+                "pending": _DIM,
+            }.get(task.status.value, _DIM)
+            self.console.print(
+                f"  [{_ACCENT} bold][{task.task_id}][/{_ACCENT} bold] "
+                f"{task.description}  [{status_color}]{task.status.value}[/{status_color}]"
+            )
+            self.console.print(
+                f"  [{_DIM}]{task.elapsed:.0f}s | "
+                f"{task.input_tokens + task.output_tokens:,} tokens | "
+                f"{task.tool_calls} tools[/{_DIM}]"
+            )
+            if task.output:
+                self.console.print(f"\n  [{_DIM}]Output:[/{_DIM}]")
+                for line in task.output[:2000].splitlines():
+                    self.console.print(f"  {line}")
+            if task.error:
+                self.console.print(f"  [red]Error: {task.error}[/red]")
+            self.console.print()
+            return
+
+        if not tasks:
+            self.console.print(f"  [{_DIM}]No tasks. Agents will appear here when spawned.[/{_DIM}]")
+            return
+
+        self.console.print()
+        for t in tasks:
+            status_color = {
+                "running": _ACCENT,
+                "completed": "green",
+                "failed": "red",
+                "killed": "red",
+                "pending": _DIM,
+            }.get(t.status.value, _DIM)
+            bg = " [bg]" if t.is_background else ""
+            self.console.print(
+                f"  [{_ACCENT}][{t.task_id}][/{_ACCENT}] "
+                f"{t.description:<40} "
+                f"[{status_color}]{t.status.value}{bg}[/{status_color}]  "
+                f"[{_DIM}]{t.elapsed:.0f}s[/{_DIM}]"
+            )
+        self.console.print(
+            f"\n  [{_DIM}]/tasks <id> to view output | /kill <id> to stop | /fg <id> to foreground[/{_DIM}]"
+        )
+        self.console.print()
+
+    def _cmd_bg(self, args: str) -> None:
+        """Background a task or list background tasks."""
+        reg = self.engine.task_registry
+        if args.strip():
+            reg.background(args.strip())
+            self.console.print(f"  [{_ACCENT}]Backgrounded [{args.strip()}][/{_ACCENT}]")
+        else:
+            bg = reg.list_background()
+            if not bg:
+                self.console.print(f"  [{_DIM}]No background tasks running.[/{_DIM}]")
+            else:
+                for t in bg:
+                    self.console.print(
+                        f"  [{_ACCENT}][{t.task_id}][/{_ACCENT}] {t.description}  "
+                        f"[{_DIM}]{t.elapsed:.0f}s[/{_DIM}]"
+                    )
+
+    def _cmd_fg(self, args: str) -> None:
+        """Bring a background task to foreground."""
+        if not args.strip():
+            self.console.print(f"  [{_DIM}]Usage: /fg <task_id>[/{_DIM}]")
+            return
+        reg = self.engine.task_registry
+        task = reg.get(args.strip())
+        if not task:
+            self.console.print(f"  [{_DIM}]Task not found: {args.strip()}[/{_DIM}]")
+            return
+        if task.is_done:
+            # Just show output
+            self.console.print(f"  [{_ACCENT}][{task.task_id}] already {task.status.value}[/{_ACCENT}]")
+            if task.output:
+                for line in task.output[:2000].splitlines():
+                    self.console.print(f"  {line}")
+        else:
+            reg.foreground(args.strip())
+            self.console.print(f"  [{_ACCENT}]Foregrounded [{args.strip()}][/{_ACCENT}]")
+
+    def _cmd_kill(self, args: str) -> None:
+        """Kill a running task."""
+        if not args.strip():
+            self.console.print(f"  [{_DIM}]Usage: /kill <task_id>[/{_DIM}]")
+            return
+        reg = self.engine.task_registry
+        if reg.kill(args.strip()):
+            self.console.print(f"  [{_ACCENT}]Killed [{args.strip()}][/{_ACCENT}]")
+        else:
+            self.console.print(f"  [{_DIM}]Task not found or already done: {args.strip()}[/{_DIM}]")
 
     # ---- /dream ----
 
@@ -739,6 +866,10 @@ class REPL:
     def _cmd_help(self) -> None:
         commands = [
             ("/model [name]", "Pick a model or list all available"),
+            ("/tasks [id]", "List running agents or view output"),
+            ("/bg [id]", "Background a task / list bg tasks"),
+            ("/fg <id>", "Foreground a background task"),
+            ("/kill <id>", "Kill a running agent"),
             ("/usage", "Claude subscription usage & rate limits"),
             ("/status", "Session info, auth, usage stats"),
             ("/context", "Context window usage breakdown"),

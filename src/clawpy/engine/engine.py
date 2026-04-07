@@ -71,6 +71,10 @@ class Engine:
         self.system_prompt: str = ""
         self.file_state = FileStateTracker()
         self._compact_failures = 0
+        # Task registry for tracking sub-agents
+        from clawpy.engine.tasks import TaskRegistry
+        self.task_registry = TaskRegistry()
+        self.on_agent_event: Callable[[str, str], None] | None = None
 
     def set_system_prompt(self, prompt: str) -> None:
         self.system_prompt = prompt
@@ -343,6 +347,8 @@ class Engine:
         ctx = RunContext(
             work_dir=self.config.work_dir,
             ask_user=_stub_ask_user,
+            task_registry=self.task_registry,
+            on_agent_event=self.on_agent_event,
         )
         try:
             exec_result = await tool.run(call.input, ctx)
