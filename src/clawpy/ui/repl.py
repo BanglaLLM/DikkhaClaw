@@ -135,9 +135,11 @@ class REPL:
 
     async def _run_turn(self, user_input: str) -> None:
         text_buf = ""
+        turn_start = time.time()
 
         def on_stream(event: StreamEvent) -> None:
             nonlocal text_buf
+            elapsed = time.time() - turn_start
             match event.type:
                 case EventType.DELTA:
                     if event.delta and event.delta.text:
@@ -147,7 +149,10 @@ class REPL:
                     if event.tool_call:
                         if text_buf and not text_buf.endswith("\n"):
                             print()
-                        self.console.print(f"  [{_ACCENT}]>> {event.tool_call.name}[/{_ACCENT}]")
+                        self.console.print(
+                            f"  [{_ACCENT}]>> {event.tool_call.name}[/{_ACCENT}]"
+                            f"  [{_DIM}]{elapsed:.0f}s[/{_DIM}]"
+                        )
                 case EventType.TOOL_END:
                     pass
                 case EventType.ERROR:

@@ -160,6 +160,21 @@ class AgentTool:
         """Run an agent and update task state."""
         from clawpy.engine.tasks import TaskStatus
 
+        # Background heartbeat — shows elapsed time every 15s
+        heartbeat_task: asyncio.Task[None] | None = None
+        if task.is_background and notify:
+            async def _heartbeat() -> None:
+                while True:
+                    await asyncio.sleep(15)
+                    if task.is_done:
+                        break
+                    notify(
+                        task.task_id,
+                        f"running ({task.elapsed:.0f}s, {task.tool_calls} tools)...",
+                    )
+
+            heartbeat_task = asyncio.create_task(_heartbeat())
+
         try:
             tool_count = 0
 
@@ -169,7 +184,10 @@ class AgentTool:
                     tool_count += 1
                     task.tool_calls = tool_count
                     if notify and task.is_background:
-                        notify(task.task_id, f">> {event.tool_call.name}")
+                        notify(
+                            task.task_id,
+                            f">> {event.tool_call.name} ({task.elapsed:.0f}s)",
+                        )
 
             result = await engine.run_turn(prompt, on_stream=on_stream)
 
@@ -200,14 +218,18 @@ class AgentTool:
         except asyncio.CancelledError:
             registry.kill(task.task_id)
             if notify:
-                notify(task.task_id, "killed")
+                notify(task.task_id, f"killed ({task.elapsed:.0f}s)")
             return ToolResult(content="Agent was killed.", is_error=True)
 
         except Exception as e:
             registry.fail(task.task_id, str(e))
             if notify:
-                notify(task.task_id, f"failed: {e}")
+                notify(task.task_id, f"failed ({task.elapsed:.0f}s): {e}")
             return ToolResult(content=f"Agent error: {e}", is_error=True)
+
+        finally:
+            if heartbeat_task and not heartbeat_task.done():
+                heartbeat_task.cancel()
 
     async def _run_inline(self, engine: Any, prompt: str) -> ToolResult:
         """Fallback: run without task registry."""
