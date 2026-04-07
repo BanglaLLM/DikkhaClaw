@@ -136,6 +136,17 @@ class FileEditTool:
         else:
             new_content = content.replace(old_string, new_string, 1)
 
+        # Generate diff for display
+        import difflib
+        diff_lines = list(difflib.unified_diff(
+            content.splitlines(keepends=True),
+            new_content.splitlines(keepends=True),
+            fromfile=str(path),
+            tofile=str(path),
+            n=3,
+        ))
+        diff_text = "".join(diff_lines)
+
         # Write back
         try:
             path.write_text(new_content, encoding="utf-8")
@@ -147,6 +158,7 @@ class FileEditTool:
             self._file_state.update_after_write(str(path.resolve()), new_content)
 
         replacements = count if replace_all else 1
-        return ToolResult(
-            content=f"Replaced {replacements} occurrence(s) in {path}"
-        )
+        summary = f"Replaced {replacements} occurrence(s) in {path}"
+        if diff_text:
+            summary += f"\n\n{diff_text}"
+        return ToolResult(content=summary)

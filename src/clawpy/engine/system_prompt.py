@@ -142,26 +142,48 @@ def _environment_section(work_dir: str, model: str) -> str:
     parts.append(f"- Platform: {platform.system().lower()}")
     parts.append(f"- Model: {model}")
 
-    # Git info
-    git_info = _get_git_info(work_dir)
-    if git_info:
-        parts.append(f"- Git branch: {git_info}")
+    # Git context
+    git = _get_git_context(work_dir)
+    if git:
+        parts.append(f"- Is a git repository: true")
+        if git.get("branch"):
+            parts.append(f"- Git branch: {git['branch']}")
+        if git.get("status"):
+            parts.append(f"- Git status:\n{git['status']}")
+        if git.get("recent_commits"):
+            parts.append(f"- Recent commits:\n{git['recent_commits']}")
 
     return "\n".join(parts)
 
 
-def _get_git_info(work_dir: str) -> str:
-    """Get current git branch, or empty string if not a git repo."""
-    try:
-        result = subprocess.run(
-            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-            capture_output=True,
-            text=True,
-            cwd=work_dir,
-            timeout=5,
-        )
-        if result.returncode == 0:
-            return result.stdout.strip()
-    except (OSError, subprocess.TimeoutExpired):
-        pass
-    return ""
+def _get_git_context(work_dir: str) -> dict[str, str]:
+    """Get git context: branch, status summary, recent commits."""
+    result: dict[str, str] = {}
+
+    def _run(cmd: list[str]) -> str:
+        try:
+            r = subprocess.run(cmd, capture_output=True, text=True, cwd=work_dir, timeout=5)
+            return r.stdout.strip() if r.returncode == 0 else ""
+        except (OSError, subprocess.TimeoutExpired):
+            return ""
+
+    # Check if git repo
+    if not _run(["git", "rev-parse", "--is-inside-work-tree"]):
+        return {}
+
+    result["branch"] = _run(["git", "rev-parse", "--abbrev-ref", "HEAD"])
+
+    # Status (short format, limited)
+    status = _run(["git", "status", "--short"])
+    if status:
+        lines = status.splitlines()
+        if len(lines) > 20:
+            status = "\n".join(lines[:20]) + f"\n... ({len(lines)} files total)"
+        result["status"] = status
+
+    # Recent commits (last 5, oneline)
+    commits = _run(["git", "log", "--oneline", "-5"])
+    if commits:
+        result["recent_commits"] = commits
+
+    return result

@@ -14,6 +14,7 @@ from typing import Any, Callable
 from clawpy.config.config import Config
 from clawpy.engine.compact import auto_compact
 from clawpy.engine.file_state import FileStateTracker
+from clawpy.engine.microcompact import microcompact, should_microcompact
 from clawpy.engine.token_budget import TokenBudget, get_context_window
 from clawpy.provider.base import (
     Delta,
@@ -75,6 +76,10 @@ class Engine:
         from clawpy.engine.tasks import TaskRegistry
         self.task_registry = TaskRegistry()
         self.on_agent_event: Callable[[str, str], None] | None = None
+        self._ask_user: Callable[[str], Any] | None = None  # Set by REPL for interactive prompts
+        # Session persistence
+        from clawpy.session.session import SessionStore
+        self.session_store: SessionStore | None = None
 
     def set_system_prompt(self, prompt: str) -> None:
         self.system_prompt = prompt
@@ -84,6 +89,11 @@ class Engine:
         self.messages = []
         self.file_state.clear()
         self._compact_failures = 0
+
+    def _persist(self, msg: Message) -> None:
+        """Save a message to session store if available."""
+        if self.session_store:
+            self.session_store.save_message(msg)
 
     def reload_system_prompt(self) -> None:
         """Rebuild system prompt (e.g., after memory files change)."""
@@ -106,11 +116,20 @@ class Engine:
         6. Permission-check → execute tools (read-only concurrent, writes serial)
         7. Append tool results → goto 2
         """
-        self.messages.append(text_message(Role.USER, user_input))
+        user_msg = text_message(Role.USER, user_input)
+        self.messages.append(user_msg)
+        self._persist(user_msg)
         total_usage = Usage()
         budget = TokenBudget(context_window=get_context_window(self.config.model))
 
         for iteration in range(MAX_ITERATIONS):
+            # Microcompact: clear old tool results at 70% context
+            est_tokens = budget.total_input_tokens + budget.total_output_tokens
+            if should_microcompact(est_tokens, budget.context_window):
+                cleared = microcompact(self.messages)
+                if cleared > 0:
+                    logger.info("Microcompact: cleared %d old tool results", cleared)
+
             # Auto-compact if approaching context limit
             if not budget.should_continue() and self._compact_failures < 3:
                 compacted = await auto_compact(
@@ -138,6 +157,7 @@ class Engine:
             total_usage = total_usage + usage
             budget.record_turn(usage.input_tokens, usage.output_tokens)
             self.messages.append(assistant_msg)
+            self._persist(assistant_msg)
 
             # Check for tool calls
             tool_calls = assistant_msg.tool_calls()
@@ -162,7 +182,9 @@ class Engine:
             results = await self._execute_tools(tool_calls)
 
             # Append tool results as user message
-            self.messages.append(tool_result_message(results))
+            result_msg = tool_result_message(results)
+            self.messages.append(result_msg)
+            self._persist(result_msg)
 
             logger.debug(
                 "Iteration %d: %d tool calls, %d tokens remaining",
@@ -333,9 +355,26 @@ class Engine:
         denial = self.enforcer.check(tool, call.input)
         if denial is not None:
             if denial.startswith("ASK:"):
-                # In default mode, auto-approve for now (REPL will add interactive prompts)
-                # TODO: wire up interactive permission prompt
-                pass
+                # Interactive permission prompt
+                ask = self._ask_user or _stub_ask_user
+                try:
+                    # Build a readable description of what's being asked
+                    input_preview = str(call.input)
+                    if len(input_preview) > 200:
+                        input_preview = input_preview[:200] + "..."
+                    question = f"Allow {call.name}? {input_preview}\n(y)es / (n)o / (a)lways: "
+                    answer = await ask(question)
+                    answer = answer.strip().lower()
+                    if answer in ("a", "always"):
+                        self.enforcer.allow_rules.append(call.name)
+                    elif answer not in ("y", "yes", ""):
+                        return ToolResult(
+                            tool_call_id=call.id,
+                            content=f"Permission denied by user for {call.name}",
+                            is_error=True,
+                        )
+                except Exception:
+                    pass  # Fallthrough to allow on error
             else:
                 return ToolResult(
                     tool_call_id=call.id,
@@ -346,7 +385,7 @@ class Engine:
         # Execute
         ctx = RunContext(
             work_dir=self.config.work_dir,
-            ask_user=_stub_ask_user,
+            ask_user=self._ask_user or _stub_ask_user,
             task_registry=self.task_registry,
             on_agent_event=self.on_agent_event,
         )

@@ -10,6 +10,7 @@ import uuid
 from typing import Any
 
 from prompt_toolkit import PromptSession
+from prompt_toolkit.completion import Completer, Completion, merge_completers
 from prompt_toolkit.history import InMemoryHistory
 from rich.console import Console
 from rich.panel import Panel
@@ -78,13 +79,66 @@ def _format_ctx(tokens: int) -> str:
     return f"{tokens // 1000}K"
 
 
+class _SlashCompleter(Completer):
+    """Autocomplete / commands."""
+
+    _COMMANDS = [
+        "/model", "/tasks", "/bg", "/fg", "/kill", "/usage", "/status",
+        "/context", "/memory", "/dream", "/plan", "/clear", "/compact",
+        "/plugin", "/resume", "/login", "/logout", "/help", "/quit",
+    ]
+
+    def get_completions(self, document: Any, complete_event: Any) -> Any:
+        text = document.text_before_cursor
+        if not text.startswith("/"):
+            return
+        for cmd in self._COMMANDS:
+            if cmd.startswith(text):
+                yield Completion(cmd, start_position=-len(text))
+
+
+class _FileCompleter(Completer):
+    """Autocomplete @file mentions."""
+
+    def get_completions(self, document: Any, complete_event: Any) -> Any:
+        text = document.text_before_cursor
+        # Find the last @ mention
+        at_pos = text.rfind("@")
+        if at_pos < 0:
+            return
+        partial = text[at_pos + 1:]
+        if " " in partial and not partial.endswith("/"):
+            return
+        from pathlib import Path
+        try:
+            if "/" in partial:
+                parent = Path(partial).parent
+                stem = Path(partial).name
+                for p in sorted(parent.iterdir()):
+                    if p.name.startswith(stem) or not stem:
+                        rel = str(p.relative_to(".")) if not str(p).startswith("/") else str(p)
+                        display = rel + ("/" if p.is_dir() else "")
+                        yield Completion(display, start_position=-len(partial))
+            else:
+                for p in sorted(Path(".").iterdir()):
+                    if p.name.startswith(partial):
+                        display = p.name + ("/" if p.is_dir() else "")
+                        yield Completion(display, start_position=-len(partial))
+        except OSError:
+            return
+
+
 class REPL:
     """ClawPy interactive REPL."""
 
     def __init__(self, engine: Engine, console: Console | None = None) -> None:
         self.engine = engine
         self.console = console or Console()
-        self.session: PromptSession[str] = PromptSession(history=InMemoryHistory())
+        completer = merge_completers([_SlashCompleter(), _FileCompleter()])
+        self.session: PromptSession[str] = PromptSession(
+            history=InMemoryHistory(),
+            completer=completer,
+        )
         self._session_id = uuid.uuid4().hex[:12]
         self._start_time = time.time()
         self._total_input_tokens = 0
@@ -92,8 +146,26 @@ class REPL:
         self._turn_count = 0
         self._slash_awaitable: Any = None
 
-        # Wire agent event notifications from engine to terminal
+        # Wire engine callbacks
         self.engine.on_agent_event = self._on_agent_event
+        self.engine._ask_user = self._ask_permission
+
+        # Initialize session persistence
+        from clawpy.session.session import SessionMeta, SessionStore
+        store = SessionStore()
+        store.save_meta(self.engine.config.model, self.engine.config.work_dir)
+        self.engine.session_store = store
+        SessionStore.save_to_history(SessionMeta(
+            session_id=store.session_id,
+            created_at=self._start_time,
+            model=self.engine.config.model,
+            work_dir=self.engine.config.work_dir,
+        ))
+
+    async def _ask_permission(self, question: str) -> str:
+        """Interactive permission prompt using prompt_toolkit."""
+        self.console.print(f"  [yellow]{question}[/yellow]", end="")
+        return await self.session.prompt_async("")
 
     def _on_agent_event(self, task_id: str, message: str) -> None:
         """Called when a background agent has an update."""
@@ -173,8 +245,15 @@ class REPL:
         self._turn_count += 1
 
         if result.usage.input_tokens > 0 or result.usage.output_tokens > 0:
+            from clawpy.engine.cost import estimate_cost, format_cost
+            turn_cost = estimate_cost(
+                self.engine.config.model,
+                result.usage.input_tokens,
+                result.usage.output_tokens,
+            )
             self.console.print(
-                f"  [{_DIM}]{result.usage.input_tokens}in {result.usage.output_tokens}out[/{_DIM}]"
+                f"  [{_DIM}]{result.usage.input_tokens}in {result.usage.output_tokens}out"
+                f"  {format_cost(turn_cost)}[/{_DIM}]"
             )
         print()
 
@@ -221,6 +300,8 @@ class REPL:
                 self._cmd_fg(args)
             case "/kill":
                 self._cmd_kill(args)
+            case "/resume":
+                self._cmd_resume()
             case "/plan":
                 self._cmd_plan()
             case "/plugin" | "/plugins":
@@ -336,6 +417,11 @@ class REPL:
             ("", ""),
             ("turns", str(self._turn_count)),
             ("tokens", f"{total_tok:,} total  [{_DIM}]{self._total_input_tokens:,}in {self._total_output_tokens:,}out[/{_DIM}]"),
+        ]
+        from clawpy.engine.cost import estimate_cost, format_cost
+        session_cost = estimate_cost(cfg.model, self._total_input_tokens, self._total_output_tokens)
+        rows += [
+            ("est. cost", format_cost(session_cost)),
         ]
 
         table = Table(show_header=False, box=None, padding=(0, 1), expand=False)
@@ -560,6 +646,59 @@ class REPL:
             self.console.print(f"  [{_ACCENT}]Killed [{args.strip()}][/{_ACCENT}]")
         else:
             self.console.print(f"  [{_DIM}]Task not found or already done: {args.strip()}[/{_DIM}]")
+
+    # ---- /resume ----
+
+    def _cmd_resume(self) -> None:
+        """Resume a previous session."""
+        from clawpy.session.session import SessionStore
+
+        sessions = SessionStore.list_sessions()
+        if not sessions:
+            self.console.print(f"  [{_DIM}]No previous sessions found.[/{_DIM}]")
+            return
+
+        # Show recent sessions (last 10)
+        self.console.print()
+        recent = sessions[-10:]
+        for i, s in enumerate(reversed(recent), 1):
+            import datetime
+            dt = datetime.datetime.fromtimestamp(s.created_at).strftime("%Y-%m-%d %H:%M")
+            title = s.title or s.session_id[:8]
+            self.console.print(
+                f"  [{_ACCENT}]{i}.[/{_ACCENT}] {title:<30} [{_DIM}]{dt}  {s.model}[/{_DIM}]"
+            )
+
+        self.console.print(f"\n  [{_DIM}]Enter number to resume, or Esc to cancel:[/{_DIM}]")
+
+        try:
+            choice = input("  > ").strip()
+        except (EOFError, KeyboardInterrupt):
+            return
+
+        try:
+            idx = int(choice) - 1
+            if 0 <= idx < len(recent):
+                selected = list(reversed(recent))[idx]
+            else:
+                self.console.print(f"  [{_DIM}]Invalid selection.[/{_DIM}]")
+                return
+        except ValueError:
+            return
+
+        # Load the session
+        store = SessionStore(selected.session_id)
+        messages = store.load_session()
+        if not messages:
+            self.console.print(f"  [{_DIM}]Session is empty.[/{_DIM}]")
+            return
+
+        self.engine.messages = messages
+        self.engine.session_store = store
+        self.console.print(
+            f"  [{_ACCENT}]Resumed session {selected.session_id[:8]}[/{_ACCENT}] "
+            f"[{_DIM}]({len(messages)} messages)[/{_DIM}]"
+        )
 
     # ---- /dream ----
 
@@ -883,6 +1022,7 @@ class REPL:
             ("/plan", "Toggle read-only plan mode"),
             ("/clear", "Reset conversation"),
             ("/compact", "Compress conversation history"),
+            ("/resume", "Resume a previous session"),
             ("/plugin [cmd]", "Install, list, remove plugins"),
             ("/login", "Authenticate with Claude subscription"),
             ("/logout", "Clear stored credentials"),
