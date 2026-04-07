@@ -90,6 +90,7 @@ class REPL:
         self._total_input_tokens = 0
         self._total_output_tokens = 0
         self._turn_count = 0
+        self._slash_awaitable: Any = None
 
     async def run(self) -> None:
         cfg = self.engine.config
@@ -117,6 +118,10 @@ class REPL:
             if user_input.startswith("/"):
                 if self._handle_slash(user_input):
                     break
+                # Run any async slash command
+                if self._slash_awaitable is not None:
+                    await self._slash_awaitable
+                    self._slash_awaitable = None
                 continue
 
             await self._run_turn(user_input)
@@ -186,8 +191,7 @@ class REPL:
             case "/status":
                 self._cmd_status()
             case "/usage":
-                import asyncio
-                asyncio.get_event_loop().run_until_complete(self._cmd_usage())
+                self._slash_awaitable = self._cmd_usage()
             case "/compact":
                 self.console.print(f"[{_DIM}]Manual compact not yet implemented.[/{_DIM}]")
             case "/plan":
