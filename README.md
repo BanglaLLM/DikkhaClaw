@@ -1,292 +1,262 @@
-# ClawPy
+<p align="center">
+  <img src="https://img.shields.io/badge/python-3.12+-blue?style=flat-square" />
+  <img src="https://img.shields.io/badge/mypy-strict-green?style=flat-square" />
+  <img src="https://img.shields.io/badge/deps-3%20only-orange?style=flat-square" />
+  <img src="https://img.shields.io/badge/providers-5-purple?style=flat-square" />
+  <img src="https://img.shields.io/github/license/AIScienceStudio/clawpy?style=flat-square" />
+  <img src="https://img.shields.io/github/stars/AIScienceStudio/clawpy?style=flat-square" />
+</p>
 
-Multi-model CLI coding agent written in typed Python. A ground-up rewrite inspired by [Claude Code](https://claude.ai/code), with support for Anthropic, OpenAI, Gemini, Ollama, and DeepSeek.
+<h1 align="center">ClawPy</h1>
+<p align="center"><strong>The Python AI coding agent that works with any model.</strong></p>
+<p align="center">Claude, GPT-4o, Gemini, Ollama, DeepSeek — one tool, any brain.</p>
 
-ClawPy gives you an interactive terminal agent that can read your codebase, search files, edit code, run commands, and fetch web content — all driven by the LLM of your choice.
+---
+
+```
+pip install clawpy   # or: git clone + uv pip install -e .
+clawpy login         # use your Claude subscription (or set any API key)
+clawpy               # start coding with AI
+```
+
+<!-- TODO: Replace with actual demo GIF
+<p align="center">
+  <img src="docs/demo.gif" width="700" />
+</p>
+-->
+
+## Why ClawPy?
+
+Every AI coding agent locks you into one provider. ClawPy doesn't.
+
+| | ClawPy | Claude Code | Cursor | Aider |
+|---|:---:|:---:|:---:|:---:|
+| Pure Python | **Yes** | TypeScript | Electron | Python |
+| Multi-model (5 providers) | **Yes** | Claude only | OpenAI + Claude | Multi |
+| Claude subscription login | **Yes** | Yes | No | No |
+| Runs locally with Ollama | **Yes** | No | No | Yes |
+| Plugin system | **Yes** | Yes | No | No |
+| Background agents | **Yes** | Yes | No | No |
+| Memory consolidation (dream) | **Yes** | Yes | No | No |
+| MCP support | **Yes** | Yes | No | No |
+| Dependencies | **3** | 200+ | Electron | 20+ |
+| `mypy --strict` | **Yes** | No | No | No |
+
+## Quickstart
+
+**30 seconds to your first AI-powered code change:**
+
+```bash
+# Install
+git clone https://github.com/AIScienceStudio/clawpy.git && cd clawpy
+uv venv && uv pip install -e .
+
+# Authenticate (pick one)
+clawpy login                              # Claude Pro/Max/Team subscription
+export OPENAI_API_KEY=sk-...              # or OpenAI
+export GEMINI_API_KEY=AIza...             # or Gemini
+# Ollama needs no key — just have it running
+
+# Run
+clawpy
+```
+
+That's it. You're in.
+
+## What it looks like
+
+```
+  ClawPy  v0.1.0
+  /home/user/myproject
+  model: Opus 4.6 via anthropic
+
+> Find the bug in auth.py and fix it
+
+  >> Read src/auth.py  3s
+  >> Grep "password"  4s
+  >> Edit src/auth.py  6s
+
+  Found the issue: the password hash comparison was using == instead
+  of hmac.compare_digest(), making it vulnerable to timing attacks.
+  Fixed it.
+
+  --- src/auth.py
+  +++ src/auth.py
+  @@ -42,1 +42,1 @@
+  -    if stored_hash == computed_hash:
+  +    if hmac.compare_digest(stored_hash, computed_hash):
+
+  1,808in 65out  $0.031
+```
+
+## Switch models in one command
+
+```bash
+clawpy -p openai -m gpt-4o          # OpenAI
+clawpy -p gemini -m gemini-2.5-pro  # Google (1M context!)
+clawpy -p ollama -m llama3.1        # Local, free, private
+clawpy -p deepseek -m deepseek-chat # DeepSeek V3
+clawpy                               # Claude (default)
+```
+
+Or switch mid-conversation:
+```
+> /model gemini-2.5-pro
+  model  Gemini 2.5 Pro  1M context, multimodal
+```
 
 ## Features
 
-- **Multi-model** — switch between Claude, GPT-4o, Gemini, Ollama, DeepSeek with a flag or env var
-- **Claude subscription login** — use your Claude Pro/Max/Team subscription directly (OAuth PKCE)
-- **9 built-in tools** — Bash, Read, Write, Edit, Grep, Glob, ListFiles, WebFetch, Agent
-- **Agentic loop** — model calls tools autonomously, results feed back, loops until done
-- **Permission system** — 4 modes (default, accept_edits, bypass, plan) with allow/deny rules
-- **Read-before-write** — files must be read before editing, with mtime staleness detection
-- **Token budget** — auto-stops at 90% context window, detects diminishing returns
-- **Auto-compact** — summarizes old messages when context gets full
-- **CLAWPY.md memory** — project-level instructions discovered from CWD to root
-- **Streaming** — real-time response streaming in the terminal
-- **Fully typed** — `mypy --strict` passes on all source files
+<details>
+<summary><strong>9 built-in tools</strong></summary>
 
-## Install
+| Tool | What it does | Permission |
+|------|-------------|------------|
+| **Bash** | Execute shell commands | Dynamic (safe commands auto-approved) |
+| **Read** | Read files with line numbers | Read-only |
+| **Write** | Write/create files | Workspace write |
+| **Edit** | Search & replace with diff preview | Workspace write |
+| **Grep** | Search contents (ripgrep) | Read-only |
+| **Glob** | Find files by pattern | Read-only |
+| **ListFiles** | List directory contents | Read-only |
+| **WebFetch** | Fetch URL content | Requires approval |
+| **Agent** | Spawn sub-agents (background OK) | Requires approval |
 
-Requires Python 3.12+ and [uv](https://docs.astral.sh/uv/).
+</details>
 
-```bash
-git clone https://github.com/AIScienceStudio/clawpy.git
-cd clawpy
-uv venv
-uv pip install -e .
-```
-
-For development (tests, linting, type checking):
-
-```bash
-uv pip install -e ".[dev]"
-```
-
-## Authentication
-
-### Option 1: Claude subscription (recommended)
-
-Use your existing Claude Pro, Max, Team, or Enterprise subscription:
-
-```bash
-uv run clawpy login
-```
-
-This opens your browser to authenticate with your Claude account. Tokens are stored at `~/.clawpy/credentials.json`.
-
-```bash
-# Check login status
-uv run clawpy status
-
-# Logout
-uv run clawpy logout
-```
-
-### Option 2: API keys
-
-Set the API key for your provider:
-
-```bash
-# Anthropic
-export ANTHROPIC_API_KEY=sk-ant-...
-
-# OpenAI
-export OPENAI_API_KEY=sk-proj-...
-
-# Gemini
-export GEMINI_API_KEY=AIza...
-
-# DeepSeek
-export DEEPSEEK_API_KEY=sk-...
-
-# Ollama (no key needed, just have Ollama running)
-```
-
-## Usage
-
-### Interactive REPL (default)
-
-```bash
-uv run clawpy
-```
-
-This starts an interactive session. Type prompts, get streaming responses, watch the agent use tools.
-
-```
-ClawPy v0.1.0 — anthropic:claude-sonnet-4-20250514
-Working directory: /home/user/myproject
-Type /help for commands, /quit to exit.
-
-> Find all Python files that import asyncio and explain what they do
-```
-
-### Non-interactive (single prompt)
-
-```bash
-uv run clawpy run "List all TODO comments in this project"
-```
-
-Or pipe from stdin:
-
-```bash
-echo "What does the main function do?" | uv run clawpy run
-```
-
-### Switching models
-
-```bash
-# Via CLI flag
-uv run clawpy -p openai -m gpt-4o
-uv run clawpy -p gemini -m gemini-2.5-pro
-uv run clawpy -p ollama -m llama3.1
-uv run clawpy -p deepseek -m deepseek-chat
-
-# Via environment
-export CLAWPY_PROVIDER=gemini
-export CLAWPY_MODEL=gemini-2.5-pro
-uv run clawpy
-
-# Switch during a session
-> /model gpt-4o
-```
-
-### Permission modes
-
-```bash
-# Default — asks before non-read-only tools
-uv run clawpy
-
-# Auto-approve file edits
-uv run clawpy --permission-mode accept_edits
-
-# Approve everything (yolo mode)
-uv run clawpy --permission-mode bypass
-
-# Read-only (plan mode) — no edits allowed
-uv run clawpy --permission-mode plan
-```
-
-### Slash commands
+<details>
+<summary><strong>22 slash commands</strong></summary>
 
 | Command | Description |
 |---------|-------------|
-| `/help` | List available commands |
-| `/quit` | Exit the REPL |
-| `/clear` | Clear conversation history |
-| `/model [name]` | Show or switch model |
-| `/context` | Show token usage estimate |
-| `/plan` | Toggle plan mode (read-only) |
-| `/compact` | Compact conversation history |
+| `/model [name]` | Pick a model or list all available |
+| `/tasks [id]` | List running agents or view output |
+| `/bg` / `/fg` / `/kill` | Background/foreground/kill agents |
+| `/usage` | Claude subscription rate limits |
+| `/status` | Session info, auth, cost |
+| `/context` | Context window usage with breakdown |
+| `/memory` | View, edit, add persistent memory |
+| `/dream` | LLM-powered memory consolidation |
+| `/plan` | Toggle read-only plan mode |
+| `/resume` | Resume a previous session |
+| `/plugin` | Install/manage plugins |
+| `/agents` | List custom agent definitions |
+| `/mcp` | Show MCP server configuration |
+| `/login` / `/logout` | Claude subscription auth |
+| `/clear` / `/compact` | Reset or compress conversation |
+| `/help` / `/quit` | Help and exit |
 
-## Configuration
+</details>
 
-### Settings files
+<details>
+<summary><strong>Memory system with dream consolidation</strong></summary>
 
-ClawPy loads settings in priority order (later overrides earlier):
-
-1. **Defaults** — hardcoded sensible defaults
-2. **Global** — `~/.clawpy/settings.json`
-3. **Project** — `<project>/.clawpy/settings.json`
-4. **Environment variables** — `CLAWPY_PROVIDER`, `CLAWPY_MODEL`, etc.
-5. **CLI flags** — `--provider`, `--model`, `--permission-mode`
-
-Example `settings.json`:
-
-```json
-{
-  "provider": "anthropic",
-  "model": "claude-sonnet-4-20250514",
-  "max_tokens": 16384,
-  "permission_mode": "accept_edits",
-  "allow_tools": ["Bash"],
-  "deny_tools": ["WebFetch"]
-}
-```
-
-### Environment variables
-
-| Variable | Description |
-|----------|-------------|
-| `CLAWPY_PROVIDER` | Provider name (anthropic, openai, gemini, ollama, deepseek) |
-| `CLAWPY_MODEL` | Model ID |
-| `CLAWPY_MAX_TOKENS` | Max output tokens |
-| `CLAWPY_PERMISSION_MODE` | Permission mode |
-| `ANTHROPIC_API_KEY` | Anthropic API key |
-| `OPENAI_API_KEY` | OpenAI API key |
-| `GEMINI_API_KEY` | Google Gemini API key |
-| `DEEPSEEK_API_KEY` | DeepSeek API key |
-| `OLLAMA_BASE_URL` | Ollama endpoint (default: http://localhost:11434/v1) |
-
-### Project memory (CLAWPY.md)
-
-Create a `CLAWPY.md` file in your project root to give the agent persistent context:
+Create a `CLAWPY.md` in your project root — the agent reads it automatically:
 
 ```markdown
 # Project: MyApp
-
-- This is a Django project using PostgreSQL
-- Always run tests with `pytest -x`
-- Never modify files in `vendor/`
+- Django project with PostgreSQL
+- Run tests with `pytest -x`
+- Never modify vendor/
 ```
 
-ClawPy discovers memory files by walking from the current directory to the filesystem root, plus `~/.clawpy/CLAWPY.md` for global instructions.
+ClawPy discovers memory files from your current directory up to root, plus global `~/.clawpy/CLAWPY.md`.
 
-## Tools
+**Dream** (`/dream`): LLM reviews your conversation and consolidates learnings into organized, persistent memory. Auto-dream triggers after 10+ turns if 24h have passed.
 
-| Tool | Description | Permission |
-|------|-------------|------------|
-| **Bash** | Execute shell commands | Dynamic (read-only for safe commands) |
-| **Read** | Read files with line numbers | Read-only |
-| **Write** | Write/create files | Workspace write |
-| **Edit** | Search and replace in files | Workspace write |
-| **Grep** | Search file contents (ripgrep) | Read-only |
-| **Glob** | Find files by pattern | Read-only |
-| **ListFiles** | List directory contents | Read-only |
-| **WebFetch** | Fetch URL content | Shell unsafe |
-| **Agent** | Spawn a sub-agent for complex tasks | Shell unsafe |
+</details>
 
-## Hooks
+<details>
+<summary><strong>Background agents & parallel tasks</strong></summary>
 
-Run custom shell commands before/after tool execution. Add to `settings.json`:
+The LLM can spawn background agents that don't block:
 
-```json
-{
-  "hooks": {
-    "pre_tool_use": [
-      {
-        "tool": "Edit",
-        "command": "echo 'Editing file'"
-      }
-    ],
-    "post_tool_use": [
-      {
-        "tool": "Edit",
-        "if": "file_path:*.py",
-        "command": "ruff check --fix $CLAWPY_FILE_PATH"
-      }
-    ]
-  }
-}
 ```
+> Analyze the codebase and fix the tests
+
+  [bg a0001] started: "Explore structure"
+  [bg a0002] started: "Fix tests"
+
+  While those run...
+
+  [bg a0001] >> Glob (5s)
+  [bg a0001] >> Read (8s)
+  [bg a0001] completed (15s, 4,200 tokens)
+  [bg a0002] >> Bash (20s)
+  [bg a0002] completed (23s, 6,100 tokens)
+```
+
+Manage with `/tasks`, `/kill <id>`, `/fg <id>`.
+
+</details>
+
+<details>
+<summary><strong>Plugin system</strong></summary>
+
+Install plugins from GitHub:
+
+```
+> /plugin install owner/repo-name
+  Cloning...
+  Installed my-plugin v1.0.0
+  Commands: my-plugin:build, my-plugin:deploy
+```
+
+Plugins can add: commands, agents, skills, hooks, MCP servers. Compatible with Claude Code plugin format.
+
+</details>
+
+<details>
+<summary><strong>Smart context management</strong></summary>
+
+Three layers prevent context overflow:
+
+1. **Microcompact** (70%) — clears old tool results automatically
+2. **Auto-compact** (90%) — LLM summarizes old messages, keeps last 10
+3. **Token budget** — stops if diminishing returns detected
+
+Plus per-turn cost tracking: `1,808in 65out  $0.031`
+
+</details>
 
 ## Architecture
 
 ```
-User input → CLI → Engine.run_turn()
-                      ↓
-              Build Request (system prompt + messages + tools)
-                      ↓
-              Provider.stream() → SSE → StreamEvents
-                      ↓
-              Consume stream → assemble assistant Message
-                      ↓
-              Extract ToolCalls → permission check → execute
-                      ↓
-              Append results → check token budget → loop or return
+User → CLI → Engine.run_turn()
+               ├── Provider.stream() → SSE → StreamEvents
+               ├── Consume stream → assistant Message
+               ├── ToolCalls → permission → execute (concurrent if read-only)
+               ├── Tool results → append → token budget check
+               └── Loop until done or compact needed
 ```
 
-See [spec/](spec/) for detailed architecture documentation.
+- **50+ source files**, ~6,500 lines of typed Python
+- **3 runtime deps**: httpx, prompt-toolkit, rich (no SDK bloat)
+- **`mypy --strict`** passes on all files
+- **57 tests** covering types, config, tools, permissions, engine, SSE, OpenAI conversion
 
-## Development
+## Adding a new provider
+
+It's ~30 lines. Gemini, Ollama, and DeepSeek all inherit from the OpenAI provider:
+
+```python
+class MyProvider(OpenAIProvider):
+    def __init__(self, cfg):
+        cfg.base_url = "https://my-api.com/v1"
+        super().__init__(cfg)
+        self._provider_name = "my-provider"
+
+register("my-provider", lambda cfg: MyProvider(cfg))
+```
+
+## Contributing
 
 ```bash
-# Run tests
-uv run pytest tests/ -v
-
-# Type checking
-uv run mypy --strict src/
-
-# Lint
-uv run ruff check src/
-
-# Run benchmarks (requires API key)
-GEMINI_API_KEY=... uv run python benchmarks/run_benchmark.py
+uv pip install -e ".[dev]"
+uv run pytest tests/ -v      # 57 tests
+uv run mypy --strict src/    # 0 errors
+uv run ruff check src/       # Lint
 ```
-
-## Providers
-
-| Provider | Status | Models |
-|----------|--------|--------|
-| Anthropic | Stable | claude-opus-4, claude-sonnet-4, claude-haiku-4 |
-| OpenAI | Stable | gpt-4o, gpt-4o-mini, o1, o3-mini |
-| Gemini | Stable (2.5) | gemini-2.5-pro, gemini-2.5-flash |
-| Ollama | Stable | Any local model |
-| DeepSeek | Stable | deepseek-chat, deepseek-coder, deepseek-reasoner |
-
-All OpenAI-compatible providers (Gemini, Ollama, DeepSeek) use the same conversion layer. Adding a new provider is ~30 lines of code.
 
 ## License
 
