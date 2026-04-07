@@ -169,6 +169,9 @@ class REPL:
         if result.error:
             self.console.print(f"[yellow]  {result.error}[/yellow]")
 
+        # Check auto-dream after turn
+        await self._maybe_auto_dream()
+
     def _handle_slash(self, raw: str) -> bool:
         parts = raw.split(maxsplit=1)
         cmd = parts[0].lower()
@@ -194,6 +197,8 @@ class REPL:
                 self._slash_awaitable = self._cmd_usage()
             case "/memory" | "/mem":
                 self._cmd_memory(args)
+            case "/dream":
+                self._slash_awaitable = self._cmd_dream()
             case "/compact":
                 self.console.print(f"[{_DIM}]Manual compact not yet implemented.[/{_DIM}]")
             case "/plan":
@@ -423,6 +428,50 @@ class REPL:
             border_style=_ACCENT,
             padding=(1, 2),
         ))
+
+    # ---- /dream ----
+
+    async def _cmd_dream(self) -> None:
+        from clawpy.engine.dream import dream_and_save
+
+        self.console.print(f"  [{_DIM}]Dreaming... consolidating memories from this session[/{_DIM}]")
+
+        result = await dream_and_save(
+            provider=self.engine.provider,
+            model=self.engine.config.model,
+            work_dir=self.engine.config.work_dir,
+            messages=self.engine.messages,
+        )
+
+        if result.success:
+            self.engine.reload_system_prompt()
+            self.console.print(
+                f"  [{_ACCENT}]Dream complete[/{_ACCENT}] "
+                f"[{_DIM}]{result.tokens_used:,} tokens used, memory updated[/{_DIM}]"
+            )
+        else:
+            self.console.print(f"  [red]Dream failed: {result.error}[/red]")
+
+    async def _maybe_auto_dream(self) -> None:
+        """Check and run auto-dream after a turn if conditions met."""
+        from clawpy.engine.dream import dream_and_save, should_auto_dream
+
+        work_dir = self.engine.config.work_dir
+        if not should_auto_dream(work_dir, self._turn_count):
+            return
+
+        self.console.print(f"\n  [{_DIM}]Auto-dreaming... consolidating session memories[/{_DIM}]")
+        result = await dream_and_save(
+            provider=self.engine.provider,
+            model=self.engine.config.model,
+            work_dir=work_dir,
+            messages=self.engine.messages,
+        )
+        if result.success:
+            self.engine.reload_system_prompt()
+            self.console.print(
+                f"  [{_ACCENT}]Auto-dream complete[/{_ACCENT}] [{_DIM}]memory updated[/{_DIM}]"
+            )
 
     # ---- /memory ----
 
@@ -694,6 +743,7 @@ class REPL:
             ("/status", "Session info, auth, usage stats"),
             ("/context", "Context window usage breakdown"),
             ("/memory [cmd]", "View, edit, add project memory"),
+            ("/dream", "Consolidate session memories (LLM-powered)"),
             ("/plan", "Toggle read-only plan mode"),
             ("/clear", "Reset conversation"),
             ("/compact", "Compress conversation history"),
