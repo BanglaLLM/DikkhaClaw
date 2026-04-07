@@ -196,6 +196,8 @@ class REPL:
                 self.console.print(f"[{_DIM}]Manual compact not yet implemented.[/{_DIM}]")
             case "/plan":
                 self._cmd_plan()
+            case "/plugin" | "/plugins":
+                self._cmd_plugin(args)
             case "/login":
                 self._cmd_login()
             case "/logout":
@@ -420,6 +422,124 @@ class REPL:
             padding=(1, 2),
         ))
 
+    # ---- /plugin ----
+
+    def _cmd_plugin(self, args: str) -> None:
+        from clawpy.plugins.manager import PluginManager
+
+        pm = PluginManager()
+        parts = args.split(maxsplit=1)
+        subcmd = parts[0].lower() if parts else ""
+        subargs = parts[1].strip() if len(parts) > 1 else ""
+
+        if not subcmd or subcmd == "list":
+            installed = pm.list_installed()
+            if not installed:
+                self.console.print(f"  [{_DIM}]No plugins installed.[/{_DIM}]")
+                self.console.print(f"  [{_DIM}]Install with: /plugin install owner/repo[/{_DIM}]")
+                return
+            self.console.print()
+            for entry in installed:
+                status = f"[green]enabled[/green]" if entry.enabled else f"[red]disabled[/red]"
+                ver = f" v{entry.version}" if entry.version else ""
+                self.console.print(
+                    f"  [{_ACCENT}]{entry.name}[/{_ACCENT}]{ver}  {status}  [{_DIM}]{entry.source}[/{_DIM}]"
+                )
+            self.console.print()
+
+        elif subcmd == "install":
+            if not subargs:
+                self.console.print(f"  [{_DIM}]Usage: /plugin install owner/repo  or  /plugin install /local/path[/{_DIM}]")
+                return
+            try:
+                if subargs.startswith("/") or subargs.startswith("./") or subargs.startswith("~"):
+                    plugin = pm.install_from_local(subargs)
+                    self.console.print(f"  [{_ACCENT}]Installed {plugin.name}[/{_ACCENT}] from local path")
+                else:
+                    self.console.print(f"  [{_DIM}]Cloning {subargs}...[/{_DIM}]")
+                    plugin = pm.install_from_github(subargs)
+                    self.console.print(f"  [{_ACCENT}]Installed {plugin.name}[/{_ACCENT}] v{plugin.manifest.version}")
+
+                # Show what was loaded
+                if plugin.commands:
+                    cmds = ", ".join(c.name for c in plugin.commands)
+                    self.console.print(f"  [{_DIM}]Commands: {cmds}[/{_DIM}]")
+                if plugin.agents:
+                    agents = ", ".join(a.name for a in plugin.agents)
+                    self.console.print(f"  [{_DIM}]Agents: {agents}[/{_DIM}]")
+                if plugin.skills:
+                    self.console.print(f"  [{_DIM}]Skills: {len(plugin.skills)}[/{_DIM}]")
+                if plugin.errors:
+                    for err in plugin.errors:
+                        self.console.print(f"  [yellow]{err}[/yellow]")
+            except Exception as e:
+                self.console.print(f"  [red]Install failed: {e}[/red]")
+
+        elif subcmd == "remove" or subcmd == "uninstall":
+            if not subargs:
+                self.console.print(f"  [{_DIM}]Usage: /plugin remove <name>[/{_DIM}]")
+                return
+            if pm.remove(subargs):
+                self.console.print(f"  [{_ACCENT}]Removed {subargs}[/{_ACCENT}]")
+            else:
+                self.console.print(f"  [{_DIM}]Plugin not found: {subargs}[/{_DIM}]")
+
+        elif subcmd == "enable":
+            if pm.enable(subargs):
+                self.console.print(f"  [{_ACCENT}]Enabled {subargs}[/{_ACCENT}]")
+            else:
+                self.console.print(f"  [{_DIM}]Plugin not found: {subargs}[/{_DIM}]")
+
+        elif subcmd == "disable":
+            if pm.disable(subargs):
+                self.console.print(f"  [{_ACCENT}]Disabled {subargs}[/{_ACCENT}]")
+            else:
+                self.console.print(f"  [{_DIM}]Plugin not found: {subargs}[/{_DIM}]")
+
+        elif subcmd == "info":
+            plugin = pm.get_loaded(subargs)
+            if not plugin:
+                # Try loading all first
+                pm.load_all()
+                plugin = pm.get_loaded(subargs)
+            if not plugin:
+                self.console.print(f"  [{_DIM}]Plugin not found: {subargs}[/{_DIM}]")
+                return
+            m = plugin.manifest
+            lines = [
+                f"[{_ACCENT} bold]{m.name}[/{_ACCENT} bold]  v{m.version}",
+                f"{m.description}" if m.description else "",
+                f"[{_DIM}]Author: {m.author}[/{_DIM}]" if m.author else "",
+                f"[{_DIM}]Source: {plugin.source}[/{_DIM}]",
+                f"[{_DIM}]Path: {plugin.install_path}[/{_DIM}]",
+            ]
+            if plugin.commands:
+                lines.append(f"\nCommands: {', '.join(c.name for c in plugin.commands)}")
+            if plugin.agents:
+                lines.append(f"Agents: {', '.join(a.name for a in plugin.agents)}")
+            if plugin.skills:
+                lines.append(f"Skills: {len(plugin.skills)}")
+            if plugin.errors:
+                lines.append(f"\n[yellow]Errors:[/yellow]")
+                for err in plugin.errors:
+                    lines.append(f"  [yellow]{err}[/yellow]")
+            self.console.print()
+            self.console.print(Panel(
+                "\n".join(l for l in lines if l),
+                border_style=_ACCENT,
+                padding=(1, 2),
+            ))
+
+        else:
+            self.console.print(f"  [{_DIM}]Plugin commands:[/{_DIM}]")
+            self.console.print(f"  [{_ACCENT}]/plugin list[/{_ACCENT}]              List installed plugins")
+            self.console.print(f"  [{_ACCENT}]/plugin install <repo>[/{_ACCENT}]    Install from GitHub (owner/repo)")
+            self.console.print(f"  [{_ACCENT}]/plugin install <path>[/{_ACCENT}]    Install from local directory")
+            self.console.print(f"  [{_ACCENT}]/plugin remove <name>[/{_ACCENT}]     Remove a plugin")
+            self.console.print(f"  [{_ACCENT}]/plugin enable <name>[/{_ACCENT}]     Enable a plugin")
+            self.console.print(f"  [{_ACCENT}]/plugin disable <name>[/{_ACCENT}]    Disable a plugin")
+            self.console.print(f"  [{_ACCENT}]/plugin info <name>[/{_ACCENT}]       Show plugin details")
+
     # ---- /plan ----
 
     def _cmd_plan(self) -> None:
@@ -456,6 +576,7 @@ class REPL:
             ("/plan", "Toggle read-only plan mode"),
             ("/clear", "Reset conversation"),
             ("/compact", "Compress conversation history"),
+            ("/plugin [cmd]", "Install, list, remove plugins"),
             ("/login", "Authenticate with Claude subscription"),
             ("/logout", "Clear stored credentials"),
             ("/help", "This help"),
