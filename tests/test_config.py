@@ -10,7 +10,7 @@ from clawpy.config.config import Config, detect_provider
 def test_config_defaults():
     cfg = Config()
     assert cfg.provider == "anthropic"
-    assert cfg.model == "claude-sonnet-4-20250514"
+    assert cfg.model == "claude-opus-4-6"
     assert cfg.max_tokens == 8192
     assert cfg.permission_mode == "default"
 

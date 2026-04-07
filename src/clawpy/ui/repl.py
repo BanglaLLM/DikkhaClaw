@@ -185,6 +185,9 @@ class REPL:
                 self._cmd_context()
             case "/status":
                 self._cmd_status()
+            case "/usage":
+                import asyncio
+                asyncio.get_event_loop().run_until_complete(self._cmd_usage())
             case "/compact":
                 self.console.print(f"[{_DIM}]Manual compact not yet implemented.[/{_DIM}]")
             case "/plan":
@@ -363,6 +366,56 @@ class REPL:
             padding=(1, 2),
         ))
 
+    # ---- /usage ----
+
+    async def _cmd_usage(self) -> None:
+        from clawpy.auth.usage import fetch_usage
+
+        self.console.print(f"  [{_DIM}]Fetching usage...[/{_DIM}]")
+        info = await fetch_usage()
+
+        if info.error:
+            self.console.print(f"  [red]{info.error}[/red]")
+            return
+
+        if not info.windows:
+            self.console.print(f"  [{_DIM}]No usage data available.[/{_DIM}]")
+            return
+
+        lines: list[str] = []
+        for w in info.windows:
+            pct = w.utilization
+            bar_w = 30
+            filled = int(bar_w * min(pct, 100) / 100)
+            if pct < 50:
+                color = "green"
+            elif pct < 80:
+                color = _ACCENT
+            else:
+                color = "red"
+            bar = f"[{color}]{'━' * filled}[/{color}][{_DIM}]{'╌' * (bar_w - filled)}[/{_DIM}]"
+            reset_text = f"resets in {w.resets_in}" if w.resets_at else ""
+            lines.append(f"  [{_ACCENT}]{w.label:<22}[/{_ACCENT}] {bar} {pct:.0f}%  [{_DIM}]{reset_text}[/{_DIM}]")
+
+        if info.extra and info.extra.enabled:
+            lines.append("")
+            ex = info.extra
+            if ex.monthly_limit is not None and ex.used_credits is not None:
+                lines.append(
+                    f"  [{_ACCENT}]{'Extra usage':<22}[/{_ACCENT}] "
+                    f"${ex.used_credits:.2f} / ${ex.monthly_limit:.2f}"
+                )
+            elif ex.utilization is not None:
+                lines.append(f"  [{_ACCENT}]{'Extra usage':<22}[/{_ACCENT}] {ex.utilization:.0f}% used")
+
+        self.console.print()
+        self.console.print(Panel(
+            "\n".join(lines),
+            title=f"[{_ACCENT} bold]Usage[/{_ACCENT} bold]",
+            border_style=_ACCENT,
+            padding=(1, 2),
+        ))
+
     # ---- /plan ----
 
     def _cmd_plan(self) -> None:
@@ -393,6 +446,7 @@ class REPL:
     def _cmd_help(self) -> None:
         commands = [
             ("/model [name]", "Pick a model or list all available"),
+            ("/usage", "Claude subscription usage & rate limits"),
             ("/status", "Session info, auth, usage stats"),
             ("/context", "Context window usage breakdown"),
             ("/plan", "Toggle read-only plan mode"),
