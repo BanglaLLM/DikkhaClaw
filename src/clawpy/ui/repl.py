@@ -85,7 +85,8 @@ class _SlashCompleter(Completer):
     _COMMANDS = [
         "/model", "/tasks", "/bg", "/fg", "/kill", "/usage", "/status",
         "/context", "/memory", "/dream", "/plan", "/clear", "/compact",
-        "/plugin", "/resume", "/login", "/logout", "/help", "/quit",
+        "/plugin", "/resume", "/agents", "/mcp", "/login", "/logout",
+        "/help", "/quit",
     ]
 
     def get_completions(self, document: Any, complete_event: Any) -> Any:
@@ -170,6 +171,9 @@ class REPL:
     def _on_agent_event(self, task_id: str, message: str) -> None:
         """Called when a background agent has an update."""
         self.console.print(f"  [{_DIM}][bg {task_id}][/{_DIM}] [{_ACCENT}]{message}[/{_ACCENT}]")
+        # Terminal bell on completion/failure
+        if "completed" in message or "failed" in message:
+            print("\a", end="", flush=True)
 
     async def run(self) -> None:
         cfg = self.engine.config
@@ -233,6 +237,12 @@ class REPL:
 
         try:
             result = await self.engine.run_turn(user_input, on_stream=on_stream)
+        except KeyboardInterrupt:
+            self.console.print(f"\n  [{_ACCENT}]Interrupted[/{_ACCENT}]")
+            return
+        except asyncio.CancelledError:
+            self.console.print(f"\n  [{_ACCENT}]Cancelled[/{_ACCENT}]")
+            return
         except Exception as e:
             self.console.print(f"\n[red]Error: {e}[/red]")
             return
@@ -312,6 +322,10 @@ class REPL:
                 from clawpy.auth.oauth import clear_tokens
                 clear_tokens()
                 self.console.print(f"[{_ACCENT}]Logged out.[/{_ACCENT}]")
+            case "/agents":
+                self._cmd_agents()
+            case "/mcp":
+                self._cmd_mcp()
             case "/help":
                 self._cmd_help()
             case _:
@@ -1005,6 +1019,49 @@ class REPL:
         except Exception as e:
             self.console.print(f"[red]Login failed: {e}[/red]")
 
+    # ---- /agents ----
+
+    def _cmd_agents(self) -> None:
+        """List custom agent definitions."""
+        from clawpy.agents.loader import discover_agents
+
+        agents = discover_agents(self.engine.config.work_dir)
+        if not agents:
+            self.console.print(f"  [{_DIM}]No custom agents found.[/{_DIM}]")
+            self.console.print(
+                f"  [{_DIM}]Create .clawpy/agents/<name>.md with YAML frontmatter + system prompt.[/{_DIM}]"
+            )
+            return
+
+        self.console.print()
+        for a in agents:
+            tools_str = f"  [{_DIM}]tools: {', '.join(a.tools)}[/{_DIM}]" if a.tools else ""
+            model_str = f"  [{_DIM}]model: {a.model}[/{_DIM}]" if a.model else ""
+            self.console.print(
+                f"  [{_ACCENT}]{a.name:<20}[/{_ACCENT}] {a.description}{tools_str}{model_str}"
+            )
+        self.console.print()
+
+    # ---- /mcp ----
+
+    def _cmd_mcp(self) -> None:
+        """Show MCP server configuration."""
+        from clawpy.mcp.client import load_mcp_configs
+
+        configs = load_mcp_configs(self.engine.config.work_dir)
+        if not configs:
+            self.console.print(f"  [{_DIM}]No MCP servers configured.[/{_DIM}]")
+            self.console.print(
+                f"  [{_DIM}]Create .clawpy/mcp.json or .mcp.json with server configs.[/{_DIM}]"
+            )
+            return
+
+        self.console.print()
+        for cfg in configs:
+            cmd = " ".join(cfg.command + cfg.args)
+            self.console.print(f"  [{_ACCENT}]{cfg.name:<20}[/{_ACCENT}] [{_DIM}]{cmd}[/{_DIM}]")
+        self.console.print()
+
     # ---- /help ----
 
     def _cmd_help(self) -> None:
@@ -1024,6 +1081,8 @@ class REPL:
             ("/compact", "Compress conversation history"),
             ("/resume", "Resume a previous session"),
             ("/plugin [cmd]", "Install, list, remove plugins"),
+            ("/agents", "List custom agent definitions"),
+            ("/mcp", "Show MCP server configuration"),
             ("/login", "Authenticate with Claude subscription"),
             ("/logout", "Clear stored credentials"),
             ("/help", "This help"),
