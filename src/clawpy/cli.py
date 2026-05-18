@@ -164,6 +164,9 @@ async def run_once(args: argparse.Namespace) -> None:
 
     engine = _build_engine(config)
 
+    import time as _time
+    start = _time.time()
+
     # Stream callback for terminal output
     text_buf = ""
 
@@ -177,9 +180,17 @@ async def run_once(args: argparse.Namespace) -> None:
 
     result = await engine.run_turn(prompt, on_stream=on_stream)
 
+    elapsed = _time.time() - start
+
     # Ensure we end with a newline
     if text_buf and not text_buf.endswith("\n"):
         print()
+
+    # Show timing
+    if result.usage.input_tokens > 0:
+        from clawpy.engine.cost import estimate_cost, format_cost
+        cost = estimate_cost(config.model, result.usage.input_tokens, result.usage.output_tokens)
+        print(f"\n  {elapsed:.1f}s  {result.usage.input_tokens}in {result.usage.output_tokens}out  {format_cost(cost)}", file=sys.stderr)
 
     if result.error:
         print(f"\nError: {result.error}", file=sys.stderr)

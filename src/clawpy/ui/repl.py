@@ -250,6 +250,7 @@ class REPL:
         if text_buf and not text_buf.endswith("\n"):
             print()
 
+        turn_elapsed = time.time() - turn_start
         self._total_input_tokens += result.usage.input_tokens
         self._total_output_tokens += result.usage.output_tokens
         self._turn_count += 1
@@ -262,8 +263,9 @@ class REPL:
                 result.usage.output_tokens,
             )
             self.console.print(
-                f"  [{_DIM}]{result.usage.input_tokens}in {result.usage.output_tokens}out"
-                f"  {format_cost(turn_cost)}[/{_DIM}]"
+                f"  [{_DIM}]{turn_elapsed:.1f}s  "
+                f"{result.usage.input_tokens}in {result.usage.output_tokens}out  "
+                f"{format_cost(turn_cost)}[/{_DIM}]"
             )
         print()
 
