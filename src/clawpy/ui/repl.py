@@ -169,8 +169,17 @@ class REPL:
         return await self.session.prompt_async("")
 
     def _on_agent_event(self, task_id: str, message: str) -> None:
-        """Called when a background agent has an update."""
-        self.console.print(f"  [{_DIM}][bg {task_id}][/{_DIM}] [{_ACCENT}]{message}[/{_ACCENT}]")
+        """Called when an agent (background or foregrounded) has an update."""
+        reg = self.engine.task_registry
+        task = reg.get(task_id)
+        is_fg = task and not task.is_background and reg.foreground_id == task_id
+
+        if is_fg:
+            # Foregrounded task — show without [bg] prefix
+            self.console.print(f"  [{_ACCENT}][{task_id}][/{_ACCENT}] {message}")
+        else:
+            self.console.print(f"  [{_DIM}][bg {task_id}][/{_DIM}] [{_ACCENT}]{message}[/{_ACCENT}]")
+
         # Terminal bell on completion/failure
         if "completed" in message or "failed" in message:
             print("\a", end="", flush=True)
@@ -581,8 +590,19 @@ class REPL:
                 f"{task.input_tokens + task.output_tokens:,} tokens | "
                 f"{task.tool_calls} tools[/{_DIM}]"
             )
-            if task.output:
-                self.console.print(f"\n  [{_DIM}]Output:[/{_DIM}]")
+
+            # Show live activity log
+            if task.log:
+                self.console.print(f"\n  [{_ACCENT}]Activity log:[/{_ACCENT}]")
+                # Show last 20 log entries
+                for entry in task.log[-20:]:
+                    self.console.print(f"  [{_DIM}]{entry}[/{_DIM}]")
+                if len(task.log) > 20:
+                    self.console.print(f"  [{_DIM}]... ({len(task.log)} total entries)[/{_DIM}]")
+
+            # Show final output for completed tasks
+            if task.output and task.is_done:
+                self.console.print(f"\n  [{_ACCENT}]Output:[/{_ACCENT}]")
                 for line in task.output[:2000].splitlines():
                     self.console.print(f"  {line}")
             if task.error:
@@ -633,7 +653,7 @@ class REPL:
                     )
 
     def _cmd_fg(self, args: str) -> None:
-        """Bring a background task to foreground."""
+        """Bring a background task to foreground — shows live log."""
         if not args.strip():
             self.console.print(f"  [{_DIM}]Usage: /fg <task_id>[/{_DIM}]")
             return
@@ -642,15 +662,32 @@ class REPL:
         if not task:
             self.console.print(f"  [{_DIM}]Task not found: {args.strip()}[/{_DIM}]")
             return
+
+        self.console.print(
+            f"  [{_ACCENT} bold][{task.task_id}][/{_ACCENT} bold] "
+            f"{task.description}  [{_DIM}]{task.elapsed:.0f}s[/{_DIM}]"
+        )
+
         if task.is_done:
-            # Just show output
-            self.console.print(f"  [{_ACCENT}][{task.task_id}] already {task.status.value}[/{_ACCENT}]")
+            # Show log + final output
+            if task.log:
+                self.console.print(f"\n  [{_ACCENT}]Activity log:[/{_ACCENT}]")
+                for entry in task.log:
+                    self.console.print(f"  [{_DIM}]{entry}[/{_DIM}]")
             if task.output:
-                for line in task.output[:2000].splitlines():
+                self.console.print(f"\n  [{_ACCENT}]Output:[/{_ACCENT}]")
+                for line in task.output[:3000].splitlines():
                     self.console.print(f"  {line}")
+            if task.error:
+                self.console.print(f"  [red]Error: {task.error}[/red]")
         else:
+            # Running: bring to foreground, show log so far
             reg.foreground(args.strip())
-            self.console.print(f"  [{_ACCENT}]Foregrounded [{args.strip()}][/{_ACCENT}]")
+            self.console.print(f"  [{_ACCENT}]Foregrounded — live updates below[/{_ACCENT}]")
+            if task.log:
+                for entry in task.log:
+                    self.console.print(f"  [{_DIM}]{entry}[/{_DIM}]")
+            self.console.print(f"  [{_DIM}]New events will appear as they happen...[/{_DIM}]")
 
     def _cmd_kill(self, args: str) -> None:
         """Kill a running task."""

@@ -39,6 +39,7 @@ class TaskState:
     input_tokens: int = 0
     output_tokens: int = 0
     tool_calls: int = 0
+    log: list[str] = field(default_factory=list)  # Live activity log
     _asyncio_task: asyncio.Task[Any] | None = field(default=None, repr=False)
 
     @property

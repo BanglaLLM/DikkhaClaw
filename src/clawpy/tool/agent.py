@@ -177,17 +177,27 @@ class AgentTool:
 
         try:
             tool_count = 0
+            text_buf = ""
 
             def on_stream(event: StreamEvent) -> None:
-                nonlocal tool_count
+                nonlocal tool_count, text_buf
                 if event.type == EventType.TOOL_START and event.tool_call:
                     tool_count += 1
                     task.tool_calls = tool_count
+                    log_entry = f">> {event.tool_call.name} ({task.elapsed:.0f}s)"
+                    task.log.append(log_entry)
                     if notify and task.is_background:
-                        notify(
-                            task.task_id,
-                            f">> {event.tool_call.name} ({task.elapsed:.0f}s)",
-                        )
+                        notify(task.task_id, log_entry)
+                elif event.type == EventType.DELTA and event.delta and event.delta.text:
+                    text_buf += event.delta.text
+                elif event.type == EventType.MESSAGE_STOP:
+                    if text_buf:
+                        # Log a preview of streamed text
+                        preview = text_buf[:100].replace("\n", " ")
+                        if len(text_buf) > 100:
+                            preview += "..."
+                        task.log.append(f"   {preview}")
+                        text_buf = ""
 
             result = await engine.run_turn(prompt, on_stream=on_stream)
 
