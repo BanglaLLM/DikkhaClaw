@@ -55,14 +55,13 @@ class TokenBudget:
 
     context_window: int
     continuation_count: int = 0
-    last_output_tokens: int = 0
+    last_turn_output: int = 0  # Output tokens from most recent turn only
     total_input_tokens: int = 0
     total_output_tokens: int = 0
 
     def record_turn(self, input_tokens: int, output_tokens: int) -> None:
         """Record token usage from a completed turn."""
-        delta = output_tokens - self.last_output_tokens if self.last_output_tokens > 0 else output_tokens
-        self.last_output_tokens = output_tokens
+        self.last_turn_output = output_tokens
         self.total_input_tokens += input_tokens
         self.total_output_tokens += output_tokens
         self.continuation_count += 1
@@ -72,7 +71,7 @@ class TokenBudget:
 
         Returns False when:
         1. Total tokens approach context window (90% threshold)
-        2. Diminishing returns detected (< 500 token delta after 3+ continuations)
+        2. Diminishing returns detected (< 500 output tokens per turn after 3+ continuations)
         """
         total = self.total_input_tokens + self.total_output_tokens
 
@@ -80,9 +79,9 @@ class TokenBudget:
         if total >= self.context_window * COMPLETION_THRESHOLD:
             return False
 
-        # Diminishing returns
+        # Diminishing returns — only after enough continuations
         if (self.continuation_count >= MIN_CONTINUATIONS_FOR_DIMINISHING
-                and self.last_output_tokens < DIMINISHING_THRESHOLD):
+                and self.last_turn_output < DIMINISHING_THRESHOLD):
             return False
 
         return True

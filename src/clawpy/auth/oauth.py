@@ -327,6 +327,11 @@ class OAuthFlow:
 
 async def refresh_tokens(tokens: OAuthTokens) -> OAuthTokens:
     """Refresh expired tokens."""
+    # Use inference-only scopes for refresh (org:create_api_key is console-only)
+    refresh_scopes = [s for s in tokens.scopes if s != "org:create_api_key"]
+    if not refresh_scopes:
+        refresh_scopes = ["user:profile", "user:inference"]
+
     async with httpx.AsyncClient(timeout=15) as client:
         resp = await client.post(
             TOKEN_URL,
@@ -334,7 +339,7 @@ async def refresh_tokens(tokens: OAuthTokens) -> OAuthTokens:
                 "grant_type": "refresh_token",
                 "refresh_token": tokens.refresh_token,
                 "client_id": CLIENT_ID,
-                "scope": " ".join(SCOPES),
+                "scope": " ".join(refresh_scopes),
             },
         )
         if resp.status_code != 200:

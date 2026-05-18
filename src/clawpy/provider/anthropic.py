@@ -77,15 +77,7 @@ class AnthropicProvider:
             tokens = load_tokens()
             if tokens is None:
                 return
-            if tokens.is_expired and tokens.refresh_token:
-                import asyncio
-                try:
-                    tokens = asyncio.get_event_loop().run_until_complete(
-                        refresh_tokens(tokens)
-                    )
-                except Exception:
-                    # Can't refresh synchronously in async context — will refresh lazily
-                    pass
+            # Don't try to refresh here (sync context) — _ensure_valid_token handles it lazily
             self._auth_token = tokens.access_token
         except Exception:
             pass
