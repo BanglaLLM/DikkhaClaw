@@ -5,6 +5,7 @@ Own visual identity — amber/orange theme, claw branding, unique layout.
 
 from __future__ import annotations
 
+import asyncio
 import time
 import uuid
 from typing import Any
