@@ -163,6 +163,100 @@ class REPL:
             work_dir=self.engine.config.work_dir,
         ))
 
+    async def _wait_with_keys(self, engine_task: asyncio.Task[Any], task: Any) -> bool:
+        """Wait for engine_task while listening for Ctrl+B and Ctrl+O.
+
+        Returns True if the task was backgrounded.
+        Ctrl+B twice within 1s → background
+        Ctrl+O → show log
+        """
+        import os
+        import sys
+
+        ctrl_b_time = 0.0
+
+        async def _key_reader() -> str:
+            """Read keys from stdin in a thread, return special key names."""
+            fd = sys.stdin.fileno()
+
+            def _read() -> str:
+                import select
+                import termios
+                import tty
+                old = termios.tcgetattr(fd)
+                try:
+                    tty.setcbreak(fd)  # cbreak = pass ctrl chars, no echo
+                    while True:
+                        r, _, _ = select.select([fd], [], [], 0.2)
+                        if r:
+                            ch = os.read(fd, 1)
+                            if ch == b'\x02':
+                                return "ctrl_b"
+                            elif ch == b'\x0f':
+                                return "ctrl_o"
+                            elif ch == b'\x03':
+                                return "ctrl_c"
+                finally:
+                    termios.tcsetattr(fd, termios.TCSADRAIN, old)
+                return ""
+
+            loop = asyncio.get_event_loop()
+            return await loop.run_in_executor(None, _read)
+
+        try:
+            key_task = asyncio.create_task(_key_reader())
+
+            while not engine_task.done():
+                done, _ = await asyncio.wait(
+                    {engine_task, key_task},
+                    timeout=0.5,
+                    return_when=asyncio.FIRST_COMPLETED,
+                )
+
+                if engine_task in done:
+                    key_task.cancel()
+                    return False
+
+                if key_task in done:
+                    try:
+                        key = key_task.result()
+                    except Exception:
+                        key = ""
+
+                    if key == "ctrl_b":
+                        now = time.time()
+                        if now - ctrl_b_time < 1.0:
+                            # Double Ctrl+B — background
+                            self.engine.task_registry.background(task.task_id)
+                            key_task.cancel()
+                            return True
+                        ctrl_b_time = now
+                        self.console.print(
+                            f"\n  [{_DIM}]Ctrl+B again to background[/{_DIM}]"
+                        )
+
+                    elif key == "ctrl_o":
+                        self.console.print(f"\n  [{_ACCENT}]Log [{task.task_id}]:[/{_ACCENT}]")
+                        if task.log:
+                            for entry in task.log[-10:]:
+                                self.console.print(f"  [{_DIM}]{entry}[/{_DIM}]")
+                        else:
+                            self.console.print(f"  [{_DIM}](no activity yet)[/{_DIM}]")
+
+                    elif key == "ctrl_c":
+                        engine_task.cancel()
+                        key_task.cancel()
+                        raise KeyboardInterrupt
+
+                    # Start listening for next key
+                    key_task = asyncio.create_task(_key_reader())
+
+            key_task.cancel()
+        except asyncio.CancelledError:
+            pass
+
+        return False
+
     async def _ask_permission(self, question: str) -> str:
         """Interactive permission prompt using prompt_toolkit."""
         self.console.print(f"  [yellow]{question}[/yellow]", end="")
@@ -219,45 +313,111 @@ class REPL:
             await self._run_turn(user_input)
 
     async def _run_turn(self, user_input: str) -> None:
-        text_buf = ""
+        """Run a turn as a detachable task.
+
+        Ctrl+B (double press): background the running turn
+        Ctrl+O: show activity log of running turn
+        """
         turn_start = time.time()
+        text_buf_ref: list[str] = [""]  # Use list for closure mutability
+
+        # Create a task entry for this turn
+        from clawpy.engine.tasks import TaskStatus
+        reg = self.engine.task_registry
+        task = reg.create(user_input[:50], background=False)
+        task.status = TaskStatus.RUNNING
 
         def on_stream(event: StreamEvent) -> None:
-            nonlocal text_buf
             elapsed = time.time() - turn_start
             match event.type:
                 case EventType.DELTA:
                     if event.delta and event.delta.text:
-                        text_buf += event.delta.text
-                        print(event.delta.text, end="", flush=True)
+                        text_buf_ref[0] += event.delta.text
+                        if not task.is_background:
+                            print(event.delta.text, end="", flush=True)
                 case EventType.TOOL_START:
                     if event.tool_call:
-                        if text_buf and not text_buf.endswith("\n"):
-                            print()
-                        self.console.print(
-                            f"  [{_ACCENT}]>> {event.tool_call.name}[/{_ACCENT}]"
-                            f"  [{_DIM}]{elapsed:.0f}s[/{_DIM}]"
-                        )
+                        log_entry = f">> {event.tool_call.name} ({elapsed:.0f}s)"
+                        task.log.append(log_entry)
+                        if not task.is_background:
+                            if text_buf_ref[0] and not text_buf_ref[0].endswith("\n"):
+                                print()
+                            self.console.print(
+                                f"  [{_ACCENT}]{log_entry}[/{_ACCENT}]"
+                            )
+                        elif self.engine.on_agent_event:
+                            self.engine.on_agent_event(task.task_id, log_entry)
                 case EventType.TOOL_END:
                     pass
                 case EventType.ERROR:
                     if event.error:
-                        self.console.print(f"[red]Error: {event.error}[/red]")
+                        task.log.append(f"ERROR: {event.error}")
+                        if not task.is_background:
+                            self.console.print(f"[red]Error: {event.error}[/red]")
 
+        # Run the turn as an asyncio.Task so it can be backgrounded
+        async def _engine_turn() -> Any:
+            return await self.engine.run_turn(user_input, on_stream=on_stream)
+
+        engine_task = asyncio.create_task(_engine_turn())
+        task._asyncio_task = engine_task
+
+        # Listen for Ctrl+B / Ctrl+O while turn runs
+        backgrounded = False
         try:
-            result = await self.engine.run_turn(user_input, on_stream=on_stream)
+            backgrounded = await self._wait_with_keys(engine_task, task)
         except KeyboardInterrupt:
+            engine_task.cancel()
             self.console.print(f"\n  [{_ACCENT}]Interrupted[/{_ACCENT}]")
+            reg.kill(task.task_id)
             return
+
+        if backgrounded:
+            # Turn was sent to background — add completion callback
+            def _on_bg_done(fut: asyncio.Task[Any]) -> None:
+                try:
+                    result = fut.result()
+                    task.output = text_buf_ref[0]
+                    task.input_tokens = result.usage.input_tokens
+                    task.output_tokens = result.usage.output_tokens
+                    reg.complete(task.task_id, output=task.output)
+                    tokens = result.usage.input_tokens + result.usage.output_tokens
+                    self.console.print(
+                        f"\n  [{_DIM}][bg {task.task_id}][/{_DIM}] "
+                        f"[{_ACCENT}]completed ({task.elapsed:.0f}s, {tokens:,} tokens)[/{_ACCENT}]"
+                    )
+                    print("\a", end="", flush=True)
+                except asyncio.CancelledError:
+                    reg.kill(task.task_id)
+                except Exception as e:
+                    reg.fail(task.task_id, str(e))
+
+            engine_task.add_done_callback(_on_bg_done)
+            self.console.print(
+                f"\n  [{_ACCENT}]Backgrounded [{task.task_id}][/{_ACCENT}] "
+                f"[{_DIM}]use /tasks or /fg {task.task_id}[/{_DIM}]"
+            )
+            return
+
+        # Turn completed in foreground
+        try:
+            result = engine_task.result()
         except asyncio.CancelledError:
             self.console.print(f"\n  [{_ACCENT}]Cancelled[/{_ACCENT}]")
+            reg.kill(task.task_id)
             return
         except Exception as e:
             self.console.print(f"\n[red]Error: {e}[/red]")
+            reg.fail(task.task_id, str(e))
             return
 
-        if text_buf and not text_buf.endswith("\n"):
+        if text_buf_ref[0] and not text_buf_ref[0].endswith("\n"):
             print()
+
+        task.output = text_buf_ref[0]
+        task.input_tokens = result.usage.input_tokens
+        task.output_tokens = result.usage.output_tokens
+        reg.complete(task.task_id, output=task.output)
 
         turn_elapsed = time.time() - turn_start
         self._total_input_tokens += result.usage.input_tokens
