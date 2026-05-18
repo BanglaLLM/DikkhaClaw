@@ -199,6 +199,34 @@ async def run_repl(args: argparse.Namespace) -> None:
         config.permission_mode = args.permission_mode
 
     engine = _build_engine(config)
+
+    # Handle --resume
+    if args.resume:
+        from clawpy.session.session import SessionStore
+        if args.resume == "__latest__":
+            sessions = SessionStore.list_sessions()
+            if sessions:
+                latest = sessions[-1]
+                store = SessionStore(latest.session_id)
+                messages = store.load_session()
+                if messages:
+                    engine.messages = messages
+                    engine.session_store = store
+                    print(f"Resumed session {latest.session_id[:8]} ({len(messages)} messages)")
+                else:
+                    print("Last session was empty, starting fresh.")
+            else:
+                print("No previous sessions found, starting fresh.")
+        else:
+            store = SessionStore(args.resume)
+            messages = store.load_session()
+            if messages:
+                engine.messages = messages
+                engine.session_store = store
+                print(f"Resumed session {args.resume[:8]} ({len(messages)} messages)")
+            else:
+                print(f"Session {args.resume} not found or empty, starting fresh.")
+
     repl = REPL(engine)
     await repl.run()
 
@@ -219,6 +247,10 @@ def main() -> None:
         help="Permission mode",
     )
     parser.add_argument("--version", action="version", version="clawpy 0.1.0")
+    parser.add_argument(
+        "--resume", nargs="?", const="__latest__", default=None, metavar="SESSION_ID",
+        help="Resume a previous session (latest if no ID given)",
+    )
 
     sub = parser.add_subparsers(dest="command")
 
