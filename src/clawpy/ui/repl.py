@@ -165,97 +165,15 @@ class REPL:
         ))
 
     async def _wait_with_keys(self, engine_task: asyncio.Task[Any], task: Any) -> bool:
-        """Wait for engine_task while listening for Ctrl+B and Ctrl+O.
+        """Wait for engine_task to finish. Returns False (no backgrounding mid-turn).
 
-        Returns True if the task was backgrounded.
-        Ctrl+B twice within 1s → background
-        Ctrl+O → show log
+        Use /bg <id> after Ctrl+C to background, /tasks to view log.
+        Raw stdin key capture conflicts with prompt_toolkit, so we keep it simple.
         """
-        import os
-        import sys
-
-        ctrl_b_time = 0.0
-
-        async def _key_reader() -> str:
-            """Read keys from stdin in a thread, return special key names."""
-            fd = sys.stdin.fileno()
-
-            def _read() -> str:
-                import select
-                import termios
-                import tty
-                old = termios.tcgetattr(fd)
-                try:
-                    tty.setcbreak(fd)  # cbreak = pass ctrl chars, no echo
-                    while True:
-                        r, _, _ = select.select([fd], [], [], 0.2)
-                        if r:
-                            ch = os.read(fd, 1)
-                            if ch == b'\x02':
-                                return "ctrl_b"
-                            elif ch == b'\x0f':
-                                return "ctrl_o"
-                            elif ch == b'\x03':
-                                return "ctrl_c"
-                finally:
-                    termios.tcsetattr(fd, termios.TCSADRAIN, old)
-                return ""
-
-            loop = asyncio.get_event_loop()
-            return await loop.run_in_executor(None, _read)
-
         try:
-            key_task = asyncio.create_task(_key_reader())
-
-            while not engine_task.done():
-                done, _ = await asyncio.wait(
-                    {engine_task, key_task},
-                    timeout=0.5,
-                    return_when=asyncio.FIRST_COMPLETED,
-                )
-
-                if engine_task in done:
-                    key_task.cancel()
-                    return False
-
-                if key_task in done:
-                    try:
-                        key = key_task.result()
-                    except Exception:
-                        key = ""
-
-                    if key == "ctrl_b":
-                        now = time.time()
-                        if now - ctrl_b_time < 1.0:
-                            # Double Ctrl+B — background
-                            self.engine.task_registry.background(task.task_id)
-                            key_task.cancel()
-                            return True
-                        ctrl_b_time = now
-                        self.console.print(
-                            f"\n  [{_DIM}]Ctrl+B again to background[/{_DIM}]"
-                        )
-
-                    elif key == "ctrl_o":
-                        self.console.print(f"\n  [{_ACCENT}]Log [{task.task_id}]:[/{_ACCENT}]")
-                        if task.log:
-                            for entry in task.log[-10:]:
-                                self.console.print(f"  [{_DIM}]{entry}[/{_DIM}]")
-                        else:
-                            self.console.print(f"  [{_DIM}](no activity yet)[/{_DIM}]")
-
-                    elif key == "ctrl_c":
-                        engine_task.cancel()
-                        key_task.cancel()
-                        raise KeyboardInterrupt
-
-                    # Start listening for next key
-                    key_task = asyncio.create_task(_key_reader())
-
-            key_task.cancel()
+            await engine_task
         except asyncio.CancelledError:
-            pass
-
+            raise KeyboardInterrupt
         return False
 
     async def _ask_permission(self, question: str) -> str:
