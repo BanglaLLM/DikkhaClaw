@@ -38,7 +38,15 @@ _OAUTH_BETAS = [
     "interleaved-thinking-2025-05-14",
     "prompt-caching-scope-2026-01-05",
     "effort-2025-11-24",
+    "web-search-2025-03-05",
 ]
+
+# Server-side tool for web search (handled by Anthropic, not locally)
+_WEB_SEARCH_TOOL: dict[str, Any] = {
+    "type": "web_search_20250305",
+    "name": "web_search",
+    "max_uses": 5,
+}
 
 _STOP_MAP: dict[str | None, StopReason] = {
     "end_turn": StopReason.END_TURN,
@@ -138,8 +146,13 @@ class AnthropicProvider:
         if system_parts:
             body["system"] = system_parts
 
+        # Tools: user-defined + server-side web search
+        tools_list: list[dict[str, Any]] = []
         if request.tools:
-            body["tools"] = self._convert_tools(request.tools)
+            tools_list.extend(self._convert_tools(request.tools))
+        tools_list.append(_WEB_SEARCH_TOOL)
+        body["tools"] = tools_list
+
         if request.temperature is not None:
             body["temperature"] = request.temperature
         if request.stop_sequences:
@@ -288,6 +301,16 @@ class AnthropicProvider:
                     active_tool_calls[index] = tc
                     tool_json_bufs[index] = ""
                     return StreamEvent(type=EventType.TOOL_START, tool_call=tc)
+                elif block_type == "server_tool_use":
+                    # Server-side tool (web_search) — show as a tool call
+                    name = block.get("name", "web_search")
+                    return StreamEvent(
+                        type=EventType.DELTA,
+                        delta=Delta(text=f"\n[searching the web...]\n"),
+                    )
+                elif block_type == "web_search_tool_result":
+                    # Web search results — will be followed by text with citations
+                    return None
                 elif block_type == "thinking":
                     return StreamEvent(type=EventType.DELTA, delta=Delta())
                 else:
