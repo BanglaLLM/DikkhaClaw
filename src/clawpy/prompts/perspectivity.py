@@ -59,26 +59,47 @@ def build_perspectivity_prompt(context_type: str | None = None, context_data: di
     prompt = SYSTEM_PROMPT
 
     if context_type == "article" and context_data:
+        context_id = context_data.get("context_id", "")
         title = context_data.get("title", "")
         sources = context_data.get("sources", [])
-        prompt += f"""
-## Current Context
-The user is viewing a specific article:
-- **Title:** {title}
-- **Sources:** {', '.join(str(s) for s in sources[:5])}
+        category = context_data.get("category", "")
 
-Focus your answers on this article and its related coverage. Use `get_article_detail` \
-or `compare_sources` with the event_id to get full details.
-"""
+        prompt += "\n## Current Context\n"
+        prompt += "The user is viewing a specific article/event.\n"
+
+        if title:
+            prompt += f"- **Title:** {title}\n"
+        if category:
+            prompt += f"- **Category:** {category}\n"
+        if sources:
+            prompt += f"- **Sources:** {', '.join(str(s) for s in sources[:5])}\n"
+        if context_id:
+            prompt += f"- **Event ID:** {context_id}\n"
+
+        prompt += (
+            "\nFocus your answers on this article and its related coverage. "
+        )
+        if context_id:
+            prompt += (
+                f"Use `get_article_detail` with event_id \"{context_id}\" to fetch full details. "
+                f"Use `compare_sources` with the same event_id to show how different outlets covered it."
+            )
+        elif not title:
+            prompt += "Ask the user which article they'd like to explore."
+        prompt += "\n"
 
     elif context_type == "rumor" and context_data:
         claim = context_data.get("claim", "")
-        prompt += f"""
-## Current Context
-The user is asking about a specific claim/rumor:
-- **Claim:** {claim}
-
-Use `run_fact_check` to verify this claim, then provide a clear verdict with evidence.
-"""
+        context_id = context_data.get("context_id", "")
+        prompt += "\n## Current Context\n"
+        prompt += "The user is asking about a specific claim/rumor.\n"
+        if claim:
+            prompt += f"- **Claim:** {claim}\n"
+        if context_id:
+            prompt += f"- **Reference ID:** {context_id}\n"
+        prompt += (
+            "\nUse `run_fact_check` to verify this claim, "
+            "then provide a clear verdict with evidence.\n"
+        )
 
     return prompt

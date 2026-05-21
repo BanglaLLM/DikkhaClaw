@@ -100,6 +100,8 @@ def _get_server_config() -> Config:
 
 async def get_or_create_engine(session_id: str | None = None) -> tuple[str, Engine]:
     """Get an existing engine or create a new one for a session."""
+    from clawpy.session.session import SessionStore
+
     sid = session_id or str(uuid.uuid4())
 
     if sid in _engines:
@@ -124,6 +126,15 @@ async def get_or_create_engine(session_id: str | None = None) -> tuple[str, Engi
 
     from clawpy.prompts.perspectivity import build_perspectivity_prompt
     engine.set_system_prompt(build_perspectivity_prompt())
+
+    store = SessionStore(sid)
+    previous = store.load_session()
+    if previous:
+        engine.messages = previous
+        logger.info("Resumed session '%s' with %d messages", sid, len(previous))
+    else:
+        store.save_meta(config.model, config.work_dir)
+    engine.session_store = store
 
     _engines[sid] = engine
     return sid, engine
@@ -180,6 +191,7 @@ class ChatRequest(BaseModel):
     session_id: str | None = None
     context_type: str | None = None
     context_id: str | None = None
+    context_data: dict | None = None
 
 
 class SuggestionsResponse(BaseModel):
@@ -207,9 +219,12 @@ async def chat_stream(req: ChatRequest):
 
     if req.context_type and req.context_type != "global":
         from clawpy.prompts.perspectivity import build_perspectivity_prompt
+        ctx = req.context_data or {}
+        if req.context_id:
+            ctx["context_id"] = req.context_id
         engine.set_system_prompt(build_perspectivity_prompt(
             context_type=req.context_type,
-            context_data={"context_id": req.context_id} if req.context_id else None,
+            context_data=ctx or None,
         ))
 
     tools_called: list[str] = []
