@@ -66,12 +66,13 @@ class TokenBudget:
         self.total_output_tokens += output_tokens
         self.continuation_count += 1
 
-    def should_continue(self) -> bool:
+    def should_continue(self, has_tool_calls: bool = False) -> bool:
         """Check if we should continue the agentic loop.
 
         Returns False when:
         1. Total tokens approach context window (90% threshold)
         2. Diminishing returns detected (< 500 output tokens per turn after 3+ continuations)
+           — skipped when the turn produced tool calls, since tool call output is intentionally small
         """
         total = self.total_input_tokens + self.total_output_tokens
 
@@ -79,8 +80,9 @@ class TokenBudget:
         if total >= self.context_window * COMPLETION_THRESHOLD:
             return False
 
-        # Diminishing returns — only after enough continuations
-        if (self.continuation_count >= MIN_CONTINUATIONS_FOR_DIMINISHING
+        # Diminishing returns — only after enough continuations, skip for tool-calling turns
+        if (not has_tool_calls
+                and self.continuation_count >= MIN_CONTINUATIONS_FOR_DIMINISHING
                 and self.last_turn_output < DIMINISHING_THRESHOLD):
             return False
 

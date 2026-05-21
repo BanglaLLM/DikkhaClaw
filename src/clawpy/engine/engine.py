@@ -169,7 +169,7 @@ class Engine:
                 )
 
             # Token budget check after tool use decision
-            if not budget.should_continue():
+            if not budget.should_continue(has_tool_calls=bool(tool_calls)):
                 logger.info("Token budget exhausted, ending turn")
                 return TurnResult(
                     messages=self.messages,

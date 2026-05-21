@@ -189,6 +189,40 @@ class MCPClient:
             pass
 
 
+class MCPToolWrapper:
+    """Wraps an MCP server tool as a ClawPy Tool for the ToolRegistry."""
+
+    def __init__(self, client: MCPClient, spec: ToolSpec) -> None:
+        self._client = client
+        self._spec = spec
+
+    @property
+    def name(self) -> str:
+        return self._spec.name
+
+    @property
+    def description(self) -> str:
+        return self._spec.description
+
+    def input_schema(self) -> dict[str, Any]:
+        return self._spec.input_schema
+
+    def permission_for(self, input: dict[str, Any]) -> Any:
+        from clawpy.tool.base import Permission
+        return Permission.SHELL_SAFE
+
+    def is_read_only(self, input: dict[str, Any]) -> bool:
+        return False
+
+    async def run(self, input: dict[str, Any], ctx: Any) -> Any:
+        from clawpy.tool.base import ToolResult
+        try:
+            result = await self._client.call_tool(self._spec.name, input)
+            return ToolResult(content=result)
+        except Exception as e:
+            return ToolResult(content=f"MCP tool error: {e}", is_error=True)
+
+
 def load_mcp_configs(work_dir: str) -> list[MCPServerConfig]:
     """Load MCP server configs from .clawpy/mcp.json or .mcp.json."""
     configs: list[MCPServerConfig] = []
