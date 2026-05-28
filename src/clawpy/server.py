@@ -282,6 +282,95 @@ async def get_suggestions():
     ])
 
 
+class QueryRequest(BaseModel):
+    """Simple non-streaming LLM query — no agentic loop, no tools."""
+    prompt: str
+    system_prompt: str | None = None
+    model: str | None = None
+    provider: str | None = None
+    max_tokens: int = 8192
+    temperature: float | None = None
+    fallback_models: list[str] | None = None
+
+
+@app.post("/orchestrator/query")
+async def simple_query(req: QueryRequest):
+    """Direct LLM call — fast, no tools, no agentic loop.
+
+    Use for batch pipeline tasks: content extraction, summarization,
+    selector generation, classification, etc.
+
+    Supports provider/model override and automatic fallback chain.
+    """
+    import time as _time
+    from clawpy.provider.base import Request as ProviderRequest
+    from clawpy.types import ContentType, Role, text_message
+
+    models_to_try = []
+    if req.model:
+        models_to_try.append((req.provider, req.model))
+    else:
+        models_to_try.append((None, None))
+
+    if req.fallback_models:
+        for fm in req.fallback_models:
+            if ":" in fm:
+                p, m = fm.split(":", 1)
+                models_to_try.append((p, m))
+            else:
+                models_to_try.append((None, fm))
+
+    last_error = None
+    for provider_name, model_name in models_to_try:
+        try:
+            cfg = _get_server_config()
+            if provider_name:
+                cfg.provider = provider_name
+            if model_name:
+                cfg.model = model_name
+
+            provider = _create_provider(cfg)
+            target_model = model_name or cfg.model
+
+            messages = [text_message(Role.USER, req.prompt)]
+
+            provider_req = ProviderRequest(
+                model=target_model,
+                system=req.system_prompt or "",
+                messages=messages,
+                tools=[],
+                max_tokens=req.max_tokens,
+                temperature=req.temperature,
+            )
+
+            start = _time.time()
+            response = await provider.send(provider_req)
+            elapsed = _time.time() - start
+
+            content = ""
+            for block in response.content:
+                if block.type == ContentType.TEXT:
+                    content += block.text
+
+            return {
+                "success": True,
+                "content": content,
+                "model": target_model,
+                "provider": provider_name or cfg.provider,
+                "input_tokens": response.usage.input_tokens,
+                "output_tokens": response.usage.output_tokens,
+                "execution_time": round(elapsed, 2),
+            }
+        except Exception as e:
+            last_error = str(e)
+            prov = provider_name or "default"
+            mod = model_name or "default"
+            logger.warning(f"Query failed ({prov}/{mod}): {last_error}")
+            continue
+
+    return {"success": False, "error": last_error or "All models failed", "content": ""}
+
+
 @app.get("/orchestrator/health")
 async def health():
     return {"status": "ok", "engines": len(_engines)}

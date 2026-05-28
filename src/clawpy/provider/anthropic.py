@@ -146,12 +146,13 @@ class AnthropicProvider:
         if system_parts:
             body["system"] = system_parts
 
-        # Tools: user-defined + server-side web search
+        # Tools: user-defined + server-side web search (skip web search for tool-free queries)
         tools_list: list[dict[str, Any]] = []
         if request.tools:
             tools_list.extend(self._convert_tools(request.tools))
-        tools_list.append(_WEB_SEARCH_TOOL)
-        body["tools"] = tools_list
+            tools_list.append(_WEB_SEARCH_TOOL)
+        if tools_list:
+            body["tools"] = tools_list
 
         if request.temperature is not None:
             body["temperature"] = request.temperature
