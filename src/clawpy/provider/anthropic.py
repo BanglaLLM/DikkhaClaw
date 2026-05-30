@@ -7,8 +7,11 @@ Converts between neutral types and Anthropic's native API format.
 from __future__ import annotations
 
 import json
+import logging
 import os
 from typing import Any, AsyncIterator
+
+logger = logging.getLogger(__name__)
 
 import httpx
 
@@ -71,12 +74,28 @@ class AnthropicProvider:
     def __init__(self, cfg: ProviderConfig) -> None:
         self._api_key = cfg.api_key or os.environ.get("ANTHROPIC_API_KEY", "")
         self._auth_token: str = ""  # OAuth access token (Claude subscription)
+        self._account_pool = None  # Multi-account pool (claude-swap integration)
         self._base_url = (cfg.base_url or _DEFAULT_BASE_URL).rstrip("/")
         self._client = httpx.AsyncClient(timeout=httpx.Timeout(300.0, connect=10.0))
 
-        # If no API key, try OAuth tokens
+        # If no API key, try account pool first, then single OAuth
         if not self._api_key:
-            self._try_load_oauth()
+            self._try_load_pool()
+            if not self._auth_token:
+                self._try_load_oauth()
+
+    def _try_load_pool(self) -> None:
+        """Try to load multi-account pool from claude-swap."""
+        try:
+            from clawpy.auth.account_pool import get_pool
+            pool = get_pool()
+            if pool.available_accounts:
+                self._account_pool = pool
+                self._auth_token = pool.get_best_token() or ""
+                if self._auth_token:
+                    logger.info(f"Using account pool ({len(pool.available_accounts)} accounts)")
+        except Exception as e:
+            logger.debug(f"Account pool not available: {e}")
 
     def _try_load_oauth(self) -> None:
         """Try to load OAuth tokens from stored credentials."""
@@ -85,20 +104,38 @@ class AnthropicProvider:
             tokens = load_tokens()
             if tokens is None:
                 return
-            # Don't try to refresh here (sync context) — _ensure_valid_token handles it lazily
             self._auth_token = tokens.access_token
         except Exception:
             pass
 
     async def _ensure_valid_token(self) -> None:
-        """Refresh OAuth token if expired."""
+        """Refresh OAuth token — uses pool rotation if available."""
         if not self._auth_token:
             return
+        if self._account_pool:
+            # Pool handles rotation — just get the best token
+            best = self._account_pool.get_best_token()
+            if best:
+                self._auth_token = best
+            return
+        # Single account — refresh if expired
         from clawpy.auth.oauth import load_tokens, refresh_tokens
         tokens = load_tokens()
         if tokens and tokens.is_expired and tokens.refresh_token:
             tokens = await refresh_tokens(tokens)
             self._auth_token = tokens.access_token
+
+    def _handle_rate_limit(self) -> bool:
+        """Handle 429 by switching to next account. Returns True if switched."""
+        if not self._account_pool:
+            return False
+        self._account_pool.mark_rate_limited(self._auth_token, cooldown_seconds=300)
+        next_token = self._account_pool.get_next_token(self._auth_token)
+        if next_token:
+            self._auth_token = next_token
+            logger.info("Switched to next account after rate limit")
+            return True
+        return False
 
     @property
     def name(self) -> str:
@@ -244,6 +281,36 @@ class AnthropicProvider:
             json=body,
             headers=self._headers(),
         ) as resp:
+            if resp.status_code == 429 and self._handle_rate_limit():
+                pass  # Fall through to retry below
+            elif resp.status_code != 200:
+                error_body = await resp.aread()
+                yield StreamEvent(
+                    type=EventType.ERROR,
+                    error=RuntimeError(
+                        f"Anthropic API error {resp.status_code}: {error_body.decode()}"
+                    ),
+                )
+                return
+            else:
+                async for event_type, data in parse_sse_with_event(resp):
+                    ev = self._map_event(
+                        data, active_tool_calls, tool_json_bufs, block_index
+                    )
+                    if ev is not None:
+                        if data.get("type") == "content_block_start":
+                            block_index = data.get("index", block_index + 1)
+                        yield ev
+                return
+
+        # Retry with alternate account after 429
+        logger.info("Retrying stream with alternate account after 429")
+        async with self._client.stream(
+            "POST",
+            f"{self._base_url}/v1/messages",
+            json=body,
+            headers=self._headers(),
+        ) as resp:
             if resp.status_code != 200:
                 error_body = await resp.aread()
                 yield StreamEvent(
@@ -379,7 +446,7 @@ class AnthropicProvider:
         return None
 
     async def send(self, request: Request) -> Response:
-        """Non-streaming request."""
+        """Non-streaming request with automatic account rotation on 429."""
         await self._ensure_valid_token()
         body = self._build_body(request)
 
@@ -388,6 +455,16 @@ class AnthropicProvider:
             json=body,
             headers=self._headers(),
         )
+
+        # On 429, try switching account and retry once
+        if resp.status_code == 429 and self._handle_rate_limit():
+            logger.info("Retrying with alternate account after 429")
+            resp = await self._client.post(
+                f"{self._base_url}/v1/messages",
+                json=body,
+                headers=self._headers(),
+            )
+
         resp.raise_for_status()
         data = resp.json()
 

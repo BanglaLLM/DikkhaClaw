@@ -392,6 +392,17 @@ async def health():
     return {"status": "ok", "engines": len(_engines)}
 
 
+@app.get("/orchestrator/accounts")
+async def account_status():
+    """Show account pool status — which accounts are available, rate-limited, etc."""
+    try:
+        from clawpy.auth.account_pool import get_pool
+        pool = get_pool()
+        return pool.get_status()
+    except Exception as e:
+        return {"error": str(e), "total_accounts": 0}
+
+
 def main():
     """Run the server with uvicorn."""
     import uvicorn
