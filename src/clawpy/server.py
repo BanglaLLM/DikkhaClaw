@@ -26,6 +26,9 @@ from clawpy.tool.registry import ToolRegistry
 
 logger = logging.getLogger("clawpy.server")
 
+# Concurrency limiter — subscription rate limits are tight
+_query_semaphore = asyncio.Semaphore(2)
+
 # ── Engine factory ─────────────────────────────────────────────────────────
 
 _engines: dict[str, Engine] = {}
@@ -302,10 +305,6 @@ async def simple_query(req: QueryRequest):
 
     Supports provider/model override and automatic fallback chain.
     """
-    import time as _time
-    from clawpy.provider.base import Request as ProviderRequest
-    from clawpy.types import ContentType, Role, text_message
-
     models_to_try = []
     if req.model:
         models_to_try.append((req.provider, req.model))
@@ -320,53 +319,70 @@ async def simple_query(req: QueryRequest):
             else:
                 models_to_try.append((None, fm))
 
+    async with _query_semaphore:
+        return await _execute_query(req, models_to_try)
+
+
+async def _execute_query(req: QueryRequest, models_to_try: list):
+    import time as _time
+    from clawpy.provider.base import Request as ProviderRequest
+    from clawpy.types import ContentType, Role, text_message
+
     last_error = None
     for provider_name, model_name in models_to_try:
-        try:
-            cfg = _get_server_config()
-            if provider_name:
-                cfg.provider = provider_name
-            if model_name:
-                cfg.model = model_name
+        cfg = _get_server_config()
+        if provider_name:
+            cfg.provider = provider_name
+        if model_name:
+            cfg.model = model_name
 
-            provider = _create_provider(cfg)
-            target_model = model_name or cfg.model
+        provider = _create_provider(cfg)
+        target_model = model_name or cfg.model
 
-            messages = [text_message(Role.USER, req.prompt)]
+        messages = [text_message(Role.USER, req.prompt)]
 
-            provider_req = ProviderRequest(
-                model=target_model,
-                system=req.system_prompt or "",
-                messages=messages,
-                tools=[],
-                max_tokens=req.max_tokens,
-                temperature=req.temperature,
-            )
+        provider_req = ProviderRequest(
+            model=target_model,
+            system=req.system_prompt or "",
+            messages=messages,
+            tools=[],
+            max_tokens=req.max_tokens,
+            temperature=req.temperature,
+        )
 
-            start = _time.time()
-            response = await provider.send(provider_req)
-            elapsed = _time.time() - start
+        # Retry with exponential backoff for rate limits (429)
+        max_retries = 5
+        for attempt in range(max_retries):
+            try:
+                start = _time.time()
+                response = await provider.send(provider_req)
+                elapsed = _time.time() - start
 
-            content = ""
-            for block in response.content:
-                if block.type == ContentType.TEXT:
-                    content += block.text
+                content = ""
+                for block in response.content:
+                    if block.type == ContentType.TEXT:
+                        content += block.text
 
-            return {
-                "success": True,
-                "content": content,
-                "model": target_model,
-                "provider": provider_name or cfg.provider,
-                "input_tokens": response.usage.input_tokens,
-                "output_tokens": response.usage.output_tokens,
-                "execution_time": round(elapsed, 2),
-            }
-        except Exception as e:
-            last_error = str(e)
-            prov = provider_name or "default"
-            mod = model_name or "default"
-            logger.warning(f"Query failed ({prov}/{mod}): {last_error}")
-            continue
+                return {
+                    "success": True,
+                    "content": content,
+                    "model": target_model,
+                    "provider": provider_name or cfg.provider,
+                    "input_tokens": response.usage.input_tokens,
+                    "output_tokens": response.usage.output_tokens,
+                    "execution_time": round(elapsed, 2),
+                }
+            except Exception as e:
+                last_error = str(e)
+                if "429" in str(e) and attempt < max_retries - 1:
+                    wait = 2 ** attempt * 10  # 10s, 20s, 40s, 80s, 160s
+                    logger.info(f"Rate limited, retrying in {wait}s (attempt {attempt + 1}/{max_retries})")
+                    await asyncio.sleep(wait)
+                    continue
+                prov = provider_name or "default"
+                mod = model_name or "default"
+                logger.warning(f"Query failed ({prov}/{mod}): {last_error}")
+                break
 
     return {"success": False, "error": last_error or "All models failed", "content": ""}
 
