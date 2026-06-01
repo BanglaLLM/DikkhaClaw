@@ -86,37 +86,59 @@ class AccountPool:
             return
 
         accounts_meta = sequence.get("accounts", {})
+        active_slot = sequence.get("activeAccountNumber")
         usage_data = self._load_usage_cache()
+
+        # Also read the live credentials (always fresh for active account)
+        live_oauth = {}
+        live_creds_path = Path.home() / ".claude" / ".credentials.json"
+        try:
+            if live_creds_path.exists():
+                live_data = json.loads(live_creds_path.read_text())
+                live_oauth = live_data.get("claudeAiOauth", {})
+        except Exception:
+            pass
 
         for slot_str, meta in accounts_meta.items():
             slot = int(slot_str)
             email = meta.get("email", f"account-{slot}")
-            cred_file = _CREDS_DIR / f".creds-{slot}-{email}.enc"
 
-            if not cred_file.exists():
-                logger.warning(f"Credential file missing for slot {slot}: {cred_file}")
+            # For the active account, prefer live credentials (auto-refreshed)
+            if slot == active_slot and live_oauth.get("accessToken"):
+                oauth = live_oauth
+            else:
+                cred_file = _CREDS_DIR / f".creds-{slot}-{email}.enc"
+                if not cred_file.exists():
+                    logger.warning(f"Credential file missing for slot {slot}: {cred_file}")
+                    continue
+                try:
+                    raw = base64.b64decode(cred_file.read_text())
+                    creds = json.loads(raw)
+                    oauth = creds.get("claudeAiOauth", {})
+                except Exception as e:
+                    logger.error(f"Failed to load credentials for slot {slot}: {e}")
+                    continue
+
+            account = Account(
+                slot=slot,
+                email=email,
+                access_token=oauth.get("accessToken", ""),
+                refresh_token=oauth.get("refreshToken", ""),
+                expires_at=oauth.get("expiresAt", 0),
+            )
+
+            # Skip expired tokens
+            if account.is_expired:
+                logger.warning(f"Skipping account {slot} ({email}): token expired")
                 continue
 
-            try:
-                raw = base64.b64decode(cred_file.read_text())
-                creds = json.loads(raw)
-                oauth = creds.get("claudeAiOauth", {})
+            # Load usage stats from cache
+            slot_usage = usage_data.get(slot_str, {})
+            account.five_hour_pct = slot_usage.get("five_hour", {}).get("pct", 0.0)
+            account.seven_day_pct = slot_usage.get("seven_day", {}).get("pct", 0.0)
 
-                account = Account(
-                    slot=slot,
-                    email=email,
-                    access_token=oauth.get("accessToken", ""),
-                    refresh_token=oauth.get("refreshToken", ""),
-                    expires_at=oauth.get("expiresAt", 0),
-                )
-
-                # Load usage stats from cache
-                slot_usage = usage_data.get(slot_str, {})
-                account.five_hour_pct = slot_usage.get("five_hour", {}).get("pct", 0.0)
-                account.seven_day_pct = slot_usage.get("seven_day", {}).get("pct", 0.0)
-
-                if account.access_token:
-                    self._accounts.append(account)
+            if account.access_token:
+                self._accounts.append(account)
                     logger.info(f"Loaded account {slot}: {email} (5h: {account.five_hour_pct}%, 7d: {account.seven_day_pct}%)")
 
             except Exception as e:
