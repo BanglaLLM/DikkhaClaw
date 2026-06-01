@@ -62,10 +62,19 @@ class AccountPool:
     def __init__(self):
         self._accounts: list[Account] = []
         self._current_idx: int = 0
+        self._last_reload: float = 0.0
         self._load_accounts()
+
+    def _maybe_reload(self):
+        """Reload credentials from disk every 30 min to pick up refreshed tokens."""
+        if time.time() - self._last_reload > 1800:
+            logger.info("Reloading account credentials from claude-swap")
+            self._accounts.clear()
+            self._load_accounts()
 
     def _load_accounts(self):
         """Load all accounts from claude-swap credential store."""
+        self._last_reload = time.time()
         if not _SEQUENCE_FILE.exists():
             logger.warning("claude-swap not configured — no sequence.json found")
             return
@@ -142,6 +151,7 @@ class AccountPool:
 
     def get_best_token(self) -> Optional[str]:
         """Get the access token for the account with most headroom."""
+        self._maybe_reload()
         available = self.available_accounts
         if not available:
             # All rate limited — return the one that recovers soonest
@@ -170,6 +180,13 @@ class AccountPool:
                 account.rate_limited_until = time.time() + cooldown_seconds
                 logger.warning(f"Account {account.email} rate-limited for {cooldown_seconds}s")
                 break
+
+    def mark_unauthorized(self, token: str):
+        """Handle 401 — token expired. Force reload credentials from disk."""
+        logger.warning("Got 401, forcing credential reload from claude-swap")
+        self._last_reload = 0  # Force reload on next get_best_token()
+        self._accounts.clear()
+        self._load_accounts()
 
     def get_status(self) -> dict:
         """Get pool status for monitoring."""

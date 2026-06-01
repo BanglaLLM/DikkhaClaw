@@ -137,6 +137,18 @@ class AnthropicProvider:
             return True
         return False
 
+    def _handle_unauthorized(self) -> bool:
+        """Handle 401 by reloading tokens from disk. Returns True if refreshed."""
+        if not self._account_pool:
+            return False
+        self._account_pool.mark_unauthorized(self._auth_token)
+        new_token = self._account_pool.get_best_token()
+        if new_token and new_token != self._auth_token:
+            self._auth_token = new_token
+            logger.info("Reloaded tokens after 401 Unauthorized")
+            return True
+        return False
+
     @property
     def name(self) -> str:
         return "anthropic"
@@ -459,6 +471,15 @@ class AnthropicProvider:
         # On 429, try switching account and retry once
         if resp.status_code == 429 and self._handle_rate_limit():
             logger.info("Retrying with alternate account after 429")
+            resp = await self._client.post(
+                f"{self._base_url}/v1/messages",
+                json=body,
+                headers=self._headers(),
+            )
+
+        # On 401, reload tokens from disk and retry
+        if resp.status_code == 401 and self._handle_unauthorized():
+            logger.info("Retrying with refreshed token after 401")
             resp = await self._client.post(
                 f"{self._base_url}/v1/messages",
                 json=body,
