@@ -192,6 +192,7 @@ except ImportError:
 class ChatRequest(BaseModel):
     message: str
     session_id: str | None = None
+    system_prompt: str | None = None
     context_type: str | None = None
     context_id: str | None = None
     context_data: dict | None = None
@@ -220,7 +221,9 @@ async def chat_stream(req: ChatRequest):
     """Stream a chat response as SSE events."""
     session_id, engine = await get_or_create_engine(req.session_id)
 
-    if req.context_type and req.context_type != "global":
+    if req.system_prompt:
+        engine.set_system_prompt(req.system_prompt)
+    elif req.context_type and req.context_type != "global":
         from clawpy.prompts.perspectivity import build_perspectivity_prompt
         ctx = req.context_data or {}
         if req.context_id:
