@@ -285,13 +285,35 @@ async def get_suggestions():
     ])
 
 
+MODEL_MAX_OUTPUT_TOKENS = {
+    "claude-opus-4-8": 128000,
+    "claude-opus-4-7": 128000,
+    "claude-opus-4-6": 128000,
+    "claude-sonnet-4-6": 64000,
+    "claude-sonnet-4-5-20250929": 64000,
+    "claude-haiku-4-5-20251001": 64000,
+}
+
+
+def _resolve_max_tokens(model: str | None, requested: int | None) -> int:
+    """Use the model's actual max if no explicit limit requested."""
+    if requested and requested > 0:
+        return requested
+    if model and model in MODEL_MAX_OUTPUT_TOKENS:
+        return MODEL_MAX_OUTPUT_TOKENS[model]
+    for key, val in MODEL_MAX_OUTPUT_TOKENS.items():
+        if model and key.startswith(model):
+            return val
+    return 64000
+
+
 class QueryRequest(BaseModel):
     """Simple non-streaming LLM query — no agentic loop, no tools."""
     prompt: str
     system_prompt: str | None = None
     model: str | None = None
     provider: str | None = None
-    max_tokens: int = 8192
+    max_tokens: int | None = None
     temperature: float | None = None
     fallback_models: list[str] | None = None
 
@@ -341,12 +363,14 @@ async def _execute_query(req: QueryRequest, models_to_try: list):
 
         messages = [text_message(Role.USER, req.prompt)]
 
+        resolved_max = _resolve_max_tokens(target_model, req.max_tokens)
+
         provider_req = ProviderRequest(
             model=target_model,
             system=req.system_prompt or "",
             messages=messages,
             tools=[],
-            max_tokens=req.max_tokens,
+            max_tokens=resolved_max,
             temperature=req.temperature,
         )
 
