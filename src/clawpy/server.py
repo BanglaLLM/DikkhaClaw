@@ -564,13 +564,150 @@ async def account_status():
         return {"error": str(e), "total_accounts": 0}
 
 
+# ── Curriculum API ────────────────────────────────────────────────────────
+
+class LessonPlanRequest(BaseModel):
+    student_id: str
+    target_exam: str = "general"  # du, buet, medical, gst, general
+    difficulty: str = "medium"  # easy, medium, hard
+    subjects: list[str] | None = None
+    weak_topics: list[str] | None = None
+    max_lessons: int | None = None
+
+
+@app.get("/curriculum/subjects")
+async def list_subjects():
+    """List all available subjects with their unit/lesson counts."""
+    from clawpy.curriculum.planner import get_subject_overview
+    from clawpy.curriculum.models import SubjectId
+
+    results = []
+    for sid in SubjectId:
+        overview = get_subject_overview(sid)
+        if "error" not in overview:
+            results.append({
+                "id": overview["subject"],
+                "title": overview["title"],
+                "title_bn": overview["title_bn"],
+                "icon": overview["icon"],
+                "target_exams": overview["target_exams"],
+                "total_units": overview["total_units"],
+                "total_lessons": overview["total_lessons"],
+            })
+    return {"subjects": results}
+
+
+@app.get("/curriculum/subjects/{subject_id}")
+async def get_subject(subject_id: str):
+    """Get full curriculum tree for a subject — units and lessons."""
+    from clawpy.curriculum.planner import get_subject_overview
+    from clawpy.curriculum.models import SubjectId
+
+    try:
+        sid = SubjectId(subject_id)
+    except ValueError:
+        return {"error": f"Unknown subject: {subject_id}"}
+    return get_subject_overview(sid)
+
+
+@app.get("/curriculum/lessons/{lesson_id}")
+async def get_lesson(lesson_id: str):
+    """Get details of a specific lesson."""
+    from clawpy.curriculum.planner import get_lesson_detail
+    result = get_lesson_detail(lesson_id)
+    if not result:
+        return {"error": f"Lesson not found: {lesson_id}"}
+    return result
+
+
+@app.post("/curriculum/plan")
+async def create_lesson_plan(req: LessonPlanRequest):
+    """Generate a personalized Duolingo-style lesson plan."""
+    from clawpy.curriculum.planner import generate_lesson_plan
+    from clawpy.curriculum.models import Difficulty, SubjectId, TargetExam
+
+    try:
+        target = TargetExam(req.target_exam)
+    except ValueError:
+        target = TargetExam.GENERAL
+
+    try:
+        diff = Difficulty(req.difficulty)
+    except ValueError:
+        diff = Difficulty.MEDIUM
+
+    subjects = None
+    if req.subjects:
+        subjects = []
+        for s in req.subjects:
+            try:
+                subjects.append(SubjectId(s))
+            except ValueError:
+                pass
+
+    plan = generate_lesson_plan(
+        student_id=req.student_id,
+        target_exam=target,
+        difficulty=diff,
+        subjects=subjects or None,
+        weak_topics=req.weak_topics,
+        max_lessons=req.max_lessons,
+    )
+
+    return {
+        "id": plan.id,
+        "title": plan.title,
+        "title_bn": plan.title_bn,
+        "target_exam": plan.target_exam.value,
+        "difficulty": plan.difficulty.value,
+        "subjects": [s.value for s in plan.subjects],
+        "total_lessons": plan.total_lessons,
+        "estimated_hours": plan.estimated_hours,
+        "path": plan.path,
+    }
+
+
+@app.get("/curriculum/exams")
+async def list_exams():
+    """List available target exams and their subjects."""
+    from clawpy.curriculum.syllabus import EXAM_SUBJECTS
+    return {
+        "exams": {
+            exam.value: {
+                "subjects": [s.value for s in subjects],
+                "label": _exam_label(exam.value),
+                "label_bn": _exam_label_bn(exam.value),
+            }
+            for exam, subjects in EXAM_SUBJECTS.items()
+        }
+    }
+
+
+def _exam_label(exam: str) -> str:
+    return {
+        "du": "Dhaka University", "buet": "BUET (Engineering)",
+        "medical": "Medical Admission", "ru": "Rajshahi University",
+        "ju": "Jahangirnagar University", "cu": "Chittagong University",
+        "gst": "GST (Combined)", "general": "General Preparation",
+    }.get(exam, exam.upper())
+
+
+def _exam_label_bn(exam: str) -> str:
+    return {
+        "du": "ঢাকা বিশ্ববিদ্যালয়", "buet": "বুয়েট (ইঞ্জিনিয়ারিং)",
+        "medical": "মেডিকেল ভর্তি", "ru": "রাজশাহী বিশ্ববিদ্যালয়",
+        "ju": "জাহাঙ্গীরনগর বিশ্ববিদ্যালয়", "cu": "চট্টগ্রাম বিশ্ববিদ্যালয়",
+        "gst": "জিএসটি (সম্মিলিত)", "general": "সাধারণ প্রস্তুতি",
+    }.get(exam, exam.upper())
+
+
 def main():
     """Run the server with uvicorn."""
     import uvicorn
 
     port = int(os.environ.get("CLAWPY_SERVER_PORT", "4039"))
     host = os.environ.get("CLAWPY_SERVER_HOST", "0.0.0.0")
-    logger.info("Starting ClawPy orchestrator on %s:%d", host, port)
+    logger.info("Starting DikkhaClaw tutor on %s:%d", host, port)
     uvicorn.run(app, host=host, port=port, log_level="info")
 
 
