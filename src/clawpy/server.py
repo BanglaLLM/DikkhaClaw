@@ -620,6 +620,65 @@ async def get_lesson(lesson_id: str):
     return result
 
 
+@app.get("/curriculum/ready-plans")
+async def list_ready_plans():
+    """List pre-built lesson plans with real admission questions."""
+    import glob
+    plans_dir = os.path.join(os.path.dirname(__file__), "..", "..", "data", "plans")
+    plans = []
+    for path in sorted(glob.glob(os.path.join(plans_dir, "*.json"))):
+        try:
+            with open(path, encoding="utf-8") as f:
+                data = json.load(f)
+            plans.append({
+                "file": os.path.basename(path),
+                "name": data.get("plan_name", ""),
+                "name_bn": data.get("plan_name_bn", ""),
+                "target_exam": data.get("target_exam", ""),
+                "difficulty": data.get("difficulty", ""),
+                "total_lessons": data.get("total_lessons", 0),
+                "total_exercises": data.get("total_exercises", 0),
+            })
+        except Exception:
+            pass
+    return {"plans": plans}
+
+
+@app.get("/curriculum/ready-plans/{plan_file}")
+async def get_ready_plan(plan_file: str, lesson_index: int | None = None):
+    """Get a pre-built plan. Optionally get a single lesson by index."""
+    plans_dir = os.path.join(os.path.dirname(__file__), "..", "..", "data", "plans")
+    path = os.path.join(plans_dir, plan_file)
+    if not os.path.exists(path):
+        return {"error": f"Plan not found: {plan_file}"}
+
+    with open(path, encoding="utf-8") as f:
+        data = json.load(f)
+
+    if lesson_index is not None:
+        if 0 <= lesson_index < len(data.get("lessons", [])):
+            return data["lessons"][lesson_index]
+        return {"error": f"Lesson index {lesson_index} out of range"}
+
+    # Return plan overview without full exercises (too large)
+    overview = {k: v for k, v in data.items() if k != "lessons"}
+    overview["lessons"] = [
+        {
+            "lesson_id": l["lesson_id"],
+            "lesson_title": l["lesson_title"],
+            "lesson_title_bn": l["lesson_title_bn"],
+            "subject": l["subject"],
+            "subject_title_bn": l["subject_title_bn"],
+            "unit_title_bn": l["unit_title_bn"],
+            "exercise_count": l["exercise_count"],
+            "estimated_minutes": l["estimated_minutes"],
+            "xp_reward": l["xp_reward"],
+        }
+        for l in data.get("lessons", [])
+    ]
+    return overview
+
+
 @app.post("/curriculum/plan")
 async def create_lesson_plan(req: LessonPlanRequest):
     """Generate a personalized Duolingo-style lesson plan."""
