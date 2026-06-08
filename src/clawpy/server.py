@@ -1,12 +1,12 @@
-"""FastAPI server wrapper for ClawPy — exposes the agentic engine as an SSE endpoint.
+"""DikkhaClaw — Koji-style Bangla AI tutor backend.
 
 Run:
     python -m clawpy.server
     # or
     uvicorn clawpy.server:app --port 4039
 
-The server creates a ClawPy Engine per session, connects to MCP servers
-(including Drishtikon intelligence tools), and streams responses as SSE.
+Built on the ClawPy engine. Creates a tutor Engine per student session,
+uses Socratic dialogue to teach, and streams responses as SSE.
 """
 
 from __future__ import annotations
@@ -49,22 +49,16 @@ def _create_provider(config: Config):
 
 
 def _build_tools(engine: Engine) -> ToolRegistry:
-    """Register built-in tools (no Agent tool in server mode)."""
-    from clawpy.engine.file_state import FileStateTracker
-    from clawpy.tool.bash import BashTool
-    from clawpy.tool.file_read import FileReadTool
-    from clawpy.tool.grep_tool import GrepTool
-    from clawpy.tool.glob_tool import GlobTool
-    from clawpy.tool.list_files import ListFilesTool
+    """Register tutor tools for Dikkha."""
     from clawpy.tool.web_fetch import WebFetchTool
-
-    fs = engine.file_state if engine else FileStateTracker()
+    from clawpy.tool.tutor.question_lookup import QuestionLookupTool
+    from clawpy.tool.tutor.student_profile import StudentProfileTool
+    from clawpy.tool.tutor.knowledge_check import KnowledgeCheckTool
 
     registry = ToolRegistry()
-    registry.register(FileReadTool(file_state=fs))
-    registry.register(GrepTool())
-    registry.register(GlobTool())
-    registry.register(ListFilesTool())
+    registry.register(QuestionLookupTool())
+    registry.register(StudentProfileTool())
+    registry.register(KnowledgeCheckTool())
     registry.register(WebFetchTool())
     return registry
 
@@ -127,8 +121,8 @@ async def get_or_create_engine(session_id: str | None = None) -> tuple[str, Engi
 
     await _connect_mcp_servers(engine.tools, config)
 
-    from clawpy.prompts.perspectivity import build_perspectivity_prompt
-    engine.set_system_prompt(build_perspectivity_prompt())
+    from clawpy.prompts.dikkha import build_dikkha_prompt
+    engine.set_system_prompt(build_dikkha_prompt())
 
     store = SessionStore(sid)
     previous = store.load_session()
@@ -203,8 +197,8 @@ class SuggestionsResponse(BaseModel):
 
 
 app = FastAPI(
-    title="ClawPy Orchestrator",
-    description="Perspectivity AI — Drishtikon intelligence gateway",
+    title="DikkhaClaw",
+    description="দীক্ষা — Koji-style Bangla AI Tutor for ShikkhaDikkha",
     version="1.0.0",
 )
 
@@ -216,19 +210,19 @@ app.add_middleware(
 )
 
 
-@app.post("/orchestrator/stream")
-async def chat_stream(req: ChatRequest):
-    """Stream a chat response as SSE events."""
+@app.post("/tutor/stream")
+async def tutor_stream(req: ChatRequest):
+    """Stream a tutor response as SSE events — main chat endpoint."""
     session_id, engine = await get_or_create_engine(req.session_id)
 
     if req.system_prompt:
         engine.set_system_prompt(req.system_prompt)
-    elif req.context_type and req.context_type != "global":
-        from clawpy.prompts.perspectivity import build_perspectivity_prompt
+    elif req.context_type:
+        from clawpy.prompts.dikkha import build_dikkha_prompt
         ctx = req.context_data or {}
         if req.context_id:
             ctx["context_id"] = req.context_id
-        engine.set_system_prompt(build_perspectivity_prompt(
+        engine.set_system_prompt(build_dikkha_prompt(
             context_type=req.context_type,
             context_data=ctx or None,
         ))
@@ -275,17 +269,157 @@ async def chat_stream(req: ChatRequest):
     return StreamingResponse(generate(), media_type="text/event-stream")
 
 
-@app.get("/orchestrator/suggestions", response_model=SuggestionsResponse)
-async def get_suggestions():
-    """Return suggested questions for the chat UI."""
+@app.get("/tutor/suggestions", response_model=SuggestionsResponse)
+async def get_suggestions(context_type: str = "free_chat", subject: str | None = None):
+    """Return context-aware starter prompts for the chat UI."""
+    if context_type == "exam_question":
+        return SuggestionsResponse(suggestions=[
+            "এই প্রশ্নটা কিভাবে সমাধান করবো?",
+            "Can you give me a hint?",
+            "এখানে কোন concept কাজে লাগবে?",
+            "Why is my answer wrong?",
+        ])
+    elif context_type == "exam_review":
+        return SuggestionsResponse(suggestions=[
+            "আমার সবচেয়ে দুর্বল বিষয় কোনটা?",
+            "Explain my mistakes one by one",
+            "এই ভুলগুলো থেকে কি pattern দেখা যাচ্ছে?",
+            "Give me practice questions on my weak areas",
+        ])
+    elif subject:
+        subject_prompts = {
+            "physics": ["Newton's laws বুঝিয়ে বলো", "Solve a circuit problem with me"],
+            "chemistry": ["Organic naming practice করি", "Acid-base কনসেপ্ট clear করো"],
+            "math": ["Integration practice করি", "Logarithm এর basic থেকে শুরু করো"],
+            "biology": ["Cell biology revision করি", "Photosynthesis explain করো"],
+        }
+        return SuggestionsResponse(suggestions=subject_prompts.get(subject, [
+            "আজ কোন বিষয় পড়বে?",
+            "তোমার দুর্বল বিষয় নিয়ে কাজ করি?",
+            "একটা mock test দিতে চাও?",
+            "গতকালের ভুলগুলো review করি?",
+        ]))
     return SuggestionsResponse(suggestions=[
-        "What are the trending news topics today?",
-        "বাংলাদেশে সর্বশেষ রাজনৈতিক পরিস্থিতি কী?",
-        "Compare how different sources covered the latest news",
-        "Fact-check: Is this claim true?",
-        "Which news sources are most reliable?",
-        "Show me narrative patterns in recent political coverage",
+        "আজ কোন বিষয় পড়বে?",
+        "Physics practice শুরু করি?",
+        "BUET এর গত বছরের প্রশ্ন দেখাও",
+        "আমার weak areas কী কী?",
+        "একটা quick quiz দাও!",
+        "Calculus এর chain rule বুঝিয়ে দাও",
     ])
+
+
+class HintRequest(BaseModel):
+    question_id: str
+    student_answer: str | None = None
+    session_id: str | None = None
+    user_id: str | None = None
+
+
+class ExplainRequest(BaseModel):
+    question_id: str
+    student_answer: str | None = None
+    correct_answer: str | None = None
+    session_id: str | None = None
+
+
+@app.post("/tutor/hint")
+async def tutor_hint(req: HintRequest):
+    """Quick Socratic hint for a specific question — non-streaming, fast."""
+    import json as _json
+    # Load the question
+    bank_path = os.environ.get(
+        "DIKKHA_QUESTION_BANK",
+        os.path.join(os.path.dirname(__file__), "..", "..", "data", "question_bank.json"),
+    )
+    try:
+        with open(bank_path, encoding="utf-8") as f:
+            questions = _json.load(f)
+    except FileNotFoundError:
+        return {"hint": "Question bank not found.", "error": True}
+
+    question = next((q for q in questions if q["id"] == req.question_id), None)
+    if not question:
+        return {"hint": "Question not found.", "error": True}
+
+    # Build a focused prompt for a quick hint
+    session_id, engine = await get_or_create_engine(req.session_id)
+    from clawpy.prompts.dikkha import build_dikkha_prompt
+    engine.set_system_prompt(build_dikkha_prompt(
+        context_type="exam_question",
+        context_data=question,
+    ))
+
+    hint_prompt = f"I'm stuck on this question."
+    if req.student_answer:
+        hint_prompt += f" I think the answer is {req.student_answer}. Am I right?"
+    hint_prompt += " Give me a hint without telling me the answer."
+
+    result = await engine.run_turn(hint_prompt)
+
+    # Extract text from result
+    text = ""
+    for msg in result.messages:
+        if msg.role.value == "assistant":
+            for block in msg.content:
+                if hasattr(block, 'text') and block.text:
+                    text = block.text
+                    break
+
+    return {
+        "hint": text,
+        "session_id": session_id,
+        "question_id": req.question_id,
+    }
+
+
+@app.post("/tutor/explain")
+async def tutor_explain(req: ExplainRequest):
+    """Full step-by-step explanation after exam — non-streaming."""
+    import json as _json
+    bank_path = os.environ.get(
+        "DIKKHA_QUESTION_BANK",
+        os.path.join(os.path.dirname(__file__), "..", "..", "data", "question_bank.json"),
+    )
+    try:
+        with open(bank_path, encoding="utf-8") as f:
+            questions = _json.load(f)
+    except FileNotFoundError:
+        return {"explanation": "Question bank not found.", "error": True}
+
+    question = next((q for q in questions if q["id"] == req.question_id), None)
+    if not question:
+        return {"explanation": "Question not found.", "error": True}
+
+    session_id, engine = await get_or_create_engine(req.session_id)
+    from clawpy.prompts.dikkha import build_dikkha_prompt
+    engine.set_system_prompt(build_dikkha_prompt(
+        context_type="exam_review",
+        context_data={"mistakes": [question]},
+    ))
+
+    prompt = f"I got this question wrong."
+    if req.student_answer:
+        prompt += f" I chose {req.student_answer}."
+    if req.correct_answer:
+        prompt += f" The correct answer is {req.correct_answer}."
+    prompt += " Please explain step by step why the correct answer is right and where I went wrong."
+
+    result = await engine.run_turn(prompt)
+
+    text = ""
+    for msg in result.messages:
+        if msg.role.value == "assistant":
+            for block in msg.content:
+                if hasattr(block, 'text') and block.text:
+                    text = block.text
+                    break
+
+    return {
+        "explanation": text,
+        "session_id": session_id,
+        "question_id": req.question_id,
+    }
 
 
 MODEL_MAX_OUTPUT_TOKENS = {
@@ -321,7 +455,7 @@ class QueryRequest(BaseModel):
     fallback_models: list[str] | None = None
 
 
-@app.post("/orchestrator/query")
+@app.post("/tutor/query")
 async def simple_query(req: QueryRequest):
     """Direct LLM call — fast, no tools, no agentic loop.
 
@@ -414,12 +548,12 @@ async def _execute_query(req: QueryRequest, models_to_try: list):
     return {"success": False, "error": last_error or "All models failed", "content": ""}
 
 
-@app.get("/orchestrator/health")
+@app.get("/tutor/health")
 async def health():
     return {"status": "ok", "engines": len(_engines)}
 
 
-@app.get("/orchestrator/accounts")
+@app.get("/tutor/accounts")
 async def account_status():
     """Show account pool status — which accounts are available, rate-limited, etc."""
     try:
