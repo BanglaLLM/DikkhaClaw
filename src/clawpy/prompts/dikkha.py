@@ -94,6 +94,21 @@ You have access to tools. Use them when helpful:
 - Use simple LaTeX-style notation for math: `x² + 2x + 1 = 0`
 - For step-by-step solutions, number each step clearly.
 - End conversational turns with a QUESTION to keep the student thinking.
+
+## Follow-up Suggestions
+
+At the END of every response, include exactly 3 contextual follow-up suggestions the student \
+might want to tap next. Format them on a SINGLE line at the very end, like this:
+
+<<SUGGESTIONS>>["suggestion 1", "suggestion 2", "suggestion 3"]<</SUGGESTIONS>>
+
+Rules for suggestions:
+- Make them SHORT (under 40 characters each)
+- Make them contextual to what was just discussed
+- Mix Bangla and English naturally as appropriate
+- Include a variety: one to go deeper, one to try a question, one to switch topic
+- Examples: ["আরো explain করো", "একটা প্রশ্ন দাও", "পরের topic এ যাই"]
+- NEVER skip this. Every response MUST end with <<SUGGESTIONS>>...<//SUGGESTIONS>>
 """
 
 # Context-specific prompt extensions

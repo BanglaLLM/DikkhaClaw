@@ -247,19 +247,84 @@ async def tutor_stream(req: ChatRequest):
             engine.run_turn(req.message, on_stream=on_stream)
         )
 
+        TAG_OPEN = "<<SUGGESTIONS>>"
+        TAG_CLOSE = "<</SUGGESTIONS>>"
+        hold_buf = ""
+        capturing = False
+
+        def _process_chunk(chunk: str):
+            """Returns list of SSE strings to yield."""
+            nonlocal hold_buf, capturing
+            results = []
+
+            if capturing:
+                hold_buf += chunk
+                return results
+
+            combined = hold_buf + chunk
+
+            if TAG_OPEN in combined:
+                before, after = combined.split(TAG_OPEN, 1)
+                if before.strip():
+                    results.append(_format_sse("token", {"text": before}))
+                hold_buf = after
+                capturing = True
+                return results
+
+            # Check if end of combined could be start of TAG_OPEN
+            for i in range(min(len(TAG_OPEN) - 1, len(combined)), 0, -1):
+                if TAG_OPEN.startswith(combined[-i:]):
+                    safe = combined[:-i]
+                    hold_buf = combined[-i:]
+                    if safe:
+                        results.append(_format_sse("token", {"text": safe}))
+                    return results
+
+            hold_buf = ""
+            if combined:
+                results.append(_format_sse("token", {"text": combined}))
+            return results
+
         while not task.done():
             while collected_events:
                 ev = collected_events.pop(0)
-                sse = stream_event_to_sse(ev, tools_called)
-                if sse:
-                    yield sse
+                if ev.type == EventType.DELTA and ev.delta and ev.delta.text:
+                    for sse in _process_chunk(ev.delta.text):
+                        yield sse
+                else:
+                    sse = stream_event_to_sse(ev, tools_called)
+                    if sse:
+                        yield sse
             await asyncio.sleep(0.05)
 
         while collected_events:
             ev = collected_events.pop(0)
-            sse = stream_event_to_sse(ev, tools_called)
-            if sse:
-                yield sse
+            if ev.type == EventType.DELTA and ev.delta and ev.delta.text:
+                for sse in _process_chunk(ev.delta.text):
+                    yield sse
+            else:
+                sse = stream_event_to_sse(ev, tools_called)
+                if sse:
+                    yield sse
+
+        suggestions = []
+        if capturing:
+            raw = hold_buf.replace(TAG_CLOSE, "").strip()
+            if raw:
+                try:
+                    parsed = json.loads(raw)
+                    if isinstance(parsed, list):
+                        suggestions = [s for s in parsed if isinstance(s, str)][:4]
+                except Exception:
+                    import re as _re
+                    m = _re.findall(r'"([^"]+)"', raw)
+                    if m:
+                        suggestions = m[:4]
+        elif hold_buf.strip():
+            yield _format_sse("token", {"text": hold_buf})
+
+        if suggestions:
+            yield _format_sse("suggestions", {"suggestions": suggestions})
 
         result = task.result()
         yield _format_sse("done", {
@@ -940,6 +1005,8 @@ async function send(text) {
             }
             collected += '<span class="tool-badge">🔧 ' + escapeHtml(data.name) + '</span>\\n';
             aiDiv.querySelector('.bubble').innerHTML = collected.replace(/\\n/g, '<br>');
+          } else if (eventType === 'suggestions' && data.suggestions) {
+            showSuggestions(data.suggestions);
           }
         } catch {}
       }
@@ -953,6 +1020,18 @@ async function send(text) {
   sending = false;
   sendBtn.disabled = false;
   inputEl.focus();
+}
+
+function showSuggestions(items) {
+  suggestionsEl.innerHTML = '';
+  items.forEach(text => {
+    const btn = document.createElement('button');
+    btn.textContent = text;
+    btn.onclick = () => send(text);
+    suggestionsEl.appendChild(btn);
+  });
+  suggestionsEl.style.display = 'flex';
+  messagesEl.scrollTop = messagesEl.scrollHeight;
 }
 
 function sendFromInput() {
