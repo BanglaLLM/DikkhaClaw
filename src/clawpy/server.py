@@ -210,6 +210,13 @@ app.add_middleware(
 )
 
 
+@app.get("/dikkhatutor")
+async def dikkha_chat_ui():
+    """Browser-based chat UI for testing Dikkha tutor."""
+    from fastapi.responses import HTMLResponse
+    return HTMLResponse(content=_CHAT_HTML)
+
+
 @app.post("/tutor/stream")
 async def tutor_stream(req: ChatRequest):
     """Stream a tutor response as SSE events — main chat endpoint."""
@@ -758,6 +765,204 @@ def _exam_label_bn(exam: str) -> str:
         "ju": "জাহাঙ্গীরনগর বিশ্ববিদ্যালয়", "cu": "চট্টগ্রাম বিশ্ববিদ্যালয়",
         "gst": "জিএসটি (সম্মিলিত)", "general": "সাধারণ প্রস্তুতি",
     }.get(exam, exam.upper())
+
+
+_CHAT_HTML = """<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>দীক্ষা — Dikkha AI Tutor</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172a;color:#e2e8f0;height:100vh;display:flex;flex-direction:column}
+.header{background:#1e293b;border-bottom:1px solid #334155;padding:16px 24px;display:flex;align-items:center;gap:12px}
+.header .logo{width:40px;height:40px;background:linear-gradient(135deg,#f59e0b,#ea580c);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.header h1{font-size:18px;font-weight:700;color:#f8fafc}
+.header .sub{font-size:12px;color:#94a3b8;margin-top:2px}
+.messages{flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:16px}
+.msg{display:flex;gap:10px;max-width:85%}
+.msg.user{align-self:flex-end;flex-direction:row-reverse}
+.msg .avatar{width:32px;height:32px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px}
+.msg.ai .avatar{background:#1e293b;border:1px solid #334155}
+.msg.user .avatar{background:#7c3aed}
+.msg .bubble{padding:12px 16px;border-radius:18px;font-size:14px;line-height:1.6;white-space:pre-wrap;word-wrap:break-word}
+.msg.ai .bubble{background:#1e293b;border:1px solid #334155;border-bottom-left-radius:4px;color:#e2e8f0}
+.msg.user .bubble{background:#7c3aed;border-bottom-right-radius:4px;color:#fff}
+.typing{display:flex;gap:5px;padding:12px 16px}
+.typing span{width:8px;height:8px;background:#64748b;border-radius:50%;animation:bounce .6s infinite alternate}
+.typing span:nth-child(2){animation-delay:.2s}
+.typing span:nth-child(3){animation-delay:.4s}
+@keyframes bounce{to{transform:translateY(-6px);opacity:.4}}
+.input-area{background:#1e293b;border-top:1px solid #334155;padding:16px 24px;display:flex;gap:12px;align-items:flex-end}
+.input-area textarea{flex:1;background:#0f172a;border:1px solid #334155;border-radius:16px;padding:12px 16px;color:#e2e8f0;font-size:14px;font-family:inherit;resize:none;min-height:48px;max-height:150px;outline:none;transition:border-color .2s}
+.input-area textarea:focus{border-color:#7c3aed}
+.input-area textarea::placeholder{color:#64748b}
+.input-area button{width:44px;height:44px;background:#7c3aed;border:none;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;flex-shrink:0}
+.input-area button:hover{background:#6d28d9}
+.input-area button:disabled{background:#334155;cursor:not-allowed}
+.input-area button svg{width:20px;height:20px;fill:#fff}
+.suggestions{display:flex;gap:8px;flex-wrap:wrap;padding:0 24px 12px}
+.suggestions button{background:#1e293b;border:1px solid #334155;border-radius:20px;padding:8px 16px;color:#94a3b8;font-size:13px;cursor:pointer;transition:all .2s}
+.suggestions button:hover{border-color:#7c3aed;color:#e2e8f0}
+.tool-badge{display:inline-block;background:#7c3aed20;color:#a78bfa;font-size:11px;padding:2px 8px;border-radius:6px;margin-bottom:4px}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="logo">🎓</div>
+  <div><h1>দীক্ষা — Dikkha</h1><div class="sub">Socratic AI Tutor for Bangladesh</div></div>
+</div>
+
+<div class="messages" id="messages">
+  <div class="msg ai">
+    <div class="avatar">🎓</div>
+    <div class="bubble">আস্সালামু আলাইকুম! আমি <b>দীক্ষা</b> — তোমার AI টিউটর। 🌟<br><br>আজ কোন বিষয় নিয়ে পড়াশোনা করবে? Physics, Chemistry, Math, নাকি Biology?</div>
+  </div>
+</div>
+
+<div class="suggestions" id="suggestions">
+  <button onclick="send('BUET এর Physics থেকে প্রশ্ন দাও')">⚛️ BUET Physics</button>
+  <button onclick="send('Organic Chemistry practice করি')">⚗️ Organic Chemistry</button>
+  <button onclick="send('Integration solve করতে help করো')">📐 Integration</button>
+  <button onclick="send('সালোকসংশ্লেষণ বুঝিয়ে বলো')">🧬 সালোকসংশ্লেষণ</button>
+  <button onclick="send('DU admission tips দাও')">🎯 DU Tips</button>
+</div>
+
+<div class="input-area">
+  <textarea id="input" rows="1" placeholder="তোমার প্রশ্ন লেখো..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendFromInput()}"></textarea>
+  <button onclick="sendFromInput()" id="sendBtn">
+    <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+  </button>
+</div>
+
+<script>
+const messagesEl = document.getElementById('messages');
+const inputEl = document.getElementById('input');
+const sendBtn = document.getElementById('sendBtn');
+const suggestionsEl = document.getElementById('suggestions');
+let sending = false;
+
+function addMessage(role, html) {
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  div.innerHTML = role === 'ai'
+    ? '<div class="avatar">🎓</div><div class="bubble">' + html + '</div>'
+    : '<div class="avatar">👤</div><div class="bubble">' + html + '</div>';
+  messagesEl.appendChild(div);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+  return div;
+}
+
+function addTyping() {
+  const div = document.createElement('div');
+  div.className = 'msg ai';
+  div.id = 'typing';
+  div.innerHTML = '<div class="avatar">🎓</div><div class="typing"><span></span><span></span><span></span></div>';
+  messagesEl.appendChild(div);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function removeTyping() {
+  const el = document.getElementById('typing');
+  if (el) el.remove();
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+async function send(text) {
+  if (sending || !text.trim()) return;
+  sending = true;
+  sendBtn.disabled = true;
+  inputEl.value = '';
+  suggestionsEl.style.display = 'none';
+
+  addMessage('user', escapeHtml(text));
+  addTyping();
+
+  let aiDiv = null;
+  let collected = '';
+
+  try {
+    const response = await fetch('/tutor/stream', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text, context_type: 'free_chat' }),
+    });
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let eventType = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\\n');
+      buffer = lines.pop() || '';
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (trimmed.startsWith('event: ')) {
+          eventType = trimmed.slice(7);
+          continue;
+        }
+        if (!trimmed.startsWith('data: ')) continue;
+        const jsonStr = trimmed.slice(6);
+        if (!jsonStr) continue;
+
+        try {
+          const data = JSON.parse(jsonStr);
+
+          if (eventType === 'token' && data.text) {
+            if (!aiDiv) {
+              removeTyping();
+              aiDiv = addMessage('ai', '');
+            }
+            collected += data.text;
+            aiDiv.querySelector('.bubble').innerHTML = collected
+              .replace(/\\*\\*(.+?)\\*\\*/g, '<b>$1</b>')
+              .replace(/\\n/g, '<br>');
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+          } else if (eventType === 'tool_use' && data.name) {
+            if (!aiDiv) {
+              removeTyping();
+              aiDiv = addMessage('ai', '');
+            }
+            collected += '<span class="tool-badge">🔧 ' + escapeHtml(data.name) + '</span>\\n';
+            aiDiv.querySelector('.bubble').innerHTML = collected.replace(/\\n/g, '<br>');
+          }
+        } catch {}
+      }
+    }
+  } catch (err) {
+    removeTyping();
+    addMessage('ai', '❌ Error: ' + escapeHtml(err.message));
+  }
+
+  if (!aiDiv) removeTyping();
+  sending = false;
+  sendBtn.disabled = false;
+  inputEl.focus();
+}
+
+function sendFromInput() {
+  send(inputEl.value);
+}
+
+inputEl.addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 150) + 'px';
+});
+</script>
+</body>
+</html>"""
 
 
 def main():
