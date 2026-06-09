@@ -1,4 +1,4 @@
-"""QuestionLookup tool — search the question bank by subject, topic, year, difficulty."""
+"""QuestionLookup tool — search 17K+ admission questions in PostgreSQL."""
 
 from __future__ import annotations
 
@@ -8,11 +8,29 @@ from typing import Any
 
 from clawpy.tool.base import Permission, RunContext, ToolResult
 
+DATABASE_URL = os.environ.get(
+    "DATABASE_URL",
+    "postgresql://shikkha:shikkha_secret@localhost:5432/shikkhadikkha",
+)
+
+# University slug → search patterns
+_UNIVERSITY_MAP: dict[str, list[str]] = {
+    "du": ["dhaka-university"],
+    "buet": ["buet"],
+    "medical": ["medical"],
+    "ru": ["rajshahi-university"],
+    "cu": ["chittagong-university"],
+    "ju": ["jahangirnagar-university", "jagannath-university"],
+    "kuet": ["kuet"],
+    "ruet": ["ruet"],
+    "cuet": ["cuet"],
+}
+
 
 class QuestionLookupTool:
-    """Search the question bank for practice questions."""
+    """Search 17,000+ real Bangladesh admission test questions in PostgreSQL."""
 
-    _questions: list[dict[str, Any]] | None = None
+    _conn: Any = None
 
     @property
     def name(self) -> str:
@@ -21,8 +39,10 @@ class QuestionLookupTool:
     @property
     def description(self) -> str:
         return (
-            "Search the question bank for practice questions. "
-            "Filter by subject, topic, year, difficulty, or exam type (DU/BUET/Medical)."
+            "Search 17,000+ real Bangladesh university admission test questions. "
+            "Filter by subject (Bangla tag like গতিবিদ্যা, জৈব রসায়ন, etc.), "
+            "university (du/buet/ru/cu/ju/medical), year (2017-2026), "
+            "or free-text search in Bangla/English. Returns MCQs with options and correct answer."
         )
 
     def input_schema(self) -> dict[str, Any]:
@@ -31,28 +51,23 @@ class QuestionLookupTool:
             "properties": {
                 "subject": {
                     "type": "string",
-                    "description": "Subject: physics, chemistry, math, biology, english, bangla, gk",
+                    "description": "Subject tag in Bangla (e.g. 'গতিবিদ্যা', 'জৈব রসায়ন', 'English') or English keyword",
                 },
-                "topic": {
+                "search": {
                     "type": "string",
-                    "description": "Specific topic within the subject (e.g. 'organic chemistry', 'calculus')",
+                    "description": "Free-text search in question text (Bangla or English)",
                 },
-                "difficulty": {
+                "university": {
                     "type": "string",
-                    "enum": ["easy", "medium", "hard"],
-                    "description": "Difficulty level",
-                },
-                "exam_type": {
-                    "type": "string",
-                    "description": "Target exam: DU, BUET, Medical, or general",
+                    "description": "University: du, buet, ru, cu, ju, medical, kuet, ruet, cuet",
                 },
                 "year": {
-                    "type": "integer",
-                    "description": "Year of the question (e.g. 2023)",
+                    "type": "string",
+                    "description": "Exam year (e.g. '2023')",
                 },
                 "limit": {
                     "type": "integer",
-                    "description": "Max number of questions to return (default 5)",
+                    "description": "Max questions to return (default 5, max 20)",
                 },
             },
             "required": [],
@@ -64,60 +79,96 @@ class QuestionLookupTool:
     def is_read_only(self, input: dict[str, Any]) -> bool:
         return True
 
-    def _load_questions(self) -> list[dict[str, Any]]:
-        if self._questions is not None:
-            return self._questions
-
-        bank_path = os.environ.get(
-            "DIKKHA_QUESTION_BANK",
-            os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "data", "question_bank.json"),
-        )
-        try:
-            with open(bank_path, encoding="utf-8") as f:
-                self._questions = json.load(f)
-        except FileNotFoundError:
-            self._questions = []
-        return self._questions
+    def _get_conn(self) -> Any:
+        if self._conn is None or self._conn.closed:
+            import psycopg2
+            self._conn = psycopg2.connect(DATABASE_URL)
+            self._conn.autocommit = True
+        return self._conn
 
     async def run(self, input: dict[str, Any], ctx: RunContext) -> ToolResult:
-        questions = self._load_questions()
-        if not questions:
-            return ToolResult(content="Question bank is empty. No questions loaded.", is_error=True)
+        try:
+            conn = self._get_conn()
+        except Exception as e:
+            return ToolResult(content=f"Database connection failed: {e}", is_error=True)
 
-        results = questions
-        subject = input.get("subject", "").lower()
+        cur = conn.cursor()
+
+        conditions: list[str] = []
+        params: list[Any] = []
+
+        # Subject filter (partial match on Bangla tags)
+        subject = input.get("subject", "").strip()
         if subject:
-            results = [q for q in results if q.get("subject", "").lower() == subject]
+            conditions.append("subject ILIKE %s")
+            params.append(f"%{subject}%")
 
-        topic = input.get("topic", "").lower()
-        if topic:
-            results = [
-                q for q in results
-                if topic in q.get("topic", "").lower()
-                or topic in " ".join(q.get("tags", [])).lower()
-            ]
+        # University filter
+        university = input.get("university", "").strip().lower()
+        if university:
+            slugs = _UNIVERSITY_MAP.get(university, [university])
+            placeholders = ",".join(["%s"] * len(slugs))
+            conditions.append(f"university IN ({placeholders})")
+            params.extend(slugs)
 
-        difficulty = input.get("difficulty", "").lower()
-        if difficulty:
-            results = [q for q in results if q.get("difficulty", "").lower() == difficulty]
-
-        exam_type = input.get("exam_type", "").lower()
-        if exam_type:
-            results = [
-                q for q in results
-                if exam_type in q.get("exam_type", "").lower()
-                or exam_type in " ".join(q.get("tags", [])).lower()
-            ]
-
-        year = input.get("year")
+        # Year filter
+        year = input.get("year", "").strip()
         if year:
-            results = [q for q in results if q.get("year") == year]
+            conditions.append("exam_year = %s")
+            params.append(year)
 
-        limit = input.get("limit", 5)
-        results = results[:limit]
+        # Free-text search
+        search = input.get("search", "").strip()
+        if search:
+            conditions.append("to_tsvector('simple', question_text) @@ plainto_tsquery('simple', %s)")
+            params.append(search)
 
-        if not results:
+        limit = min(input.get("limit", 5), 20)
+
+        where = ""
+        if conditions:
+            where = "WHERE " + " AND ".join(conditions)
+
+        query = f"""
+            SELECT id, university, exam_name, exam_year, question_text,
+                   options, correct_answer, correct_index, subject
+            FROM admission_question
+            {where}
+            ORDER BY RANDOM()
+            LIMIT %s
+        """
+        params.append(limit)
+
+        try:
+            cur.execute(query, params)
+            rows = cur.fetchall()
+        except Exception as e:
+            return ToolResult(content=f"Query failed: {e}", is_error=True)
+        finally:
+            cur.close()
+
+        if not rows:
             return ToolResult(content="No questions found matching the criteria.")
 
-        output = json.dumps(results, ensure_ascii=False, indent=2)
-        return ToolResult(content=f"Found {len(results)} question(s):\n{output}")
+        questions = []
+        for row in rows:
+            options = []
+            for i, opt in enumerate(row[5]):
+                options.append({
+                    "id": chr(65 + i),
+                    "text": opt,
+                    "isCorrect": i == row[7],
+                })
+            questions.append({
+                "id": row[0],
+                "university": row[1],
+                "exam": row[2][:80],
+                "year": row[3],
+                "question": row[4],
+                "options": options,
+                "correct_answer": row[6],
+                "subject": row[8],
+            })
+
+        output = json.dumps(questions, ensure_ascii=False, indent=2)
+        return ToolResult(content=f"Found {len(questions)} question(s):\n{output}")

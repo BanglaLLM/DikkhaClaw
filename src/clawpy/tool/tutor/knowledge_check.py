@@ -1,17 +1,23 @@
-"""KnowledgeCheck tool — generate quick verification questions mid-conversation."""
+"""KnowledgeCheck tool — pull a random question from Postgres for mid-conversation quizzes."""
 
 from __future__ import annotations
 
 import json
 import os
-import random
 from typing import Any
 
 from clawpy.tool.base import Permission, RunContext, ToolResult
 
+DATABASE_URL = os.environ.get(
+    "DATABASE_URL",
+    "postgresql://shikkha:shikkha_secret@localhost:5432/shikkhadikkha",
+)
+
 
 class KnowledgeCheckTool:
-    """Generate a quick mini-quiz question to verify student understanding."""
+    """Pull a random question from the database to quiz the student mid-conversation."""
+
+    _conn: Any = None
 
     @property
     def name(self) -> str:
@@ -20,9 +26,8 @@ class KnowledgeCheckTool:
     @property
     def description(self) -> str:
         return (
-            "Generate a quick quiz question to check if the student truly understands "
-            "a concept. Use after explaining something to verify comprehension. "
-            "Returns a question with options — present it to the student as a check."
+            "Get a random practice question from the database to check if the student "
+            "understands a concept. Use after explaining something to verify comprehension."
         )
 
     def input_schema(self) -> dict[str, Any]:
@@ -31,16 +36,11 @@ class KnowledgeCheckTool:
             "properties": {
                 "topic": {
                     "type": "string",
-                    "description": "The topic to generate a check question for",
-                },
-                "difficulty": {
-                    "type": "string",
-                    "enum": ["easy", "medium", "hard"],
-                    "description": "Difficulty level",
+                    "description": "Topic to find a question for (Bangla or English)",
                 },
                 "subject": {
                     "type": "string",
-                    "description": "Subject area",
+                    "description": "Subject tag (e.g. 'গতিবিদ্যা', 'জৈব রসায়ন')",
                 },
             },
             "required": ["topic"],
@@ -52,53 +52,79 @@ class KnowledgeCheckTool:
     def is_read_only(self, input: dict[str, Any]) -> bool:
         return True
 
+    def _get_conn(self) -> Any:
+        if self._conn is None or getattr(self._conn, 'closed', True):
+            import psycopg2
+            self._conn = psycopg2.connect(DATABASE_URL)
+            self._conn.autocommit = True
+        return self._conn
+
     async def run(self, input: dict[str, Any], ctx: RunContext) -> ToolResult:
-        topic = input["topic"]
-        difficulty = input.get("difficulty", "medium")
-        subject = input.get("subject", "")
+        topic = input.get("topic", "").strip()
+        subject = input.get("subject", "").strip()
 
-        # Try to find a matching question from the bank
-        bank_path = os.environ.get(
-            "DIKKHA_QUESTION_BANK",
-            os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "data", "question_bank.json"),
-        )
         try:
-            with open(bank_path, encoding="utf-8") as f:
-                questions = json.load(f)
-        except FileNotFoundError:
+            conn = self._get_conn()
+        except Exception as e:
             return ToolResult(
-                content=f"No question bank found. Generate a question about '{topic}' ({difficulty}) yourself."
+                content=f"Database unavailable. Generate a question about '{topic}' yourself."
             )
 
-        matches = [
-            q for q in questions
-            if topic.lower() in q.get("topic", "").lower()
-            or topic.lower() in " ".join(q.get("tags", [])).lower()
-        ]
+        cur = conn.cursor()
+        conditions: list[str] = []
+        params: list[Any] = []
 
-        if difficulty:
-            filtered = [q for q in matches if q.get("difficulty", "").lower() == difficulty]
-            if filtered:
-                matches = filtered
+        # Try full-text search on topic
+        if topic:
+            conditions.append(
+                "(to_tsvector('simple', question_text) @@ plainto_tsquery('simple', %s) "
+                "OR subject ILIKE %s)"
+            )
+            params.extend([topic, f"%{topic}%"])
 
-        if not matches:
+        if subject:
+            conditions.append("subject ILIKE %s")
+            params.append(f"%{subject}%")
+
+        where = ""
+        if conditions:
+            where = "WHERE " + " AND ".join(conditions)
+
+        try:
+            cur.execute(f"""
+                SELECT id, question_text, options, correct_answer, correct_index, subject, university, exam_year
+                FROM admission_question
+                {where}
+                ORDER BY RANDOM()
+                LIMIT 1
+            """, params)
+            row = cur.fetchone()
+        except Exception as e:
             return ToolResult(
-                content=f"No matching questions in bank for '{topic}'. Generate a question yourself."
+                content=f"Query failed. Generate a question about '{topic}' yourself."
+            )
+        finally:
+            cur.close()
+
+        if not row:
+            return ToolResult(
+                content=f"No questions found for '{topic}'. Generate one yourself."
             )
 
-        chosen = random.choice(matches)
-        # Return without revealing the correct answer to the LLM prompt
-        # (the LLM should use this to quiz the student)
+        options = []
+        for i, opt in enumerate(row[2]):
+            options.append({
+                "id": chr(65 + i),
+                "text": opt,
+                "isCorrect": i == row[4],
+            })
+
         output = {
-            "question": chosen.get("question", ""),
-            "question_bn": chosen.get("question_bn", ""),
-            "options": [
-                {"id": o["id"], "text": o["text"], "text_bn": o.get("text_bn", "")}
-                for o in chosen.get("options", [])
-            ],
-            "topic": chosen.get("topic", ""),
-            "difficulty": chosen.get("difficulty", ""),
-            "hint": f"This tests understanding of {topic}",
-            "_correct_answer": chosen.get("correct_answer", ""),
+            "question": row[1],
+            "options": [{"id": o["id"], "text": o["text"]} for o in options],
+            "subject": row[5],
+            "source": f"{row[6]} ({row[7]})",
+            "_correct_answer": row[3],
+            "_correct_index": row[4],
         }
         return ToolResult(content=json.dumps(output, ensure_ascii=False, indent=2))
