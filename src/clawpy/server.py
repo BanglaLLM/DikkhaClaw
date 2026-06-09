@@ -842,6 +842,7 @@ const inputEl = document.getElementById('input');
 const sendBtn = document.getElementById('sendBtn');
 const suggestionsEl = document.getElementById('suggestions');
 let sending = false;
+let sessionId = null;
 
 function addMessage(role, html) {
   const div = document.createElement('div');
@@ -891,7 +892,7 @@ async function send(text) {
     const response = await fetch('/tutor/stream', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: text, context_type: 'free_chat' }),
+      body: JSON.stringify({ message: text, session_id: sessionId, context_type: 'free_chat' }),
     });
 
     const reader = response.body.getReader();
@@ -920,7 +921,9 @@ async function send(text) {
         try {
           const data = JSON.parse(jsonStr);
 
-          if (eventType === 'token' && data.text) {
+          if (eventType === 'progress' && data.session_id) {
+            sessionId = data.session_id;
+          } else if (eventType === 'token' && data.text) {
             if (!aiDiv) {
               removeTyping();
               aiDiv = addMessage('ai', '');
