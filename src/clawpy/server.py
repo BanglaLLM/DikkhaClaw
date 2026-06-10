@@ -832,6 +832,153 @@ def _exam_label_bn(exam: str) -> str:
     }.get(exam, exam.upper())
 
 
+# ── Practice Quiz API ─────────────────────────────────────────────────────
+
+_PRACTICE_DATABASE_URL = os.environ.get(
+    "DATABASE_URL",
+    "postgresql://shikkha:shikkha_secret@localhost:5432/shikkhadikkha",
+)
+
+# University slug → search patterns (same as QuestionLookupTool)
+_PRACTICE_UNIVERSITY_MAP: dict[str, list[str]] = {
+    "du": ["dhaka-university"],
+    "buet": ["buet"],
+    "medical": ["medical"],
+    "ru": ["rajshahi-university"],
+    "cu": ["chittagong-university"],
+    "ju": ["jahangirnagar-university", "jagannath-university"],
+    "kuet": ["kuet"],
+    "ruet": ["ruet"],
+    "cuet": ["cuet"],
+}
+
+_practice_db_conn = None
+
+
+def _get_db_conn():
+    """Get or create a shared psycopg2 connection for practice endpoints."""
+    global _practice_db_conn
+    if _practice_db_conn is None or _practice_db_conn.closed:
+        import psycopg2
+        _practice_db_conn = psycopg2.connect(_PRACTICE_DATABASE_URL)
+        _practice_db_conn.autocommit = True
+    return _practice_db_conn
+
+
+@app.get("/practice/questions")
+async def practice_questions(
+    subject: str | None = None,
+    university: str | None = None,
+    limit: int = 10,
+    exclude: str | None = None,
+):
+    """Serve real MCQ questions from PostgreSQL for the practice quiz screen."""
+    try:
+        conn = _get_db_conn()
+    except Exception as e:
+        logger.error("Practice DB connection failed: %s", e)
+        return {"questions": [], "total": 0}
+
+    limit = max(1, min(limit, 30))
+
+    conditions: list[str] = []
+    params: list = []
+
+    if subject:
+        conditions.append("subject ILIKE %s")
+        params.append(f"%{subject.strip()}%")
+
+    if university:
+        uni = university.strip().lower()
+        slugs = _PRACTICE_UNIVERSITY_MAP.get(uni, [uni])
+        placeholders = ",".join(["%s"] * len(slugs))
+        conditions.append(f"university IN ({placeholders})")
+        params.extend(slugs)
+
+    if exclude:
+        exclude_ids = [eid.strip() for eid in exclude.split(",") if eid.strip()]
+        if exclude_ids:
+            placeholders = ",".join(["%s"] * len(exclude_ids))
+            conditions.append(f"id NOT IN ({placeholders})")
+            params.extend(exclude_ids)
+
+    where = ""
+    if conditions:
+        where = "WHERE " + " AND ".join(conditions)
+
+    query = f"""
+        SELECT id, university, exam_name, exam_year, question_text,
+               options, correct_answer, correct_index, subject
+        FROM admission_question
+        {where}
+        ORDER BY RANDOM()
+        LIMIT %s
+    """
+    params.append(limit)
+
+    try:
+        cur = conn.cursor()
+        cur.execute(query, params)
+        rows = cur.fetchall()
+        cur.close()
+    except Exception as e:
+        logger.error("Practice query failed: %s", e)
+        # Reset connection on error so next call retries
+        global _practice_db_conn
+        _practice_db_conn = None
+        return {"questions": [], "total": 0}
+
+    questions = []
+    for row in rows:
+        options = []
+        for i, opt in enumerate(row[5]):
+            options.append({
+                "id": chr(65 + i),
+                "text": opt,
+                "isCorrect": i == row[7],
+            })
+        correct_letter = chr(65 + row[7]) if isinstance(row[7], int) else row[6]
+        questions.append({
+            "id": str(row[0]),
+            "question": row[4],
+            "options": options,
+            "subject": row[8],
+            "university": row[1],
+            "exam": row[2],
+            "year": str(row[3]) if row[3] else "",
+            "correct_answer": correct_letter,
+        })
+
+    return {"questions": questions, "total": len(questions)}
+
+
+@app.get("/practice/subjects")
+async def practice_subjects():
+    """Return distinct subjects with question counts from PostgreSQL."""
+    try:
+        conn = _get_db_conn()
+    except Exception as e:
+        logger.error("Practice DB connection failed: %s", e)
+        return {"subjects": []}
+
+    try:
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT subject, COUNT(*) as count FROM admission_question "
+            "GROUP BY subject ORDER BY count DESC"
+        )
+        rows = cur.fetchall()
+        cur.close()
+    except Exception as e:
+        logger.error("Practice subjects query failed: %s", e)
+        global _practice_db_conn
+        _practice_db_conn = None
+        return {"subjects": []}
+
+    subjects = [{"name": row[0], "count": row[1]} for row in rows]
+    return {"subjects": subjects}
+
+
 _CHAT_HTML = """<!DOCTYPE html>
 <html lang="bn">
 <head>
