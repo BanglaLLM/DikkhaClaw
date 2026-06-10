@@ -882,7 +882,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
 <div class="messages" id="messages">
   <div class="msg ai">
     <div class="avatar">🎓</div>
-    <div class="bubble">আস্সালামু আলাইকুম! আমি <b>দীক্ষা</b> — তোমার AI টিউটর। 🌟<br><br>আজ কোন বিষয় নিয়ে পড়াশোনা করবে? Physics, Chemistry, Math, নাকি Biology?</div>
+    <div class="bubble">আস্সালামু আলাইকুম! আমি <b>দীক্ষা</b> — তোমার AI টিউটর।<br><br>আজ কোন বিষয় নিয়ে কাজ করবে? বলো, কোথা থেকে শুরু করি।</div>
   </div>
 </div>
 
