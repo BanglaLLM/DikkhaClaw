@@ -88,8 +88,8 @@ def _get_server_config() -> Config:
     """Build config for server mode."""
     cfg = Config()
     cfg.work_dir = os.environ.get("CLAWPY_WORK_DIR", os.getcwd())
-    cfg.provider = os.environ.get("CLAWPY_PROVIDER", "anthropic")
-    cfg.model = os.environ.get("CLAWPY_MODEL", "claude-sonnet-4-6")
+    cfg.provider = os.environ.get("CLAWPY_PROVIDER", "gemini")
+    cfg.model = os.environ.get("CLAWPY_MODEL", "gemini-2.5-flash")
     cfg.max_tokens = int(os.environ.get("CLAWPY_MAX_TOKENS", "16384"))
     cfg.permission_mode = "bypass"
     return cfg
