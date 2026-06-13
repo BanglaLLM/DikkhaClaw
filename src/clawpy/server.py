@@ -798,6 +798,23 @@ async def create_lesson_plan(req: LessonPlanRequest):
     }
 
 
+@app.get("/curriculum/tracks")
+async def list_tracks():
+    """List admission tracks with their subjects, exams, and weights."""
+    from clawpy.curriculum.models import AdmissionTrack, TRACK_SUBJECTS, TRACK_EXAMS, TRACK_SUBJECT_WEIGHTS, TRACK_META
+    return {
+        "tracks": {
+            track.value: {
+                **TRACK_META[track],
+                "subjects": [s.value for s in TRACK_SUBJECTS[track]],
+                "exams": [e.value for e in TRACK_EXAMS[track]],
+                "weights": {s.value: w for s, w in TRACK_SUBJECT_WEIGHTS[track].items()},
+            }
+            for track in AdmissionTrack
+        }
+    }
+
+
 @app.get("/curriculum/exams")
 async def list_exams():
     """List available target exams and their subjects."""

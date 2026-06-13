@@ -49,14 +49,65 @@ class SubjectId(str, Enum):
 
 
 class TargetExam(str, Enum):
-    DU = "du"           # Dhaka University
-    BUET = "buet"       # Engineering
-    MEDICAL = "medical"  # Medical admission
-    RU = "ru"           # Rajshahi University
-    JU = "ju"           # Jahangirnagar University
-    CU = "cu"           # Chittagong University
-    GST = "gst"         # Combined (General Science & Technology)
-    GENERAL = "general"  # Not exam-specific
+    DU = "du"
+    BUET = "buet"
+    MEDICAL = "medical"
+    RU = "ru"
+    JU = "ju"
+    CU = "cu"
+    GST = "gst"
+    CUET = "cuet"
+    KUET = "kuet"
+    RUET = "ruet"
+    IUT = "iut"
+    SUST = "sust"
+    GENERAL = "general"
+
+
+class AdmissionTrack(str, Enum):
+    UNIVERSITY = "university"
+    ENGINEERING = "engineering"
+    MEDICAL = "medical"
+
+
+TRACK_SUBJECTS: dict[AdmissionTrack, list[SubjectId]] = {
+    AdmissionTrack.UNIVERSITY: [SubjectId.PHYSICS, SubjectId.CHEMISTRY, SubjectId.HIGHER_MATH, SubjectId.BIOLOGY, SubjectId.GENERAL_MATH],
+    AdmissionTrack.ENGINEERING: [SubjectId.PHYSICS, SubjectId.CHEMISTRY, SubjectId.HIGHER_MATH],
+    AdmissionTrack.MEDICAL: [SubjectId.BIOLOGY, SubjectId.CHEMISTRY, SubjectId.PHYSICS, SubjectId.GENERAL_MATH],
+}
+
+TRACK_EXAMS: dict[AdmissionTrack, list[TargetExam]] = {
+    AdmissionTrack.UNIVERSITY: [TargetExam.DU, TargetExam.RU, TargetExam.CU, TargetExam.JU, TargetExam.GST],
+    AdmissionTrack.ENGINEERING: [TargetExam.BUET, TargetExam.CUET, TargetExam.KUET, TargetExam.RUET, TargetExam.IUT, TargetExam.SUST],
+    AdmissionTrack.MEDICAL: [TargetExam.MEDICAL],
+}
+
+TRACK_SUBJECT_WEIGHTS: dict[AdmissionTrack, dict[SubjectId, float]] = {
+    AdmissionTrack.UNIVERSITY: {SubjectId.PHYSICS: 0.20, SubjectId.CHEMISTRY: 0.20, SubjectId.HIGHER_MATH: 0.20, SubjectId.BIOLOGY: 0.20, SubjectId.GENERAL_MATH: 0.20},
+    AdmissionTrack.ENGINEERING: {SubjectId.PHYSICS: 0.35, SubjectId.HIGHER_MATH: 0.35, SubjectId.CHEMISTRY: 0.30},
+    AdmissionTrack.MEDICAL: {SubjectId.BIOLOGY: 0.40, SubjectId.CHEMISTRY: 0.30, SubjectId.PHYSICS: 0.20, SubjectId.GENERAL_MATH: 0.10},
+}
+
+TRACK_META: dict[AdmissionTrack, dict[str, str]] = {
+    AdmissionTrack.UNIVERSITY: {
+        "title": "University Science",
+        "title_bn": "বিশ্ববিদ্যালয়",
+        "description": "DU, RU, CU, JU, GST ভর্তি পরীক্ষা",
+        "icon": "🏛️",
+    },
+    AdmissionTrack.ENGINEERING: {
+        "title": "Engineering",
+        "title_bn": "ইঞ্জিনিয়ারিং",
+        "description": "BUET, KUET, RUET, CUET, IUT",
+        "icon": "⚙️",
+    },
+    AdmissionTrack.MEDICAL: {
+        "title": "Medical",
+        "title_bn": "মেডিকেল",
+        "description": "MBBS ভর্তি পরীক্ষা",
+        "icon": "🏥",
+    },
+}
 
 
 @dataclass
