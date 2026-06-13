@@ -799,20 +799,26 @@ async def create_lesson_plan(req: LessonPlanRequest):
 
 
 @app.get("/curriculum/tracks")
-async def list_tracks():
-    """List admission tracks with their subjects, exams, and weights."""
-    from clawpy.curriculum.models import AdmissionTrack, TRACK_SUBJECTS, TRACK_EXAMS, TRACK_SUBJECT_WEIGHTS, TRACK_META
-    return {
-        "tracks": {
-            track.value: {
-                **TRACK_META[track],
-                "subjects": [s.value for s in TRACK_SUBJECTS[track]],
-                "exams": [e.value for e in TRACK_EXAMS[track]],
-                "weights": {s.value: w for s, w in TRACK_SUBJECT_WEIGHTS[track].items()},
-            }
-            for track in AdmissionTrack
-        }
-    }
+async def list_tracks(region: str | None = None):
+    """List admission tracks for a region. Defaults to Bangladesh."""
+    from clawpy.curriculum.regions import get_region
+    r = get_region(region)
+    return {"region": r["id"], "tracks": r["tracks"]}
+
+
+@app.get("/curriculum/regions")
+async def list_regions():
+    """List all supported regions/countries."""
+    from clawpy.curriculum.regions import get_all_regions
+    return {"regions": get_all_regions()}
+
+
+@app.get("/curriculum/region/{region_id}")
+async def get_region_detail(region_id: str):
+    """Get full region config: tracks, universities, subjects."""
+    from clawpy.curriculum.regions import get_region
+    r = get_region(region_id)
+    return r
 
 
 @app.get("/curriculum/exams")
