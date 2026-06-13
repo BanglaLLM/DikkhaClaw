@@ -798,6 +798,37 @@ async def create_lesson_plan(req: LessonPlanRequest):
     }
 
 
+@app.get("/curriculum/languages")
+async def list_languages():
+    """List all supported languages."""
+    from clawpy.curriculum.regions import get_languages
+    return {"languages": get_languages()}
+
+
+@app.get("/curriculum/translate/stats")
+async def translation_stats():
+    """Show translation cache stats."""
+    from clawpy.curriculum.translate import get_cache_stats
+    return {"cache": get_cache_stats()}
+
+
+@app.post("/curriculum/translate")
+async def translate_content(req: Request):
+    """Translate text or question to a target language. Results are cached."""
+    from clawpy.curriculum.translate import translate_text, translate_question
+    body = await req.json()
+    target_lang = body.get("target_lang", "en")
+    source_lang = body.get("source_lang", "bn")
+
+    if "question" in body:
+        result = await translate_question(body["question"], target_lang, source_lang)
+        return {"translated": result}
+    elif "text" in body:
+        result = await translate_text(body["text"], target_lang, source_lang)
+        return {"translated": result}
+    return {"error": "Provide 'text' or 'question' in body"}
+
+
 @app.get("/curriculum/tracks")
 async def list_tracks(region: str | None = None):
     """List admission tracks for a region. Defaults to Bangladesh."""
