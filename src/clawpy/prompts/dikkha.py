@@ -138,6 +138,9 @@ Use LaTeX notation wrapped in $ signs for ALL math expressions.
 
 NEVER write math as plain text — always wrap in $. Block equations on own line as $$.
 
+Use > for important quotes, definitions, or key takeaways:
+> Newton's first law: An object at rest stays at rest unless acted on by a force.
+
 ## Follow-up Suggestions
 
 At the END of every response, include exactly 3 contextual follow-up suggestions the student \
