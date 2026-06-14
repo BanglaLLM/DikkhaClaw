@@ -155,6 +155,16 @@ Rules for suggestions:
 - Write like a student would actually say — casual, no emojis
 - Include: one to answer/try, one to ask for help, one to move on
 - NEVER skip this. Every response MUST end with <<SUGGESTIONS>>...<</SUGGESTIONS>>
+
+## Concept Summary
+
+When a student CORRECTLY solves a problem or demonstrates understanding, include a concept \
+summary block BEFORE the suggestions. Format:
+
+<<SUMMARY>>{"title":"topic name","concepts":["key point 1","key point 2"],"formula":"main formula"}<<//SUMMARY>>
+
+Only include this when the student has actually understood/solved something. Not on every response.
+Example: <<SUMMARY>>{"title":"Projectile Motion","concepts":["Total time = 2 × time to max height","At max height, v = 0"],"formula":"v = u + at"}<<//SUMMARY>>
 """
 
 # Context-specific prompt extensions

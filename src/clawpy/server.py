@@ -310,21 +310,45 @@ async def tutor_stream(req: ChatRequest):
                     yield sse
 
         suggestions = []
+        summary = None
         if capturing:
             raw = hold_buf.replace(TAG_CLOSE, "").strip()
+            # Check if buffer has both SUMMARY and SUGGESTIONS
+            import re as _re
+            summary_match = _re.search(r'<<SUMMARY>>(.+?)<<//SUMMARY>>', raw, _re.DOTALL)
+            if summary_match:
+                try:
+                    summary = json.loads(summary_match.group(1).strip())
+                except Exception:
+                    pass
+                raw = _re.sub(r'<<SUMMARY>>.*?<<//SUMMARY>>', '', raw, flags=_re.DOTALL).strip()
+
             if raw:
                 try:
                     parsed = json.loads(raw)
                     if isinstance(parsed, list):
                         suggestions = [s for s in parsed if isinstance(s, str)][:4]
                 except Exception:
-                    import re as _re
                     m = _re.findall(r'"([^"]+)"', raw)
                     if m:
                         suggestions = m[:4]
         elif hold_buf.strip():
-            yield _format_sse("token", {"text": hold_buf})
+            # Check for summary in non-captured buffer too
+            import re as _re
+            summary_match = _re.search(r'<<SUMMARY>>(.+?)<<//SUMMARY>>', hold_buf, _re.DOTALL)
+            if summary_match:
+                try:
+                    summary = json.loads(summary_match.group(1).strip())
+                except Exception:
+                    pass
+                clean = _re.sub(r'<<SUMMARY>>.*?<<//SUMMARY>>', '', hold_buf, flags=_re.DOTALL).strip()
+                if clean:
+                    yield _format_sse("token", {"text": clean})
+            else:
+                yield _format_sse("token", {"text": hold_buf})
 
+        if summary:
+            yield _format_sse("summary", summary)
         if suggestions:
             yield _format_sse("suggestions", {"suggestions": suggestions})
 
