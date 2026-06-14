@@ -97,11 +97,25 @@ class QuestionLookupTool:
         conditions: list[str] = []
         params: list[Any] = []
 
-        # Subject filter (partial match on Bangla tags)
+        # Subject filter — map English names to Bangla DB tags
+        _SUBJECT_MAP = {
+            "physics": ["পদার্থ", "গতি", "বল", "তাপ", "আলো", "তরঙ্গ", "বিদ্যুৎ", "চুম্বক"],
+            "chemistry": ["রসায়ন", "জৈব", "অজৈব", "পরমাণু", "মোল"],
+            "math": ["গণিত", "বীজগণিত", "জ্যামিতি", "ক্যালকুলাস", "সমীকরণ"],
+            "biology": ["জীব", "উদ্ভিদ", "প্রাণী", "কোষ", "জেনেটিক"],
+            "english": ["English", "Grammar", "Vocabulary", "Sentence"],
+            "bangla": ["বাংলা", "ব্যাকরণ", "সাহিত্য", "কবিতা"],
+        }
         subject = input.get("subject", "").strip()
         if subject:
-            conditions.append("subject ILIKE %s")
-            params.append(f"%{subject}%")
+            mapped = _SUBJECT_MAP.get(subject.lower())
+            if mapped:
+                or_clauses = " OR ".join(["subject ILIKE %s"] * len(mapped))
+                conditions.append(f"({or_clauses})")
+                params.extend(f"%{m}%" for m in mapped)
+            else:
+                conditions.append("subject ILIKE %s")
+                params.append(f"%{subject}%")
 
         # University filter
         university = input.get("university", "").strip().lower()
