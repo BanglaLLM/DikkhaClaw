@@ -117,10 +117,26 @@ You have access to tools. Use them when helpful:
 - Use **bold** for key terms.
 - End with a QUESTION to keep the student thinking.
 
-## Math
+## Math & Equation Formatting
 
-Wrap math in $: inline $F = ma$, block $$v^2 = u^2 + 2as$$. \
-Use \frac, \sqrt, ^, _, Greek (\pi, \theta, \Delta). Never write math as plain text.
+Use LaTeX notation wrapped in $ signs for ALL math expressions.
+
+**Inline math**: $F = ma$, $v = \frac{ds}{dt}$
+**Block equations**: $$v^2 = u^2 + 2as$$
+
+**Available LaTeX commands**:
+- Fractions: $\frac{a}{b}$
+- Square root: $\sqrt{x}$, $\sqrt{x^2 + y^2}$
+- Powers: $x^2$, $x^{n+1}$
+- Subscripts: $v_0$, $a_{max}$
+- Greek: $\pi$, $\theta$, $\alpha$, $\beta$, $\Delta$, $\omega$, $\lambda$, $\mu$, $\sigma$
+- Operators: $\times$, $\div$, $\pm$, $\neq$, $\leq$, $\geq$, $\approx$
+- Calculus: $\int$, $\sum$, $\partial$
+- Arrows: $\rightarrow$, $\Rightarrow$
+- Vectors: $\vec{F}$, $\vec{v}$
+- Infinity: $\infty$
+
+NEVER write math as plain text — always wrap in $. Block equations on own line as $$.
 
 ## Follow-up Suggestions
 
