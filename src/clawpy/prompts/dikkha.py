@@ -213,12 +213,39 @@ steer back to studying: "ভালো প্রশ্ন! এখন পড়া
 """
 
 
+_LANGUAGE_NAMES = {
+    "bn": "Bangla (বাংলা)",
+    "hi": "Hindi (हिन्दी)",
+    "zh": "Chinese (中文)",
+    "es": "Spanish (Español)",
+    "en": "English",
+    "id": "Indonesian (Bahasa Indonesia)",
+    "ms": "Malay (Bahasa Melayu)",
+    "ha": "Hausa",
+}
+
+_LANGUAGE_OVERRIDE = """\
+
+## Language Override
+
+The student's chosen language is **{lang_name}**. \
+You MUST respond ONLY in {lang_name}. Do not use Bangla or English unless the student \
+explicitly writes in that language. All teaching, hints, questions, suggestions — everything \
+must be in {lang_name}. Mathematical notation and variable names stay in English/Latin script.
+"""
+
+
 def build_dikkha_prompt(
     context_type: str | None = None,
     context_data: dict | None = None,
+    language: str | None = None,
 ) -> str:
     """Build the full Dikkha system prompt, optionally scoped to a context."""
     prompt = SYSTEM_PROMPT
+
+    if language and language not in ("bn",):
+        lang_name = _LANGUAGE_NAMES.get(language, language)
+        prompt += _LANGUAGE_OVERRIDE.format(lang_name=lang_name)
 
     if context_type == "exam_question" and context_data:
         import json

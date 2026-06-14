@@ -222,16 +222,18 @@ async def tutor_stream(req: ChatRequest):
     """Stream a tutor response as SSE events — main chat endpoint."""
     session_id, engine = await get_or_create_engine(req.session_id)
 
+    user_lang = (req.context_data or {}).get("language")
     if req.system_prompt:
         engine.set_system_prompt(req.system_prompt)
-    elif req.context_type:
+    else:
         from clawpy.prompts.dikkha import build_dikkha_prompt
         ctx = req.context_data or {}
         if req.context_id:
             ctx["context_id"] = req.context_id
         engine.set_system_prompt(build_dikkha_prompt(
-            context_type=req.context_type,
+            context_type=req.context_type or "free_chat",
             context_data=ctx or None,
+            language=user_lang,
         ))
 
     tools_called: list[str] = []
