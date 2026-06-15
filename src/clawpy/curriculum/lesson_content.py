@@ -3386,273 +3386,532 @@ LESSON_CONTENT: dict[str, dict] = {
                 "How long to deposit 63.5g Cu from CuSO₄ using 5A current?"
         ],
         "real_world_example": "The battery rickshaws (ব্যাটারি চালিত রিকশা) in Dhaka use lead-acid batteries — a galvanic cell where lead reacts with sulfuric acid. When you charge your phone, that's an electrolytic cell — using electricity to reverse the chemical reaction."
-},
+    },
 
+    # ══ HIGHER MATHEMATICS — Chapter 4: বৃত্ত (Circle) ══
     "hm1-04-01": {
-        "title": "Circles",
+        "title": "Circles (Equation, Tangent & Normal)",
         "learning_objectives": [
-                "Write equation of circle from center and radius",
-                "Convert general form to standard form",
-                "Find tangent and normal to a circle",
-                "Determine position of a point relative to a circle"
+            "Derive and apply the standard equation of a circle x² + y² = r² and general form x² + y² + 2gx + 2fy + c = 0",
+            "Find center and radius from the general equation (center = (−g, −f), radius = √(g²+f²−c))",
+            "Determine the equation of a circle given different conditions (center-radius, diameter endpoints, three points)",
+            "Find equations of tangent and normal to a circle at a given point and from an external point",
         ],
         "teaching_steps": [
-                {
-                        "step": 1,
-                        "type": "intro",
-                        "prompt": "Ask: a wheel, a coin, a clock face — all circles. How would you describe a circle mathematically using just two pieces of information?"
-                },
-                {
-                        "step": 2,
-                        "type": "concept",
-                        "prompt": "Standard form: (x-h)² + (y-k)² = r². General form: x² + y² + 2gx + 2fy + c = 0 where center=(-g,-f), r=√(g²+f²-c). Convert between them."
-                },
-                {
-                        "step": 3,
-                        "type": "teach",
-                        "prompt": "Tangent at point (x₁,y₁): xx₁ + yy₁ = r² (for circle at origin). Condition for tangency: distance from center to line = radius."
-                },
-                {
-                        "step": 4,
-                        "type": "practice",
-                        "prompt": "Find center and radius of x² + y² - 4x + 6y - 12 = 0."
-                },
-                {
-                        "step": 5,
-                        "type": "mastery",
-                        "prompt": "Find equation of tangent to circle x²+y²=25 at point (3,4)."
-                }
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: think of the Shaheed Minar roundabout in Dhaka — every point on the circular road is the same distance from the center. If we place the center at the origin, how would you write the equation describing all points on that circle?",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Derive x² + y² = r² from the distance formula. Then shift center to (h, k): (x−h)² + (y−k)² = r². Expand to get the general form x² + y² + 2gx + 2fy + c = 0 where center = (−g, −f), radius = √(g²+f²−c). Ask: what condition must hold for this to represent a real circle? (g²+f²−c > 0)",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Teach how to find circle equations from conditions: (a) given center and radius — direct substitution, (b) given endpoints of diameter — use (x−x₁)(x−x₂) + (y−y₁)(y−y₂) = 0, (c) given three points on the circle — substitute into general form and solve 3 equations. Then teach tangent: at point (x₁, y₁) on x²+y²=r², tangent is xx₁+yy₁=r². For general form, replace x² by xx₁, y² by yy₁, 2x by (x+x₁), 2y by (y+y₁).",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Problem: Find the equation of the circle passing through (1, 2), (3, 4), and (5, 2). Then find the equation of the tangent to x² + y² = 25 at the point (3, 4). Verify that the tangent is perpendicular to the radius at that point.",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "BUET-level: Find the length of the tangent from the external point (7, 1) to the circle x² + y² − 4x − 6y + 9 = 0. Then find the equation of the pair of tangents from (7, 1) to this circle. Also: two circles x² + y² = 9 and x² + y² − 6x − 8y + 9 = 0 — do they intersect, touch, or are separate? Find the radical axis.",
+            },
         ],
         "key_formulas": [
-                "(x-h)² + (y-k)² = r²",
-                "Center: (-g,-f), Radius: √(g²+f²-c)",
-                "Tangent condition: d = r",
-                "Length of tangent from external point: √(S₁)"
+            "Standard form: (x−h)² + (y−k)² = r²",
+            "General form: x² + y² + 2gx + 2fy + c = 0, center (−g, −f), radius √(g²+f²−c)",
+            "Tangent at (x₁,y₁) on x²+y²=r²: xx₁ + yy₁ = r²",
+            "Tangent with slope m to x²+y²=r²: y = mx ± r√(1+m²)",
+            "Length of tangent from (x₁,y₁) to circle: √(x₁²+y₁²+2gx₁+2fy₁+c)",
+            "Condition for tangency: distance from center to line = radius",
+            "Radical axis of two circles S₁=0, S₂=0: S₁ − S₂ = 0",
         ],
         "common_mistakes": [
-                "Forgetting to complete the square correctly when converting general to standard form",
-                "Getting signs wrong for center coordinates (-g, -f, not g, f)",
-                "Confusing tangent length with distance from center"
+            "Forgetting the condition g²+f²−c > 0 for a real circle — if g²+f²−c = 0, it is a point circle; if negative, no real circle exists",
+            "Sign error when reading center from general form — center is (−g, −f), not (g, f); students frequently forget the negative sign",
+            "When finding tangent from an external point, confusing the tangent length formula with the distance formula — tangent length uses √(S₁) where S₁ is the value obtained by substituting the point in the circle equation",
         ],
         "practice_prompts": [
-                "Write the equation of a circle with center (2,3) and radius 5.",
-                "Is the point (1,1) inside, on, or outside x²+y²=4?"
+            "Find center and radius of x² + y² − 6x + 8y − 11 = 0. Sketch the circle showing center, radius, and intercepts.",
+            "Find the equation of the circle with center (2, −3) that touches the x-axis. What is its radius?",
+            "The line y = mx + c is tangent to x² + y² = 16. Find the relationship between m and c. Hence find the tangent lines with slope 3/4.",
         ],
-        "real_world_example": "The roundabouts (গোল চত্বর) at Shahbag or Farmgate in Dhaka are circular — if you know the center point and radius, you can write the equation. Engineers use circle equations to design the curves."
-},
+        "real_world_example": "The Bangabandhu Satellite ground station antenna has a circular dish. Engineers use circle equations to design the parabolic reflector cross-section. When planning circular roundabouts like the Farmgate or Mohakhali flyover loops in Dhaka, RAJUK engineers use tangent and normal calculations to ensure smooth road entry and exit at the correct angle.",
+    },
 
+    # ══ HIGHER MATHEMATICS — Chapter 5: বিন্যাস ও সমাবেশ (Permutations & Combinations) ══
     "hm1-05-01": {
         "title": "Permutations & Combinations",
         "learning_objectives": [
-                "Distinguish permutation (order matters) from combination (order doesn't)",
-                "Calculate nPr and nCr",
-                "Apply to word arrangement and selection problems",
-                "Use the multiplication and addition principles"
+            "Apply the fundamental counting principle (multiplication and addition rules)",
+            "Calculate permutations nPr = n!/(n−r)! for arrangements where order matters",
+            "Calculate combinations nCr = n!/(r!(n−r)!) for selections where order does not matter",
+            "Solve problems involving repeated objects, circular permutations, and restricted arrangements",
         ],
         "teaching_steps": [
-                {
-                        "step": 1,
-                        "type": "intro",
-                        "prompt": "Ask: how many ways can 3 students sit in 3 chairs? What if we only need to choose 2 out of 3 — does the order matter?"
-                },
-                {
-                        "step": 2,
-                        "type": "concept",
-                        "prompt": "Permutation: arrangement (order matters). nPr = n!/(n-r)!. Combination: selection (order doesn't). nCr = n!/(r!(n-r)!). Ask: is choosing a cricket team P or C?"
-                },
-                {
-                        "step": 3,
-                        "type": "teach",
-                        "prompt": "Solve: how many 3-letter words from A,B,C,D,E? (permutation). How many ways to choose 3 players from 11? (combination)."
-                },
-                {
-                        "step": 4,
-                        "type": "practice",
-                        "prompt": "How many ways to arrange the letters of 'BANGLADESH'? (note repeated letters)"
-                },
-                {
-                        "step": 5,
-                        "type": "mastery",
-                        "prompt": "BUET MCQ: a committee of 5 from 6 men and 4 women must have at least 2 women. How many ways?"
-                }
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: you have 5 friends and want to select 3 to form a cricket team's opening trio. Does the order matter? What if you need to assign them as batsman 1, 2, and 3 — does order matter now? This is the difference between combinations and permutations.",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Teach the fundamental counting principle: if task 1 can be done in m ways and task 2 in n ways, together they can be done in m × n ways. Then factorials: n! = n × (n−1) × ... × 1, with 0! = 1. Permutations: nPr = n!/(n−r)! — order matters. Ask: how many 3-digit numbers can be formed from digits 1-5 without repetition?",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Teach combinations: nCr = n!/(r!(n−r)!). Key property: nCr = nC(n−r). Then special cases: permutations with repeated objects: n!/(p!q!r!...) where p, q, r are frequencies. Circular permutations: (n−1)! for n objects in a circle. Ask: how many ways can 5 people sit around a round table? How many distinct arrangements of the letters in MISSISSIPPI?",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Problem: From a group of 7 boys and 5 girls, a committee of 5 is to be formed. How many committees can be formed if: (a) there are no restrictions, (b) exactly 2 girls must be included, (c) at least 1 girl must be included? Use complementary counting for part (c).",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "BUET-level: How many 4-letter words (with or without meaning) can be formed from the letters of EQUATION such that each word starts with a vowel and ends with a consonant? Then: find the number of ways to distribute 10 identical sweets among 4 children such that each child gets at least 1 sweet. (Stars and bars: C(n−1, r−1) = C(9,3))",
+            },
         ],
         "key_formulas": [
-                "nPr = n!/(n-r)!",
-                "nCr = n!/(r!(n-r)!)",
-                "Repeated: n!/(p!q!r!...)",
-                "nCr = nCn-r"
+            "nPr = n! / (n−r)!  — permutations (order matters)",
+            "nCr = n! / (r!(n−r)!)  — combinations (order does not matter)",
+            "nCr = nC(n−r)  — symmetry property",
+            "Permutations of n objects with repetition: n! / (p₁! × p₂! × ... × pₖ!)",
+            "Circular permutations of n objects: (n−1)!",
+            "Stars and bars: distributing n identical items into r distinct bins = C(n+r−1, r−1)",
+            "With 'at least one' condition: total − none = C(n,r) − C(n−k, r) or use complementary counting",
         ],
         "common_mistakes": [
-                "Using permutation when combination is needed (selection vs arrangement)",
-                "Forgetting to handle repeated elements in arrangements",
-                "Not breaking 'at least' problems into complementary cases"
+            "Confusing permutation with combination — ask yourself 'does the order of selection matter?' If choosing a committee, order does not matter (combination). If assigning positions/ranks, order matters (permutation)",
+            "Forgetting 0! = 1 — this is used in nCn = n!/n!0! = 1 and nC0 = 1",
+            "In problems with restrictions (e.g., certain people must be included or excluded), not separating the restricted elements first before counting the remaining selections",
         ],
         "practice_prompts": [
-                "How many ways to choose 3 books from 8 different books?",
-                "In how many ways can 5 people sit around a circular table?"
+            "How many ways can the letters of the word ARRANGE be arranged? How many of these have the two R's together?",
+            "A cricket team of 11 must be chosen from 15 players. If 2 particular players are always included and 3 are always excluded, how many selections are possible?",
+            "In how many ways can 8 people be seated around a circular table if 2 particular people must sit next to each other?",
         ],
-        "real_world_example": "When selecting the Bangladesh cricket team of 11 from 20 players, the selectors use combinations (who is chosen matters, not the order of selection). But when deciding the batting order, that's permutation — order matters!"
-},
+        "real_world_example": "In the Bangladesh national cricket team selection, the selectors choose 11 from about 30 players — that is C(30,11). But when the coach decides the batting order, that becomes a permutation problem. For the BUET admission test with 12,000+ seats and 100,000+ applicants, the number of possible admit lists is astronomically large — combinatorics tells us exactly how large.",
+    },
 
+    # ══ HIGHER MATHEMATICS — Chapter 6: ত্রিকোণমিতিক অনুপাত ও অভেদাবলি (Trigonometric Ratios & Identities) ══
     "hm1-06-01": {
-        "title": "Trigonometric Ratios & Identities",
+        "title": "Trigonometric Ratios & Fundamental Identities",
         "learning_objectives": [
-                "Define all 6 trig ratios and their relationships",
-                "Prove fundamental trigonometric identities",
-                "Solve trigonometric equations",
-                "Use allied angle formulas"
+            "Define the six trigonometric ratios (sin, cos, tan, csc, sec, cot) for any angle using the unit circle",
+            "Prove and apply the Pythagorean identities: sin²θ + cos²θ = 1, 1 + tan²θ = sec²θ, 1 + cot²θ = csc²θ",
+            "Determine signs of trigonometric functions in all four quadrants (ASTC rule)",
+            "Evaluate trigonometric functions for standard angles and prove trigonometric identities",
         ],
         "teaching_steps": [
-                {
-                        "step": 1,
-                        "type": "intro",
-                        "prompt": "Ask: if you know one angle and one side of a right triangle, can you find everything else? How?"
-                },
-                {
-                        "step": 2,
-                        "type": "concept",
-                        "prompt": "sin²θ + cos²θ = 1, 1 + tan²θ = sec²θ, 1 + cot²θ = cosec²θ. Ask: if sinθ = 3/5, find cosθ and tanθ."
-                },
-                {
-                        "step": 3,
-                        "type": "teach",
-                        "prompt": "Allied angles: sin(90°-θ) = cosθ, cos(180°-θ) = -cosθ. Use ASTC rule (All Students Take Coffee) for sign in each quadrant."
-                },
-                {
-                        "step": 4,
-                        "type": "practice",
-                        "prompt": "Prove: (1-cos²θ)(1+cot²θ) = 1. Then: solve sin2θ = 1 for 0° ≤ θ ≤ 360°."
-                },
-                {
-                        "step": 5,
-                        "type": "mastery",
-                        "prompt": "BUET MCQ: simplify a complex trig expression or solve a trig equation."
-                }
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: if you stand at the base of the National Parliament Building (Jatiyo Sangsad Bhaban) and look up at the top, the angle your line of sight makes with the ground is the angle of elevation. How would you calculate the building's height knowing only this angle and your distance from the base? This is where trigonometric ratios come in.",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Define sin, cos, tan from a right triangle (SOH CAH TOA). Extend to the unit circle: for angle θ, the point on the unit circle is (cos θ, sin θ). Derive the Pythagorean identity sin²θ + cos²θ = 1 from x² + y² = 1. Divide by cos²θ to get 1 + tan²θ = sec²θ, by sin²θ to get 1 + cot²θ = csc²θ. Ask student to verify for θ = 30°.",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Teach the ASTC rule (All Sin Tan Cos) for signs in quadrants — mnemonic: 'After School To College'. Standard angle values: construct the table for 0°, 30°, 45°, 60°, 90° using sin θ = √0/2, √1/2, √2/2, √3/2, √4/2. Then teach allied angles: sin(180°−θ) = sin θ, cos(180°−θ) = −cos θ, sin(90°−θ) = cos θ, etc. Give techniques for proving identities: start from more complex side, convert everything to sin and cos.",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Prove: (1 + tan²θ)/(1 + cot²θ) = tan²θ. Then prove: (sec θ − tan θ)² = (1 − sin θ)/(1 + sin θ). Ask student to verify each identity numerically with θ = 45° as a check.",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "BUET-level: If sin θ + cos θ = √2, find the value of sin⁶θ + cos⁶θ. (Hint: first find sin θ cos θ from squaring the given equation, then use the factorization a³+b³ = (a+b)(a²−ab+b²) with a = sin²θ, b = cos²θ). Also prove: tan A + tan B + tan C = tan A · tan B · tan C for any triangle ABC.",
+            },
         ],
         "key_formulas": [
-                "sin²θ + cos²θ = 1",
-                "1 + tan²θ = sec²θ",
-                "sin(90°-θ) = cosθ",
-                "ASTC: Q1 all+, Q2 sin+, Q3 tan+, Q4 cos+"
+            "sin²θ + cos²θ = 1",
+            "1 + tan²θ = sec²θ",
+            "1 + cot²θ = csc²θ",
+            "ASTC: Q1 all +, Q2 sin +, Q3 tan +, Q4 cos +",
+            "sin(90°−θ) = cos θ, cos(90°−θ) = sin θ",
+            "sin(180°−θ) = sin θ, cos(180°−θ) = −cos θ",
+            "a³+b³ = (a+b)(a²−ab+b²) — useful for sin⁶+cos⁶ type problems",
+            "In triangle ABC: A+B+C = π, so tan A + tan B + tan C = tan A · tan B · tan C",
         ],
         "common_mistakes": [
-                "Forgetting which ratios are positive in which quadrant",
-                "Not finding ALL solutions in the given range (e.g., sinθ=½ has two solutions in [0°,360°])",
-                "Dividing both sides by a trig function that could be zero"
+            "Writing sin²θ + cos²θ = 1 but then incorrectly simplifying sin²θ = 1 − cos θ (forgetting the square on cos θ)",
+            "Confusing allied angle formulas — when the angle changes from 90°±θ, the function changes (sin<->cos, tan<->cot, sec<->csc); for 180°±θ or 360°±θ, the function stays the same but sign may change",
+            "Trying to prove an identity by cross-multiplying or moving terms from one side to the other — an identity proof should manipulate only one side (or both sides independently) to show they equal the same expression",
         ],
         "practice_prompts": [
-                "If tanθ = -1 and θ is in Q2, find sinθ and cosθ.",
-                "Solve: 2cos²θ - cosθ - 1 = 0 for 0° ≤ θ ≤ 360°."
+            "Without using a calculator, find: sin 150° + cos 240° + tan 315° + cot 210°.",
+            "Prove: (sin A + csc A)² + (cos A + sec A)² = 7 + tan²A + cot²A.",
+            "If 3 sin θ + 4 cos θ = 5, find the value of 3 cos θ − 4 sin θ. (Hint: square both equations and add.)",
         ],
-        "real_world_example": "Surveyors measuring land in rural Bangladesh use trigonometry — by measuring one angle and one distance, they can calculate the height of a tree or width of a river without crossing it. Same principle used in building মসজিদ (mosque) minarets."
-},
+        "real_world_example": "Surveyors from the Bangladesh Survey Department use trigonometric ratios to measure the heights of buildings and the widths of rivers like the Padma without crossing them. By measuring one distance and one angle, they calculate everything else. The entire GPS system that your Pathao or Uber ride uses relies on trigonometry to calculate your position from satellite signals.",
+    },
 
+    # ══ HIGHER MATHEMATICS — Chapter 7: যৌগিক ও গুণিতক কোণের ত্রিকোণমিতি (Compound & Multiple Angles) ══
+    "hm1-07-01": {
+        "title": "Compound & Multiple Angle Formulas",
+        "learning_objectives": [
+            "Apply compound angle formulas: sin(A±B), cos(A±B), tan(A±B)",
+            "Derive and use double angle formulas: sin 2A, cos 2A (three forms), tan 2A",
+            "Derive and use half angle formulas: sin(A/2), cos(A/2), tan(A/2)",
+            "Transform products to sums and sums to products (prosthaphaeresis formulas)",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: can you find sin 75° without a calculator? If you know sin 45° and sin 30°, is sin 75° = sin 45° + sin 30°? (No! sin is not linear.) Then: sin 75° = sin(45° + 30°). This is where compound angle formulas shine.",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Derive sin(A+B) = sin A cos B + cos A sin B geometrically or from the rotation matrix approach. From this derive: sin(A−B), cos(A+B) = cos A cos B − sin A sin B, cos(A−B), tan(A+B) = (tan A + tan B)/(1 − tan A tan B). Ask student to find the exact value of sin 75°, cos 15°, and tan 105° using these formulas.",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Set B = A in compound formulas to get double angle: sin 2A = 2 sin A cos A, cos 2A = cos²A − sin²A = 2cos²A − 1 = 1 − 2sin²A, tan 2A = 2tan A/(1 − tan²A). From cos 2A forms, derive half-angle formulas. Then teach product-to-sum: 2 sin A cos B = sin(A+B) + sin(A−B), and sum-to-product: sin C + sin D = 2 sin((C+D)/2) cos((C−D)/2). Ask: express sin 5x + sin 3x as a product.",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Problem: Prove that cos 20° cos 40° cos 60° cos 80° = 1/16. (Hint: use cos 60° = 1/2, then apply product-to-sum formulas repeatedly). Then: if tan A = 1/2 and tan B = 1/3, find A + B. (Answer: π/4, since tan(A+B) = (1/2+1/3)/(1−1/6) = 1)",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "BUET-level: Prove that sin 20° sin 40° sin 80° = √3/8. Also: solve the equation sin x + sin 3x + sin 5x = 0 for 0 ≤ x ≤ π using the sum-to-product formula. Then: if sin A + sin B = 1/2 and cos A + cos B = √3/2, find A − B and A + B.",
+            },
+        ],
+        "key_formulas": [
+            "sin(A±B) = sin A cos B ± cos A sin B",
+            "cos(A±B) = cos A cos B ∓ sin A sin B",
+            "tan(A±B) = (tan A ± tan B) / (1 ∓ tan A tan B)",
+            "sin 2A = 2 sin A cos A",
+            "cos 2A = cos²A − sin²A = 2cos²A − 1 = 1 − 2sin²A",
+            "tan 2A = 2tan A / (1 − tan²A)",
+            "sin C + sin D = 2 sin((C+D)/2) cos((C−D)/2)",
+            "cos C + cos D = 2 cos((C+D)/2) cos((C−D)/2)",
+            "2 sin A cos B = sin(A+B) + sin(A−B)",
+            "2 cos A cos B = cos(A−B) + cos(A+B)",
+        ],
+        "common_mistakes": [
+            "Writing sin(A+B) = sin A + sin B — this is WRONG; sin is NOT a linear function. The correct expansion involves products of sin and cos",
+            "Confusing the sign in cos(A+B) vs sin(A+B) — in cos(A+B) the middle sign is MINUS (cos A cos B − sin A sin B), opposite to the + in the argument",
+            "Forgetting there are THREE forms of cos 2A — different forms are useful in different contexts: use 1−2sin²A when you want to eliminate cos, use 2cos²A−1 when you want to eliminate sin",
+        ],
+        "practice_prompts": [
+            "Find the exact values of sin 15°, cos 75°, and tan 22.5° without a calculator.",
+            "Prove: (cos A − cos B)/(sin A + sin B) = −tan((A−B)/2). Which sum-to-product formula do you use?",
+            "If cos 2A = −1/2 and 0 < A < π, find all possible values of sin A and cos A.",
+        ],
+        "real_world_example": "Signal processing in Bangladeshi mobile networks (Grameenphone, Robi, Banglalink) uses these exact formulas. When two radio waves combine, the resulting signal is modeled by sin A + sin B = 2 sin((A+B)/2) cos((A−B)/2) — the product-to-sum conversion. This is how your phone separates your call from millions of others on the same tower.",
+    },
+
+    # ══ HIGHER MATHEMATICS — Chapter 8: ফাংশন ও গ্রাফ (Functions & Graphs) ══
+    "hm1-08-01": {
+        "title": "Functions & Graphs (Domain, Range, Inverse & Transformations)",
+        "learning_objectives": [
+            "Determine domain and range of polynomial, rational, radical, exponential, logarithmic, and trigonometric functions",
+            "Sketch graphs of standard functions and apply transformations (shift, stretch, reflection)",
+            "Identify and apply properties of even/odd functions and periodic functions",
+            "Find and verify inverse functions graphically and algebraically, including domain restriction for non-injective functions",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: the temperature in Dhaka varies throughout the year — it is a function of time. Can you think of its domain (all days of the year) and range (roughly 10°C to 40°C)? Is this function one-to-one? (No — different months can have the same temperature.) Can you find an inverse?",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Review domain restrictions systematically: denominator ≠ 0, expression under √ ≥ 0, log argument > 0. Find domain and range of f(x) = √(4−x²) (domain: [−2,2], range: [0,2] — it is a semicircle!). Then classify: even function f(−x) = f(x) (symmetric about y-axis), odd function f(−x) = −f(x) (symmetric about origin). Ask: is f(x) = x³ − x even, odd, or neither?",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Teach graph transformations: y = f(x) + k (vertical shift), y = f(x−h) (horizontal shift), y = af(x) (vertical stretch), y = f(bx) (horizontal compression), y = −f(x) (reflection in x-axis), y = f(−x) (reflection in y-axis). Apply to sketch y = |x−2| + 1 from y = |x|. Then teach inverse functions: reflect graph in y = x line. Condition: f must be one-to-one (use horizontal line test). For f(x) = x², restrict to x ≥ 0 to get f⁻¹(x) = √x.",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Problem: Sketch the graph of f(x) = 2^(x−1) + 3, identifying domain, range, asymptote, and key points. Then find f⁻¹(x) and sketch it on the same axes. Verify f(f⁻¹(x)) = x. Also: find domain and range of g(x) = ln(x² − 4).",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "BUET-level: Let f(x) = (2x + 3)/(x − 1). Find f⁻¹(x). Show that f(f(x)) = x — this means f is its own inverse (involution). Explain graphically what this means. Then: the function g(x) = x − [x] where [x] is the floor function — sketch its graph, find its domain, range, and period. Is it continuous?",
+            },
+        ],
+        "key_formulas": [
+            "Domain of √(f(x)): solve f(x) ≥ 0",
+            "Domain of 1/f(x): solve f(x) ≠ 0",
+            "Domain of log(f(x)): solve f(x) > 0",
+            "Even function: f(−x) = f(x); Odd function: f(−x) = −f(x)",
+            "Transformations: y = af(b(x−h)) + k — vertical stretch a, horizontal compress b, shift right h, shift up k",
+            "Inverse: swap x and y, solve for y; domain of f⁻¹ = range of f, range of f⁻¹ = domain of f",
+            "Horizontal line test: f is one-to-one iff no horizontal line intersects the graph more than once",
+        ],
+        "common_mistakes": [
+            "Confusing horizontal and vertical shifts — y = f(x−2) shifts RIGHT by 2 (not left), because x must be 2 more to get the same y-value. Students intuitively expect the opposite",
+            "Finding the inverse of a non-injective function without restricting the domain first — e.g., f(x) = x² does not have an inverse on all of ℝ; must restrict to x ≥ 0 or x ≤ 0",
+            "Confusing the graph of y = f(−x) (reflection in y-axis) with y = −f(x) (reflection in x-axis) — students frequently swap these two transformations",
+        ],
+        "practice_prompts": [
+            "Find domain and range of f(x) = (x + 1)/(x² − 4). Identify all asymptotes.",
+            "Starting from y = sin x, describe the transformations to obtain y = 3 sin(2x − π/3) + 1. State the amplitude, period, and phase shift.",
+            "Prove that f(x) = x³ + x is an odd function. Then show it is one-to-one on ℝ and find a formula for f⁻¹(x) at specific points (or explain why a closed-form inverse is difficult).",
+        ],
+        "real_world_example": "The water level of the Padma river at Mawa ferry ghat is a periodic function of time — it rises and falls with the tides and seasons. Meteorologists model it as a transformed sine function: h(t) = A sin(Bt + C) + D where A is the amplitude (flood vs dry season difference), B determines the period, C the phase shift, and D the average level. Understanding function transformations lets BWDB engineers predict flood levels and plan evacuations.",
+    },
+
+    # ══ HIGHER MATHEMATICS — Chapter 9: সীমা ও অন্তরীকরণ (Limits & Differentiation) ══
     "hm1-09-01": {
-        "title": "Limits & Differentiation",
+        "title": "Limits & Differentiation (Rules & Techniques)",
         "learning_objectives": [
-                "Evaluate limits using algebraic techniques",
-                "Differentiate using power rule, chain rule, product rule",
-                "Find derivatives of trigonometric and exponential functions",
-                "Apply L'Hôpital's rule for indeterminate forms"
+            "Evaluate limits using direct substitution, factoring, rationalization, and L'Hopital's rule",
+            "Apply standard limits: lim(x→0) sin x/x = 1, lim(x→0) (eˣ−1)/x = 1, lim(x→∞) (1+1/n)ⁿ = e",
+            "Differentiate using first principles (definition) and apply power rule, product rule, quotient rule, and chain rule",
+            "Find derivatives of polynomial, trigonometric, exponential, and logarithmic functions",
         ],
         "teaching_steps": [
-                {
-                        "step": 1,
-                        "type": "intro",
-                        "prompt": "Ask: what happens to 1/x as x gets bigger and bigger? What about as x approaches 0?"
-                },
-                {
-                        "step": 2,
-                        "type": "concept",
-                        "prompt": "Limit: value a function approaches. lim(x→a) f(x). Derivative: rate of change, f'(x) = lim(h→0) [f(x+h)-f(x)]/h. Power rule: d/dx(xⁿ) = nxⁿ⁻¹."
-                },
-                {
-                        "step": 3,
-                        "type": "teach",
-                        "prompt": "Chain rule: d/dx[f(g(x))] = f'(g(x))·g'(x). Product rule: (uv)' = u'v + uv'. Find d/dx(sin(3x²))."
-                },
-                {
-                        "step": 4,
-                        "type": "practice",
-                        "prompt": "Differentiate: (a) x³ + 2x² - 5x + 7, (b) sin(x)·eˣ, (c) (2x+1)⁵"
-                },
-                {
-                        "step": 5,
-                        "type": "mastery",
-                        "prompt": "BUET MCQ: find derivative of a composite function or evaluate a limit."
-                }
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: if a rickshaw in Dhaka travels 100 meters in 20 seconds, its average speed is 5 m/s. But what is its speed at exactly the 10th second? To find instantaneous speed, you need limits — as the time interval shrinks to zero, the average speed approaches the instantaneous speed. This is the fundamental idea of calculus.",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Define limit: lim(x→a) f(x) = L means f(x) gets arbitrarily close to L as x approaches a. Teach evaluation techniques: (1) direct substitution, (2) if 0/0, factorize and cancel, (3) rationalize for expressions with surds, (4) standard limits: lim(x→0) sin x/x = 1, lim(x→0) tan x/x = 1, lim(x→0) (eˣ−1)/x = 1, lim(x→∞)(1+1/n)ⁿ = e. Ask: find lim(x→2) (x²−4)/(x−2).",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Define derivative from first principles: f'(x) = lim(h→0) [f(x+h)−f(x)]/h. Derive d/dx(xⁿ) = nxⁿ⁻¹ using the binomial theorem. Then teach the rules: (1) Power rule: d/dx(xⁿ) = nxⁿ⁻¹, (2) Product rule: (uv)' = u'v + uv', (3) Quotient rule: (u/v)' = (u'v−uv')/v², (4) Chain rule: d/dx[f(g(x))] = f'(g(x))·g'(x). Teach standard derivatives: d/dx(sin x) = cos x, d/dx(cos x) = −sin x, d/dx(eˣ) = eˣ, d/dx(ln x) = 1/x.",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Problem set: (a) Find lim(x→0) (1−cos x)/x² using the identity 1−cos x = 2sin²(x/2). (b) Differentiate f(x) = x² sin x using product rule. (c) Differentiate g(x) = (3x+1)⁵ using chain rule. (d) Differentiate h(x) = ln(sin x) using chain rule. (e) Find dy/dx if y = e^(x²+3x).",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "BUET-level: Find dy/dx by implicit differentiation if x² + y² + 2xy = 1. Then find the derivative of y = xˣ (hint: take ln of both sides first — logarithmic differentiation). Also evaluate: lim(x→0) (tan x − sin x)/x³ — this is a classic admission MCQ. (Answer: 1/2)",
+            },
         ],
         "key_formulas": [
-                "d/dx(xⁿ) = nxⁿ⁻¹",
-                "d/dx(sinx) = cosx",
-                "d/dx(eˣ) = eˣ",
-                "Chain: (f∘g)' = f'(g(x))·g'(x)",
-                "Product: (uv)' = u'v + uv'"
+            "f'(x) = lim(h→0) [f(x+h) − f(x)] / h — definition of derivative",
+            "d/dx(xⁿ) = nxⁿ⁻¹ (power rule)",
+            "d/dx(uv) = u'v + uv' (product rule)",
+            "d/dx(u/v) = (u'v − uv') / v² (quotient rule)",
+            "d/dx[f(g(x))] = f'(g(x)) · g'(x) (chain rule)",
+            "d/dx(sin x) = cos x, d/dx(cos x) = −sin x, d/dx(tan x) = sec²x",
+            "d/dx(eˣ) = eˣ, d/dx(aˣ) = aˣ ln a, d/dx(ln x) = 1/x",
+            "lim(x→0) sin x/x = 1, lim(x→0) (eˣ−1)/x = 1, lim(x→∞)(1+1/n)ⁿ = e",
         ],
         "common_mistakes": [
-                "Forgetting the chain rule for composite functions",
-                "Not applying product rule when needed (treating uv as just u'·v')",
-                "Confusing d/dx(sinx)=cosx with d/dx(cosx)=-sinx (the minus sign)"
+            "Applying the power rule to eˣ — d/dx(eˣ) is NOT xeˣ⁻¹; the power rule works for xⁿ (variable base, constant exponent), not aˣ (constant base, variable exponent)",
+            "Forgetting the chain rule when differentiating composite functions — d/dx(sin(3x)) = cos(3x) × 3, not just cos(3x). The inner derivative must be multiplied",
+            "In the quotient rule, getting the numerator order wrong — it is u'v − uv', not uv' − u'v (the derivative of the numerator comes first)",
         ],
         "practice_prompts": [
-                "Find dy/dx if y = (3x² + 1)⁴",
-                "Evaluate lim(x→0) sin(x)/x"
+            "Differentiate from first principles: f(x) = 1/x. Verify your answer using the power rule with x⁻¹.",
+            "Find dy/dx if y = sin²(3x + 1). Identify how many times you apply the chain rule.",
+            "Evaluate lim(x→0) [√(1+x) − √(1−x)] / x using rationalization.",
         ],
-        "real_world_example": "When engineers design the Dhaka Elevated Expressway curves, they use derivatives to ensure the slope changes smoothly — a sudden change in slope would make cars bounce. The derivative of position = velocity, derivative of velocity = acceleration."
-},
+        "real_world_example": "When a BUET engineering student designs a bridge over the Meghna river, they calculate how stress changes with load — that is a derivative. The rate of water flow in the Padma at any instant is the derivative of the total volume with respect to time. Even the speedometer in your bus from Dhaka to Chittagong shows the derivative of distance with respect to time — instantaneous speed, the very concept Newton invented calculus to understand.",
+    },
 
-    "hm1-10-01": {
-        "title": "Integration Basics",
+    "hm1-09-02": {
+        "title": "Applications of Derivatives (Maxima, Minima, Tangent & Normal)",
         "learning_objectives": [
-                "Integrate using power rule and basic formulas",
-                "Apply substitution method",
-                "Integrate trigonometric and exponential functions",
-                "Understand integration as reverse of differentiation"
+            "Find equations of tangent and normal lines to a curve at a given point using derivatives",
+            "Determine increasing and decreasing intervals of a function using the first derivative",
+            "Find local maxima and minima using first derivative test and second derivative test",
+            "Solve optimization problems involving maxima and minima in real-world contexts",
         ],
         "teaching_steps": [
-                {
-                        "step": 1,
-                        "type": "intro",
-                        "prompt": "Ask: if differentiation finds the slope, what does the reverse process give you? If d/dx(x²) = 2x, then what is ∫2x dx?"
-                },
-                {
-                        "step": 2,
-                        "type": "concept",
-                        "prompt": "∫xⁿ dx = xⁿ⁺¹/(n+1) + C. Don't forget +C! ∫sinx dx = -cosx + C. Ask: why do we need the constant C?"
-                },
-                {
-                        "step": 3,
-                        "type": "teach",
-                        "prompt": "Substitution: let u = inner function. ∫2x·cos(x²) dx — let u=x², du=2x dx → ∫cos(u) du = sin(u) + C = sin(x²) + C."
-                },
-                {
-                        "step": 4,
-                        "type": "practice",
-                        "prompt": "Integrate: (a) ∫(3x² + 4x - 1) dx, (b) ∫cos(5x) dx, (c) ∫x·eˣ² dx"
-                },
-                {
-                        "step": 5,
-                        "type": "mastery",
-                        "prompt": "BUET MCQ: integration by substitution or standard integrals."
-                }
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: a farmer near Rajshahi has 100 meters of fencing to enclose a rectangular mango orchard. What dimensions should he choose to maximize the area? This is an optimization problem that derivatives solve beautifully.",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Teach: the derivative f'(a) gives the slope of the tangent to y = f(x) at x = a. Tangent line: y − f(a) = f'(a)(x − a). Normal line (perpendicular to tangent): y − f(a) = −1/f'(a) · (x − a). Ask: find the tangent and normal to y = x³ − 3x at x = 1.",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Teach monotonicity: f'(x) > 0 means f is increasing, f'(x) < 0 means f is decreasing. Critical points where f'(x) = 0 or undefined. First derivative test: if f' changes from + to −, local max; from − to +, local min. Second derivative test: if f'(c) = 0 and f''(c) < 0, local max; f''(c) > 0, local min; f''(c) = 0, inconclusive. Solve: find all local extrema of f(x) = x³ − 12x + 5.",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Problem: A rectangular box with square base and no top is to be made from 48 cm² of cardboard. Find the dimensions that maximize the volume. (Let base = x, height = h. Surface area: x² + 4xh = 48. Express V = x²h in terms of x, differentiate, set to 0.) Then: find the points on y = x² − 4x + 5 where the tangent is parallel to the line y = 2x + 7.",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "BUET-level: A cylindrical tin can must hold 500 cm³ of condensed milk. Find the radius and height that minimize the total surface area (top + bottom + curved side). Express SA = 2πr² + 2πrh, use V = πr²h = 500 to eliminate h. Also: find the maximum and minimum values of f(x) = sin x + cos x on [0, 2π]. What is the absolute maximum of f(x) = x/(1+x²) for x > 0?",
+            },
         ],
         "key_formulas": [
-                "∫xⁿ dx = xⁿ⁺¹/(n+1) + C (n≠-1)",
-                "∫sinx dx = -cosx + C",
-                "∫eˣ dx = eˣ + C",
-                "∫1/x dx = ln|x| + C"
+            "Tangent at (a, f(a)): y − f(a) = f'(a)(x − a)",
+            "Normal at (a, f(a)): y − f(a) = −(1/f'(a))(x − a)",
+            "f increasing when f'(x) > 0; f decreasing when f'(x) < 0",
+            "Critical points: f'(x) = 0 or f'(x) undefined",
+            "Second derivative test: f''(c) > 0 → local min; f''(c) < 0 → local max",
+            "Optimization: set up the objective function, use constraint to reduce to one variable, differentiate and set to zero",
         ],
         "common_mistakes": [
-                "Forgetting the constant of integration (+C)",
-                "Not adjusting for the coefficient when integrating cos(5x) → (1/5)sin(5x)",
-                "Applying power rule to ∫1/x (should be ln|x|, not x⁰/0)"
+            "Forgetting to check endpoints when finding absolute max/min on a closed interval — the extreme values may occur at the endpoints, not at critical points",
+            "Using the second derivative test when f''(c) = 0 — the test is inconclusive in this case, and you must fall back to the first derivative test or higher derivative test",
+            "In optimization problems, forgetting to verify that the critical point is indeed a maximum (or minimum) as required — students find the critical point but do not confirm it is the desired type of extremum",
         ],
         "practice_prompts": [
-                "Find ∫(x³ - 2x + 1) dx",
-                "Evaluate ∫sin(3x) dx"
+            "Find the local maxima and minima of f(x) = 2x³ − 9x² + 12x − 4. Sketch the curve showing the turning points.",
+            "A ball is thrown upward with velocity v₀ = 20 m/s. Its height is h(t) = 20t − 5t². Find the maximum height and the time to reach it.",
+            "Among all rectangles with perimeter 20 cm, find the one with the largest area. Prove it is a square.",
         ],
-        "real_world_example": "Integration calculates area — the total area of rice paddies in Bangladesh could be calculated by integrating the boundary function. In economics, if you know the rate of GDP growth (derivative), integration gives you the total GDP over time."
-},
+        "real_world_example": "Bangladesh Krishi Bank optimizes fertilizer distribution — too little urea means low yield, too much wastes money and pollutes water. The yield Y as a function of fertilizer amount x follows a curve with a clear maximum. Derivatives find that optimal point. Similarly, BRTC bus operators want to find the speed that minimizes fuel cost per kilometer — calculus tells them the exact optimal speed for their Dhaka-Chittagong route.",
+    },
+
+    # ══ HIGHER MATHEMATICS — Chapter 10: যোগজীকরণ (Integration) ══
+    "hm1-10-01": {
+        "title": "Integration Basics (Indefinite Integrals & Techniques)",
+        "learning_objectives": [
+            "Understand integration as the reverse process of differentiation (antiderivative)",
+            "Apply the power rule for integration: ∫xⁿ dx = xⁿ⁺¹/(n+1) + C (n ≠ −1)",
+            "Integrate standard functions: polynomial, trigonometric, exponential, and logarithmic",
+            "Apply substitution method (u-substitution) to evaluate integrals of composite functions",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: if the derivative of x² is 2x, what function has derivative 2x? What about 2x + any constant — does its derivative also equal 2x? This reverse process is integration, and the '+C' (constant of integration) is why indefinite integrals have infinitely many answers.",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Define: ∫f(x) dx = F(x) + C where F'(x) = f(x). Teach the power rule: ∫xⁿ dx = xⁿ⁺¹/(n+1) + C for n ≠ −1. For n = −1: ∫(1/x) dx = ln|x| + C. Standard integrals: ∫sin x dx = −cos x + C, ∫cos x dx = sin x + C, ∫eˣ dx = eˣ + C, ∫sec²x dx = tan x + C. Ask: find ∫(3x² + 2x − 5) dx. Why is +C essential?",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Teach substitution: if the integral has the form ∫f(g(x))·g'(x) dx, let u = g(x), then du = g'(x) dx, and the integral becomes ∫f(u) du. Example: ∫2x·cos(x²) dx — let u = x², du = 2x dx, integral = ∫cos u du = sin u + C = sin(x²) + C. Work through: ∫(3x+1)⁵ dx, ∫sin³x cos x dx, ∫eˢⁱⁿˣ cos x dx. Emphasize: choosing the right u is the key skill.",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Problem set: (a) ∫(x³ + 1/x² − √x) dx, (b) ∫tan x dx (hint: write as sin x/cos x and substitute u = cos x), (c) ∫x/√(1+x²) dx using substitution u = 1+x², (d) ∫e^(3x+2) dx, (e) ∫dx/(x ln x) using substitution u = ln x.",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "BUET-level: Evaluate ∫sin³x dx by writing sin³x = sin x(1−cos²x) and substituting u = cos x. Then evaluate ∫dx/(x² + 4x + 13) by completing the square and using the arctan formula. Also: ∫x·eˣ dx using integration by parts (∫u dv = uv − ∫v du) — this previews an advanced technique.",
+            },
+        ],
+        "key_formulas": [
+            "∫xⁿ dx = xⁿ⁺¹/(n+1) + C, n ≠ −1",
+            "∫(1/x) dx = ln|x| + C",
+            "∫sin x dx = −cos x + C, ∫cos x dx = sin x + C",
+            "∫sec²x dx = tan x + C, ∫csc²x dx = −cot x + C",
+            "∫eˣ dx = eˣ + C, ∫aˣ dx = aˣ/ln a + C",
+            "Substitution: ∫f(g(x))·g'(x) dx = ∫f(u) du where u = g(x)",
+            "∫dx/(x²+a²) = (1/a)tan⁻¹(x/a) + C",
+            "Integration by parts: ∫u dv = uv − ∫v du",
+        ],
+        "common_mistakes": [
+            "Forgetting the constant of integration +C in indefinite integrals — every antiderivative has a family of solutions differing by a constant",
+            "Applying the power rule to ∫(1/x) dx as x⁰/0 — this is undefined! The integral of 1/x is ln|x| + C, not x⁰/0",
+            "In substitution, forgetting to change dx to du completely — if u = x², then du = 2x dx, so dx = du/(2x). All x-terms must be expressed in terms of u before integrating",
+        ],
+        "practice_prompts": [
+            "Evaluate ∫(4x³ − 6x² + 2x − 7) dx and verify by differentiating your answer.",
+            "Use substitution to evaluate ∫cos(5x + 3) dx. What is your choice of u?",
+            "Evaluate ∫x²/(x³ + 1) dx. (Hint: the numerator is almost the derivative of the denominator.)",
+        ],
+        "real_world_example": "When BWDB (Bangladesh Water Development Board) engineers measure the flow rate of the Jamuna river at different depths, they get a velocity function v(y). To find the total volume of water flowing per second, they integrate v(y) across the river's cross-section. The total water discharge Q = ∫v·dA is a direct application of integration — this calculation determines flood warnings for millions of Bangladeshis living on the char lands.",
+    },
+
+    "hm1-10-02": {
+        "title": "Definite Integrals & Area Under Curves",
+        "learning_objectives": [
+            "Evaluate definite integrals using the Fundamental Theorem of Calculus: ∫ₐᵇ f(x) dx = F(b) − F(a)",
+            "Apply properties of definite integrals (linearity, interval splitting, symmetry for even/odd functions)",
+            "Calculate the area bounded by curves, the x-axis, and given vertical lines",
+            "Find the area between two curves by integrating the difference of the upper and lower functions",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: if you know the speed of a bus on the Dhaka-Mymensingh highway at every moment, how do you find the total distance traveled in 2 hours? You add up speed × small time intervals — this is exactly what a definite integral does. The area under the speed-time graph equals the distance.",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "State the Fundamental Theorem of Calculus: if F'(x) = f(x), then ∫ₐᵇ f(x) dx = F(b) − F(a). No +C needed for definite integrals! Evaluate: ∫₀² (3x² + 2x) dx = [x³ + x²]₀² = (8+4) − (0+0) = 12. Teach properties: ∫ₐᵇ kf(x) dx = k∫ₐᵇ f(x) dx, ∫ₐᵇ = ∫ₐᶜ + ∫ᶜᵇ, ∫ₐᵇ f(x) dx = −∫ᵇₐ f(x) dx. For even functions: ∫₋ₐᵃ f(x) dx = 2∫₀ᵃ f(x) dx. For odd functions: ∫₋ₐᵃ f(x) dx = 0.",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Teach area under curve: Area = ∫ₐᵇ f(x) dx when f(x) ≥ 0. If f(x) < 0 on some interval, take absolute value: Area = ∫|f(x)| dx. For area between two curves: Area = ∫ₐᵇ [f(x) − g(x)] dx where f(x) ≥ g(x). Example: find area enclosed between y = x² and y = x. First find intersection: x² = x → x = 0, 1. Area = ∫₀¹ (x − x²) dx = [x²/2 − x³/3]₀¹ = 1/2 − 1/3 = 1/6.",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Problem: (a) Evaluate ∫₀^π sin x dx and interpret it as area. (b) Evaluate ∫₀^(2π) sin x dx — why is it 0? What is the actual area bounded by sin x and the x-axis from 0 to 2π? (c) Find the area enclosed between y = x² − 2x and the x-axis. (d) Find the area between y = x² and y = 2x − x² in the first quadrant.",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "BUET-level: Find the area enclosed by the circle x² + y² = 4 using integration (express y = √(4−x²) and integrate from −2 to 2; use the substitution x = 2 sin θ). Verify the answer equals πr² = 4π. Then: find the area bounded by the parabola y² = 4x and the line y = 2x − 4. Sketch the region first, find intersection points, and decide whether to integrate with respect to x or y.",
+            },
+        ],
+        "key_formulas": [
+            "Fundamental Theorem: ∫ₐᵇ f(x) dx = F(b) − F(a) where F'(x) = f(x)",
+            "∫ₐᵇ f(x) dx = −∫ᵇₐ f(x) dx",
+            "∫ₐᵇ [f(x) + g(x)] dx = ∫ₐᵇ f(x) dx + ∫ₐᵇ g(x) dx",
+            "Even function: ∫₋ₐᵃ f(x) dx = 2∫₀ᵃ f(x) dx",
+            "Odd function: ∫₋ₐᵃ f(x) dx = 0",
+            "Area between curves: A = ∫ₐᵇ |f(x) − g(x)| dx",
+            "Area under y = f(x) from a to b: A = ∫ₐᵇ |f(x)| dx (take absolute value if curve crosses x-axis)",
+        ],
+        "common_mistakes": [
+            "Confusing the definite integral value with the area — ∫₀^(2π) sin x dx = 0, but the actual area is 4 because the integral counts area below x-axis as negative. For area, always use |f(x)|",
+            "Forgetting to find intersection points before computing area between two curves — you must determine where the curves meet to set the correct limits of integration",
+            "When the upper and lower curves switch (one curve is above for part of the interval and below for the rest), not splitting the integral at the crossing point — this leads to cancellation errors",
+        ],
+        "practice_prompts": [
+            "Evaluate ∫₁³ (x² − 2x + 1) dx. What does this value represent geometrically?",
+            "Find the total area enclosed between y = x³ − x and the x-axis between x = −1 and x = 1. (Hint: the curve crosses the x-axis at x = −1, 0, and 1.)",
+            "The region bounded by y = √x, the x-axis, and the line x = 4 is rotated about the x-axis. Find the volume using the disk method: V = π∫₀⁴ (√x)² dx. (Bonus: this is a preview of volume of revolution.)",
+        ],
+        "real_world_example": "When Bangladesh designs flood embankments along the Brahmaputra, engineers calculate the cross-sectional area of the river channel using definite integrals — the riverbed profile is an irregular curve, and the area of water flow determines how much the river can carry before it overflows. During the 2022 Sylhet floods, these calculations were used to predict which areas would be inundated. Every square meter of cross-sectional area matters when millions of lives depend on accurate flood modeling.",
+    },
 }
 
 
