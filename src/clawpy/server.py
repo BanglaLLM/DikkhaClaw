@@ -226,15 +226,26 @@ async def tutor_stream(req: ChatRequest):
     if req.system_prompt:
         engine.set_system_prompt(req.system_prompt)
     else:
-        from clawpy.prompts.dikkha import build_dikkha_prompt
+        from clawpy.prompts.dikkha import build_dikkha_prompt, build_lesson_context
         ctx = req.context_data or {}
         if req.context_id:
             ctx["context_id"] = req.context_id
-        engine.set_system_prompt(build_dikkha_prompt(
+
+        # Check if this is a structured lesson with rich content
+        lesson_id = ctx.get("lesson_id")
+        lesson_step = ctx.get("lesson_step", 1)
+        lesson_ctx = build_lesson_context(lesson_id, lesson_step) if lesson_id else None
+
+        base_prompt = build_dikkha_prompt(
             context_type=req.context_type or "free_chat",
             context_data=ctx or None,
             language=user_lang,
-        ))
+        )
+
+        if lesson_ctx:
+            engine.set_system_prompt(base_prompt + lesson_ctx)
+        else:
+            engine.set_system_prompt(base_prompt)
 
     tools_called: list[str] = []
     collected_events: list[StreamEvent] = []
@@ -853,6 +864,16 @@ async def translate_content(req: Request):
         result = await translate_text(body["text"], target_lang, source_lang)
         return {"translated": result}
     return {"error": "Provide 'text' or 'question' in body"}
+
+
+@app.get("/curriculum/lessons/{lesson_id}/content")
+async def get_lesson_content_endpoint(lesson_id: str):
+    """Get rich teaching content for a specific lesson."""
+    from clawpy.curriculum.lesson_content import get_lesson_content
+    content = get_lesson_content(lesson_id)
+    if not content:
+        return {"lesson_id": lesson_id, "has_content": False}
+    return {"lesson_id": lesson_id, "has_content": True, **content}
 
 
 @app.get("/curriculum/tracks")

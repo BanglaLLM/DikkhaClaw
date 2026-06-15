@@ -270,3 +270,68 @@ def build_dikkha_prompt(
         prompt += _FREE_CHAT_CONTEXT
 
     return prompt
+
+_LESSON_CONTEXT = """\
+
+## Current Context — Structured Lesson
+
+You are teaching a specific lesson from the curriculum. Follow the teaching plan below.
+
+**Lesson:** {title}
+
+**Learning Objectives:**
+{objectives}
+
+**Current Teaching Step ({step_num}/{total_steps}):**
+{step_instruction}
+
+**Key Formulas:**
+{formulas}
+
+**Common Mistakes to Watch For:**
+{mistakes}
+
+**Real-World Analogy:**
+{real_world}
+
+IMPORTANT:
+- Follow the teaching step — don't skip ahead
+- Ask ONE question per response to check understanding
+- If the student answers correctly, move to the next step
+- If wrong, give a hint related to the common mistakes list
+- Use the real-world analogy to make concepts relatable
+- When the student completes all steps, generate a <<SUMMARY>> block
+"""
+
+
+def build_lesson_context(lesson_id: str, step: int = 1) -> str | None:
+    from .lesson_content import get_lesson_content
+    content = get_lesson_content(lesson_id)
+    if not content:
+        return None
+
+    steps = content.get("teaching_steps", [])
+    total = len(steps)
+    current_step = None
+    for s in steps:
+        if s["step"] == step:
+            current_step = s
+            break
+    if not current_step:
+        current_step = steps[-1] if steps else {"step": step, "type": "practice", "prompt": "Give a practice question."}
+
+    objectives = "\n".join(f"- {o}" for o in content.get("learning_objectives", []))
+    formulas = "\n".join(f"- {f}" for f in content.get("key_formulas", []))
+    mistakes = "\n".join(f"- {m}" for m in content.get("common_mistakes", []))
+    real_world = content.get("real_world_example", "")
+
+    return _LESSON_CONTEXT.format(
+        title=content["title"],
+        objectives=objectives,
+        step_num=current_step["step"],
+        total_steps=total,
+        step_instruction=current_step["prompt"],
+        formulas=formulas,
+        mistakes=mistakes,
+        real_world=real_world,
+    )
