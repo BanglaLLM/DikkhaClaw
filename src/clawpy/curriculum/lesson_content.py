@@ -865,6 +865,206 @@ LESSON_CONTENT: dict[str, dict] = {
 }
 
 
+    # ══ BIOLOGY — Chapter 1: Cell & Its Structure ══
+    "bio1-01-01": {
+        "title": "Prokaryotic vs Eukaryotic Cells",
+        "learning_objectives": [
+            "Compare prokaryotic and eukaryotic cell structure",
+            "Identify key organelles and their functions",
+            "Explain the endosymbiotic theory",
+            "Distinguish plant cells from animal cells",
+        ],
+        "teaching_steps": [
+            {"step": 1, "type": "intro", "prompt": "Ask: all living things are made of cells — but are all cells the same? What do you think makes a bacteria cell different from your body's cells?"},
+            {"step": 2, "type": "concept", "prompt": "Explain prokaryotic (no nucleus, no membrane-bound organelles) vs eukaryotic (nucleus, organelles). Ask student to classify: E. coli, onion cell, amoeba, Streptococcus."},
+            {"step": 3, "type": "teach", "prompt": "Teach the key organelles: mitochondria (powerhouse), ribosome (protein factory), ER, Golgi, lysosome. Ask: which organelle is found in BOTH prokaryotes and eukaryotes?"},
+            {"step": 4, "type": "practice", "prompt": "Ask: why do plant cells have cell walls and chloroplasts but animal cells don't? What would happen if an animal cell had a cell wall?"},
+            {"step": 5, "type": "mastery", "prompt": "Give a Medical admission MCQ about cell organelles. Test: which organelle is called the 'suicide bag' of the cell?"},
+        ],
+        "key_formulas": [
+            "Prokaryote: no nucleus, circular DNA, 70S ribosomes",
+            "Eukaryote: membrane-bound nucleus, linear DNA, 80S ribosomes",
+            "Plant cell extras: cell wall, chloroplast, large vacuole",
+        ],
+        "common_mistakes": [
+            "Thinking bacteria have a nucleus (they have nucleoid, not nucleus)",
+            "Confusing 70S and 80S ribosomes between prokaryotes and eukaryotes",
+            "Forgetting that plant cells have BOTH mitochondria and chloroplasts",
+        ],
+        "practice_prompts": [
+            "Name 3 differences between prokaryotic and eukaryotic cells.",
+            "Which organelle is responsible for energy production? Is it found in plant cells?",
+            "Why is the lysosome called the 'suicide bag'?",
+        ],
+        "real_world_example": "Think of a cell like a factory — the nucleus is the manager's office (instructions), mitochondria are the generators (power), ribosomes are the assembly lines (making products). A bacteria is like a small roadside shop — everything in one room, no separate offices.",
+    },
+
+    "bio1-01-02": {
+        "title": "Cell Membrane Structure & Transport",
+        "learning_objectives": [
+            "Describe the fluid mosaic model of cell membrane",
+            "Explain passive transport: diffusion, osmosis, facilitated diffusion",
+            "Explain active transport and endocytosis/exocytosis",
+            "Predict cell behavior in hypertonic, hypotonic, isotonic solutions",
+        ],
+        "teaching_steps": [
+            {"step": 1, "type": "intro", "prompt": "Ask: if cells are surrounded by a membrane, how do nutrients get IN and waste get OUT? Can everything pass through?"},
+            {"step": 2, "type": "concept", "prompt": "Explain the fluid mosaic model: phospholipid bilayer, proteins (channel, carrier, receptor). Ask: why is it called 'fluid'?"},
+            {"step": 3, "type": "teach", "prompt": "Teach osmosis with a practical example: what happens when you put a raisin in water? What about in salt water? Introduce hypertonic/hypotonic/isotonic."},
+            {"step": 4, "type": "practice", "prompt": "Problem: red blood cells placed in distilled water — what happens and why? What about in concentrated salt solution?"},
+            {"step": 5, "type": "mastery", "prompt": "Ask a Medical admission MCQ about membrane transport. Test active vs passive transport."},
+        ],
+        "key_formulas": [
+            "Osmosis: water moves from low solute to high solute concentration",
+            "Diffusion: molecules move from high to low concentration",
+            "Active transport: requires ATP, moves against concentration gradient",
+        ],
+        "common_mistakes": [
+            "Saying osmosis is movement of solute (it's movement of WATER/solvent)",
+            "Confusing hypertonic and hypotonic — hyper = more solute OUTSIDE",
+            "Thinking all transport across membrane requires energy (diffusion is passive)",
+        ],
+        "practice_prompts": [
+            "What happens to a plant cell in a hypertonic solution? (plasmolysis)",
+            "Explain why salt is used to preserve fish (shutki) — relate to osmosis.",
+        ],
+        "real_world_example": "When your grandmother makes shutki (dried fish) with salt, the salt draws water OUT of the fish cells by osmosis — bacteria can't survive without water, so the fish is preserved. Same principle as আচার (pickle) making!",
+    },
+
+    # ══ BIOLOGY — Chapter 2: Cell Division ══
+    "bio1-02-01": {
+        "title": "Mitosis: Stages & Significance",
+        "learning_objectives": [
+            "List and describe the stages of mitosis (PMAT)",
+            "Explain the role of the mitotic spindle",
+            "Describe cytokinesis in plant vs animal cells",
+            "Explain the significance of mitosis in growth and repair",
+        ],
+        "teaching_steps": [
+            {"step": 1, "type": "intro", "prompt": "Ask: when you cut your finger, it heals in a few days. How does the body make new cells to replace the damaged ones?"},
+            {"step": 2, "type": "concept", "prompt": "Introduce the cell cycle: interphase (G1, S, G2) and M phase. Ask: what happens in S phase? Why is it important?"},
+            {"step": 3, "type": "teach", "prompt": "Teach PMAT stages of mitosis: Prophase (chromosomes condense), Metaphase (align at equator), Anaphase (separate), Telophase (reform nuclei). Use a mnemonic."},
+            {"step": 4, "type": "practice", "prompt": "Ask: if a cell has 46 chromosomes, how many chromosomes will each daughter cell have after mitosis? What about the DNA content?"},
+            {"step": 5, "type": "mastery", "prompt": "Give a Medical admission MCQ about mitosis stages or chromosome number."},
+        ],
+        "key_formulas": [
+            "Cell cycle: G1 → S → G2 → M (mitosis)",
+            "Mitosis: Prophase → Metaphase → Anaphase → Telophase",
+            "Result: 2 daughter cells, each with same chromosome number as parent (2n → 2n)",
+        ],
+        "common_mistakes": [
+            "Confusing mitosis (body cells, same chromosome #) with meiosis (gametes, half)",
+            "Thinking DNA replication happens DURING mitosis (it happens in S phase of interphase)",
+            "Forgetting that cytokinesis differs in plant cells (cell plate) vs animal cells (cleavage furrow)",
+        ],
+        "practice_prompts": [
+            "In which phase of mitosis do chromosomes line up at the cell equator?",
+            "A cell with 2n=24 undergoes mitosis. How many chromosomes in each daughter cell?",
+        ],
+        "real_world_example": "Think of mitosis like photocopying a document — you get an exact copy. When a gecko loses its tail, mitosis makes identical copies of cells to regrow it. Same happens when ধান (rice) plants grow new leaves.",
+    },
+
+    "bio1-02-02": {
+        "title": "Meiosis: Stages & Genetic Variation",
+        "learning_objectives": [
+            "Describe meiosis I and meiosis II stages",
+            "Explain crossing over and independent assortment",
+            "Compare mitosis and meiosis in a table",
+            "Explain why meiosis is essential for sexual reproduction",
+        ],
+        "teaching_steps": [
+            {"step": 1, "type": "intro", "prompt": "Ask: if mitosis copies cells exactly, why don't siblings look identical to each other or their parents?"},
+            {"step": 2, "type": "concept", "prompt": "Explain that meiosis produces gametes (sperm/egg) with HALF the chromosomes. Ask: why is reducing chromosome number necessary?"},
+            {"step": 3, "type": "teach", "prompt": "Teach meiosis I (homologous pairs separate — crossing over happens here) and meiosis II (sister chromatids separate — like mitosis). Emphasize: crossing over = genetic variation."},
+            {"step": 4, "type": "practice", "prompt": "Compare: a cell with 2n=46 undergoes meiosis. How many daughter cells? How many chromosomes each? How is this different from mitosis?"},
+            {"step": 5, "type": "mastery", "prompt": "Ask a Medical admission MCQ about meiosis — test crossing over timing or chromosome count."},
+        ],
+        "key_formulas": [
+            "Meiosis I: 2n → n (reductional division, homologs separate)",
+            "Meiosis II: n → n (equational division, chromatids separate)",
+            "Result: 4 haploid daughter cells (genetically different)",
+            "Crossing over occurs in Prophase I",
+        ],
+        "common_mistakes": [
+            "Thinking crossing over happens in meiosis II (it's in Prophase I)",
+            "Saying meiosis produces 2 cells (it produces 4)",
+            "Confusing haploid (n) with diploid (2n) after each division",
+        ],
+        "practice_prompts": [
+            "If a human cell (2n=46) undergoes meiosis, how many chromosomes in each gamete?",
+            "Why is crossing over important for evolution?",
+        ],
+        "real_world_example": "Think of meiosis like shuffling a deck of cards and dealing 4 different hands — each gamete gets a unique combination. This is why no two আম (mango) trees from seed are exactly the same, even from the same parent tree.",
+    },
+
+    # ══ BIOLOGY — Chapter 3: Cell Chemistry / Biochemistry ══
+    "bio1-03-01": {
+        "title": "Carbohydrates, Proteins & Lipids",
+        "learning_objectives": [
+            "Classify carbohydrates: mono-, di-, polysaccharides with examples",
+            "Describe protein structure levels (primary to quaternary)",
+            "Explain the structure and functions of lipids",
+            "Identify biological molecules from chemical tests",
+        ],
+        "teaching_steps": [
+            {"step": 1, "type": "intro", "prompt": "Ask: when you eat ভাত (rice), your body breaks it down. What is rice made of chemically? What about মাছ (fish) and তেল (oil)?"},
+            {"step": 2, "type": "concept", "prompt": "Teach carbohydrate classification: glucose/fructose (monosaccharides), sucrose/lactose (disaccharides), starch/cellulose/glycogen (polysaccharides). Ask: which one is in rice?"},
+            {"step": 3, "type": "teach", "prompt": "Teach protein structure: amino acids → peptide bond → primary → secondary (alpha helix, beta sheet) → tertiary → quaternary. Ask: what happens to protein structure when you boil an egg?"},
+            {"step": 4, "type": "practice", "prompt": "Ask: what chemical test identifies (a) starch, (b) protein, (c) reducing sugar? Iodine test, Biuret test, Benedict's test."},
+            {"step": 5, "type": "mastery", "prompt": "Give a Medical admission MCQ about biomolecule identification or structure."},
+        ],
+        "key_formulas": [
+            "Carbohydrate general formula: Cn(H2O)n",
+            "Peptide bond: -CO-NH- (between amino acids)",
+            "Lipid: glycerol + 3 fatty acids → triglyceride",
+            "Iodine test → starch (blue-black), Benedict's → reducing sugar (red)",
+        ],
+        "common_mistakes": [
+            "Thinking all carbohydrates taste sweet (cellulose and starch don't)",
+            "Confusing primary structure (amino acid sequence) with secondary (folding pattern)",
+            "Forgetting that enzymes are proteins — denaturation = loss of function",
+        ],
+        "practice_prompts": [
+            "What is the difference between starch and cellulose? Both are polysaccharides of glucose.",
+            "Why does cooking an egg turn the white solid? (protein denaturation)",
+        ],
+        "real_world_example": "When you cook ভাত (rice), the starch granules absorb water and swell — that's why raw rice is hard but cooked rice is soft. And when you fry an egg, heat denatures the protein — the clear albumin turns white and can't go back!",
+    },
+
+    "bio1-03-02": {
+        "title": "Nucleic Acids & Enzymes",
+        "learning_objectives": [
+            "Describe DNA and RNA structure (nucleotides, double helix vs single strand)",
+            "Explain base pairing rules (A-T, G-C for DNA; A-U for RNA)",
+            "Describe enzyme action using lock-and-key model",
+            "Explain factors affecting enzyme activity (temperature, pH, substrate concentration)",
+        ],
+        "teaching_steps": [
+            {"step": 1, "type": "intro", "prompt": "Ask: what carries the instructions to build your entire body — every cell, every protein? How is this information stored?"},
+            {"step": 2, "type": "concept", "prompt": "Teach DNA structure: nucleotide = sugar + phosphate + base. Double helix, complementary base pairing (A-T, G-C). Ask: if one strand is ATCGGA, what is the complementary strand?"},
+            {"step": 3, "type": "teach", "prompt": "Compare DNA and RNA: sugar (deoxyribose vs ribose), bases (T vs U), strands (double vs single). Teach types of RNA: mRNA, tRNA, rRNA."},
+            {"step": 4, "type": "practice", "prompt": "Teach enzyme action: lock-and-key model, active site, substrate specificity. Ask: what happens to enzyme activity if temperature increases beyond 40°C?"},
+            {"step": 5, "type": "mastery", "prompt": "Give a Medical admission MCQ about DNA base pairing or enzyme kinetics."},
+        ],
+        "key_formulas": [
+            "DNA base pairing: A=T (2 H-bonds), G≡C (3 H-bonds)",
+            "RNA base pairing: A=U",
+            "Chargaff's rule: %A = %T, %G = %C",
+            "Enzyme: E + S → ES → E + P",
+        ],
+        "common_mistakes": [
+            "Confusing thymine (DNA only) with uracil (RNA only)",
+            "Thinking enzymes are consumed in reactions (they are catalysts — reused)",
+            "Forgetting that Chargaff's rule only applies to double-stranded DNA, not RNA",
+        ],
+        "practice_prompts": [
+            "In a DNA molecule, if 30% of bases are adenine, what percentage is cytosine?",
+            "Why does fever (high temperature) sometimes make you feel weak? (enzyme denaturation)",
+        ],
+        "real_world_example": "Think of DNA like the recipe book in a restaurant kitchen — it stays safe in the office (nucleus). RNA is like the waiter who copies one recipe (mRNA) and brings it to the kitchen (ribosome) where the dish (protein) is cooked. The recipe book is never taken to the kitchen directly!",
+    },
+
+
 def get_lesson_content(lesson_id: str) -> dict | None:
     return LESSON_CONTENT.get(lesson_id)
 
