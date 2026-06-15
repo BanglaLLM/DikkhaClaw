@@ -2802,6 +2802,857 @@ LESSON_CONTENT: dict[str, dict] = {
         "real_world_example": "The pressure cooker in every Bangladeshi kitchen works on Gay-Lussac's law — as temperature increases at constant volume, pressure increases. That's why food cooks faster inside — higher pressure means higher boiling point of water!"
 },
 
+
+
+    # ══ CHEMISTRY, MATH, BIOLOGY — Chapters 4-10 ══
+    "bio1-04-01": {
+        "title": "Microorganisms",
+        "learning_objectives": [
+                "Describe virus structure and classification",
+                "Compare bacteria cell structure with eukaryotes",
+                "Explain Koch's postulates",
+                "Describe beneficial and harmful microorganisms"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: are viruses living or non-living? They can't reproduce on their own, but they evolve. What do you think?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Virus structure: protein coat (capsid) + nucleic acid (DNA or RNA). Not cellular. Bacteria: prokaryotic cell. Ask: why don't antibiotics work on viruses?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Koch's postulates: how to prove a microbe causes disease. 4 steps. Discuss: bacteriophage (virus that kills bacteria) — potential alternative to antibiotics."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "Compare: virus vs bacteria — size, structure, reproduction, treatment. Make a table."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "Medical admission MCQ about virus classification or bacterial structure."
+                }
+        ],
+        "key_formulas": [
+                "Virus: obligate intracellular parasite",
+                "Bacteria: 0.5-5 μm, virus: 20-300 nm",
+                "Koch's 4 postulates",
+                "Lytic vs lysogenic cycle"
+        ],
+        "common_mistakes": [
+                "Saying viruses are living organisms (they're at the boundary)",
+                "Thinking all bacteria are harmful (many are beneficial — gut flora)",
+                "Confusing bacteriophage with pathogenic virus"
+        ],
+        "practice_prompts": [
+                "Name a DNA virus and an RNA virus that affect humans.",
+                "Why can't antibiotics kill viruses?"
+        ],
+        "real_world_example": "COVID-19 is caused by SARS-CoV-2, an RNA virus. In Bangladesh, diarrhea from Vibrio cholerae (bacteria) is treated with ORS and antibiotics — but viral diarrhea (rotavirus) needs only ORS because antibiotics don't work on viruses. Understanding this difference saves lives."
+},
+
+    "bio1-09-01": {
+        "title": "Photosynthesis",
+        "learning_objectives": [
+                "Write the overall equation of photosynthesis",
+                "Describe light-dependent reactions (thylakoid)",
+                "Describe light-independent reactions (Calvin cycle, stroma)",
+                "Explain factors affecting photosynthesis rate"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: plants make their own food — but how? Where does the energy come from? Where does the carbon come from?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂ (in presence of light + chlorophyll). Light reactions in thylakoid: water split, O₂ released, ATP + NADPH made. Ask: where does the oxygen come from — CO₂ or H₂O?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Calvin cycle in stroma: CO₂ fixed by RuBisCO → G3P → glucose. Needs ATP and NADPH from light reactions. Ask: can Calvin cycle run in the dark if given ATP and NADPH?"
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "Factors: light intensity, CO₂ concentration, temperature. Draw a graph of photosynthesis rate vs light intensity — why does it plateau?"
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "Medical admission MCQ about photosynthesis stages or limiting factors."
+                }
+        ],
+        "key_formulas": [
+                "6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂",
+                "Light reactions: H₂O → O₂ + ATP + NADPH",
+                "Calvin cycle: CO₂ → G3P → glucose",
+                "RuBisCO fixes CO₂"
+        ],
+        "common_mistakes": [
+                "Thinking O₂ comes from CO₂ (it comes from splitting H₂O)",
+                "Saying photosynthesis only happens in light (Calvin cycle uses products from light, but doesn't need light directly)",
+                "Confusing C3 and C4 photosynthesis pathways"
+        ],
+        "practice_prompts": [
+                "In which part of the chloroplast do light reactions occur?",
+                "What would happen to photosynthesis if CO₂ concentration is doubled?"
+        ],
+        "real_world_example": "Bangladesh's ধান (rice) fields are massive photosynthesis factories — rice plants convert sunlight into grain that feeds 170 million people. In the Sundarbans, mangrove trees photosynthesize even in salty water, producing the oxygen that supports the entire ecosystem including the Royal Bengal Tiger."
+},
+
+    "bio1-09-02": {
+        "title": "Respiration & Transpiration",
+        "learning_objectives": [
+                "Compare aerobic and anaerobic respiration",
+                "Describe glycolysis, Krebs cycle, and ETC",
+                "Calculate ATP yield from one glucose molecule",
+                "Explain transpiration and its importance in plants"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: photosynthesis makes glucose, but how do cells actually USE that glucose for energy? What molecule is the 'energy currency'?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Respiration: C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + ATP. Three stages: glycolysis (cytoplasm), Krebs cycle (matrix), ETC (inner membrane). Ask: which stage produces the most ATP?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "ATP count: glycolysis = 2 ATP net, Krebs = 2 ATP, ETC = 34 ATP. Total ≈ 38 ATP per glucose. Anaerobic: only glycolysis = 2 ATP. Teach transpiration: water loss through stomata."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "Compare aerobic vs anaerobic respiration in a table. Why do muscles produce lactic acid during intense exercise?"
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "Medical admission MCQ about ATP yield or Krebs cycle products."
+                }
+        ],
+        "key_formulas": [
+                "C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + 38 ATP",
+                "Glycolysis: glucose → 2 pyruvate + 2 ATP (cytoplasm)",
+                "Krebs: acetyl CoA → CO₂ + NADH + FADH₂ (mitochondria)",
+                "ETC: NADH/FADH₂ → ATP (34 ATP)"
+        ],
+        "common_mistakes": [
+                "Thinking respiration only happens at night in plants (it happens 24/7)",
+                "Confusing fermentation products: yeast produces ethanol, muscles produce lactic acid",
+                "Saying glycolysis needs oxygen (it's anaerobic — happens without O₂)"
+        ],
+        "practice_prompts": [
+                "Where exactly in the mitochondria does the Krebs cycle occur?",
+                "Why can yeast survive without oxygen but most animals can't survive long?"
+        ],
+        "real_world_example": "When you eat ভাত (rice), your body breaks the starch into glucose, then cellular respiration converts it to ATP — that's the energy that lets you walk, think, and study. In making পান্তা ভাত (fermented rice), yeast does anaerobic respiration producing CO₂ bubbles and a slightly sour taste from organic acids."
+},
+
+    "bio1-10-01": {
+        "title": "Plant Reproduction",
+        "learning_objectives": [
+                "Describe structure of a flower and functions of each part",
+                "Explain pollination types (self vs cross)",
+                "Describe double fertilization in angiosperms",
+                "Distinguish monocot and dicot seeds"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: why do flowers exist? They're beautiful, but what's their actual biological purpose?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Flower parts: sepal, petal, stamen (male: anther + filament), pistil (female: stigma + style + ovary). Ask: which part produces pollen? Which contains ovules?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Double fertilization: one sperm + egg → zygote (2n), other sperm + polar nuclei → endosperm (3n). Unique to angiosperms. Ask: why is endosperm triploid (3n)?"
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "Compare self-pollination vs cross-pollination. Which produces more genetic variation? Which is more reliable?"
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "Medical admission MCQ about double fertilization or flower structure."
+                }
+        ],
+        "key_formulas": [
+                "Pollen grain: 2 sperm cells",
+                "Double fertilization: sperm + egg = zygote (2n), sperm + 2 polar nuclei = endosperm (3n)",
+                "Ovary → fruit, ovule → seed",
+                "Self-pollination: same flower, Cross: different flower/plant"
+        ],
+        "common_mistakes": [
+                "Thinking pollen IS the male gamete (pollen contains the gametes)",
+                "Confusing pollination (pollen transfer) with fertilization (fusion of gametes)",
+                "Forgetting that endosperm is triploid (3n), not diploid"
+        ],
+        "practice_prompts": [
+                "What develops from the ovary after fertilization?",
+                "Why is cross-pollination more advantageous than self-pollination?"
+        ],
+        "real_world_example": "The আম (mango) flowers you see in spring are pollinated by insects and wind. After double fertilization, the ovary becomes the juicy mango fruit, and the seed inside is the fertilized ovule. Bangladesh's famous ফজলি and ল্যাংড়া mangoes from Rajshahi exist because of cross-pollination creating genetic diversity!"
+},
+
+    "chem1-03-02": {
+        "title": "Chemical Bonding",
+        "learning_objectives": [
+                "Distinguish ionic, covalent, and metallic bonds",
+                "Draw Lewis structures and apply VSEPR theory",
+                "Explain hybridization (sp, sp², sp³)",
+                "Predict molecular geometry and polarity"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: why do atoms bond? Why doesn't helium form bonds but sodium does?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach ionic (electron transfer) vs covalent (sharing). Draw NaCl and H₂O Lewis structures. Ask: which has higher melting point and why?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "VSEPR theory: electron pairs repel. sp³=tetrahedral, sp²=trigonal planar, sp=linear. Ask: what is the shape of CH₄? NH₃? H₂O?"
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "Draw Lewis structure of CO₂. What hybridization? What shape? Is it polar or nonpolar?"
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ: predict the bond angle in BF₃ vs NF₃. Why are they different?"
+                }
+        ],
+        "key_formulas": [
+                "Ionic bond: metal + nonmetal",
+                "Covalent bond: nonmetal + nonmetal",
+                "sp³: 109.5°, sp²: 120°, sp: 180°",
+                "VSEPR: minimize electron pair repulsion"
+        ],
+        "common_mistakes": [
+                "Thinking all covalent compounds are nonpolar (HCl is polar covalent)",
+                "Forgetting lone pairs affect molecular geometry (NH₃ is pyramidal, not tetrahedral)",
+                "Confusing electron geometry with molecular geometry"
+        ],
+        "practice_prompts": [
+                "What is the hybridization of carbon in ethene (C₂H₄)?",
+                "Why is water bent (104.5°) instead of linear?"
+        ],
+        "real_world_example": "Table salt (NaCl) dissolves in water because water molecules pull apart the ionic bond — the Na⁺ and Cl⁻ ions separate. But oil (covalent, nonpolar) doesn't dissolve because water is polar. That's why তেল (oil) and জল (water) don't mix in your kitchen!"
+},
+
+    "chem1-04-01": {
+        "title": "Chemical Equilibrium",
+        "learning_objectives": [
+                "Write equilibrium expressions (Kc, Kp)",
+                "Apply Le Chatelier's principle",
+                "Calculate equilibrium concentrations",
+                "Distinguish between Kc and Kp"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: if you open a bottle of Coca-Cola, bubbles come out. But in the sealed bottle, was the CO₂ not dissolving and undissolving at the same time?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Dynamic equilibrium: forward rate = reverse rate. Kc = [products]/[reactants]. Ask: what does a large Kc mean?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Le Chatelier: if you disturb equilibrium, it shifts to counteract. Add reactant → shifts right. Increase temperature for exothermic → shifts left."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "N₂ + 3H₂ ⇌ 2NH₃ (exothermic). What happens if we: (a) add N₂, (b) increase pressure, (c) increase temperature?"
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "Calculate Kc: if [N₂]=0.1, [H₂]=0.3, [NH₃]=0.2 at equilibrium."
+                }
+        ],
+        "key_formulas": [
+                "Kc = [C]ᶜ[D]ᵈ / [A]ᵃ[B]ᵇ",
+                "Kp = Kc(RT)^Δn",
+                "Le Chatelier's principle",
+                "Q vs K: Q<K→forward, Q>K→reverse"
+        ],
+        "common_mistakes": [
+                "Including solids and pure liquids in the Kc expression",
+                "Thinking a catalyst changes equilibrium position (it only speeds up reaching equilibrium)",
+                "Confusing Kc (concentration) with Kp (pressure)"
+        ],
+        "practice_prompts": [
+                "For 2SO₂ + O₂ ⇌ 2SO₃, write the Kc expression.",
+                "If Kc = 4.0 and initial [A]=1M, [B]=1M for A ⇌ B, find equilibrium concentrations."
+        ],
+        "real_world_example": "The Haber process for making fertilizer (NH₃) at Chittagong's KAFCO factory uses Le Chatelier's principle: high pressure (200 atm) and moderate temperature (450°C) to push equilibrium toward NH₃ production. Bangladesh imports most fertilizer, but understanding equilibrium could help optimize local production."
+},
+
+    "chem1-04-02": {
+        "title": "Acids, Bases & Redox",
+        "learning_objectives": [
+                "Calculate pH from H⁺ concentration",
+                "Identify oxidation and reduction in reactions",
+                "Balance redox equations",
+                "Apply Brønsted-Lowry and Lewis acid-base theories"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: lemon juice is sour, soap is slippery. What makes them different chemically?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "pH = -log[H⁺]. pH<7 acidic, pH>7 basic. Brønsted acid = proton donor. Ask: is water an acid or base?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Redox: oxidation = loss of electrons, reduction = gain. OIL RIG mnemonic. Assign oxidation numbers in Fe₂O₃ + CO → Fe + CO₂."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "Find pH of 0.01M HCl. Then: find pH of 0.1M NaOH."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "Balance this redox reaction in acidic medium: MnO₄⁻ + Fe²⁺ → Mn²⁺ + Fe³⁺"
+                }
+        ],
+        "key_formulas": [
+                "pH = -log[H⁺]",
+                "pOH = -log[OH⁻]",
+                "pH + pOH = 14",
+                "OIL RIG: Oxidation Is Loss, Reduction Is Gain"
+        ],
+        "common_mistakes": [
+                "Forgetting that pH is a LOG scale (pH 3 is 10x more acidic than pH 4)",
+                "Confusing oxidation number with charge",
+                "Not balancing atoms AND charges in redox equations"
+        ],
+        "practice_prompts": [
+                "What is the pH of pure water?",
+                "In 2Mg + O₂ → 2MgO, which is oxidized and which is reduced?"
+        ],
+        "real_world_example": "When you add তেঁতুল (tamarind, acidic) to your tarkari, the sour taste is from H⁺ ions. Adding baking soda (basic) neutralizes it. The pH of the Padma river water matters for fish survival — too acidic or basic and fish die."
+},
+
+    "chem2-02-01": {
+        "title": "IUPAC Naming & Functional Groups",
+        "learning_objectives": [
+                "Name organic compounds using IUPAC rules",
+                "Identify functional groups in organic molecules",
+                "Classify organic compounds by functional group",
+                "Draw structural formulas from IUPAC names"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: methane, ethane, propane — do you see a pattern in the names? What do you think butane has?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "IUPAC naming: find longest chain, number carbons, name substituents. Meth=1, Eth=2, Prop=3, But=4. Suffixes: -ane, -ene, -yne, -ol, -al, -one, -oic acid."
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Functional groups: -OH (alcohol), -CHO (aldehyde), -COOH (carboxylic acid), -NH₂ (amine). Ask: name CH₃CH₂OH using IUPAC rules."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "Name: CH₃CH(CH₃)CH₂CH₃. Then: draw the structure of 2-methylpropan-1-ol."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ: name a branched compound with a functional group."
+                }
+        ],
+        "key_formulas": [
+                "Alkane: CₙH₂ₙ₊₂",
+                "Alkene: CₙH₂ₙ",
+                "Alkyne: CₙH₂ₙ₋₂",
+                "Alcohol: R-OH, Aldehyde: R-CHO, Ketone: R-CO-R'"
+        ],
+        "common_mistakes": [
+                "Not choosing the longest carbon chain as the parent chain",
+                "Numbering from the wrong end (should give lowest locants to substituents)",
+                "Confusing -al (aldehyde) with -ol (alcohol)"
+        ],
+        "practice_prompts": [
+                "Name CH₃CH₂CH₂OH",
+                "Draw 3-ethyl-2-methylpentane"
+        ],
+        "real_world_example": "The smell of পাকা আম (ripe mango) comes from organic compounds called esters. Vinegar is acetic acid (ethanoic acid). The natural gas used in Bangladeshi kitchens is mainly methane (CH₄) — the simplest organic compound!"
+},
+
+    "chem2-02-02": {
+        "title": "Hydrocarbons & Organic Reactions",
+        "learning_objectives": [
+                "Classify hydrocarbons as saturated/unsaturated",
+                "Explain isomerism (structural and geometrical)",
+                "Describe substitution, addition, and elimination reactions",
+                "Predict products of organic reactions"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: petrol, diesel, kerosene are all hydrocarbons. What's the difference between them?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Saturated (single bonds only) vs unsaturated (double/triple bonds). Alkanes do substitution, alkenes do addition. Ask: why can't alkanes do addition reactions?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Isomerism: same formula, different structure. CH₃CH₂CH₂CH₃ vs CH₃CH(CH₃)CH₃ — both C₄H₁₀. Teach geometrical isomerism (cis-trans) in alkenes."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "Write the products: CH₂=CH₂ + HBr → ? (addition). CH₄ + Cl₂ → ? (substitution with UV light)."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "How many structural isomers does C₅H₁₂ have? Draw all of them."
+                }
+        ],
+        "key_formulas": [
+                "Substitution: CH₄ + Cl₂ → CH₃Cl + HCl (UV)",
+                "Addition: CH₂=CH₂ + H₂ → CH₃CH₃",
+                "Markovnikov's rule: H adds to C with more H's",
+                "C₅H₁₂ has 3 isomers"
+        ],
+        "common_mistakes": [
+                "Applying Markovnikov's rule incorrectly",
+                "Forgetting UV light is needed for free radical substitution",
+                "Not counting all possible structural isomers"
+        ],
+        "practice_prompts": [
+                "What is the product of propene + HCl (Markovnikov)?",
+                "Draw all isomers of C₄H₁₀."
+        ],
+        "real_world_example": "The Sylhet natural gas fields produce methane and ethane. At refineries, crude oil is separated into petrol (C₅-C₈), kerosene (C₁₂-C₁₅), and diesel (C₁₅-C₂₀) by fractional distillation — longer chains = higher boiling point."
+},
+
+    "chem2-03-01": {
+        "title": "Mole Concept & Stoichiometry",
+        "learning_objectives": [
+                "Calculate moles from mass and vice versa",
+                "Apply Avogadro's number in calculations",
+                "Use mole ratios in stoichiometric calculations",
+                "Find limiting reagent and percentage yield"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: a dozen eggs = 12 eggs. A mole of atoms = ? atoms. Why do chemists use such a huge number?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "1 mole = 6.022 × 10²³ particles. Molar mass of H₂O = 18 g/mol. Moles = mass/molar mass. Ask: how many moles in 36g of water?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Stoichiometry: balanced equation gives mole ratios. 2H₂ + O₂ → 2H₂O means 2 moles H₂ reacts with 1 mole O₂. Teach limiting reagent concept."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "How many grams of CO₂ produced when 12g of C burns completely? (C + O₂ → CO₂)"
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "10g H₂ and 64g O₂ react. Find limiting reagent and mass of water produced."
+                }
+        ],
+        "key_formulas": [
+                "n = m/M",
+                "Nₐ = 6.022 × 10²³",
+                "At STP: 1 mole gas = 22.4 L",
+                "% yield = (actual/theoretical) × 100"
+        ],
+        "common_mistakes": [
+                "Confusing molar mass with atomic mass number",
+                "Not balancing the equation before doing stoichiometry",
+                "Forgetting to identify the limiting reagent in excess reagent problems"
+        ],
+        "practice_prompts": [
+                "How many molecules in 9g of water?",
+                "50g CaCO₃ heated: CaCO₃ → CaO + CO₂. Find mass of CO₂."
+        ],
+        "real_world_example": "When a ফার্মেসি (pharmacy) makes medicine, they need exact amounts — too little active ingredient won't work, too much is dangerous. Stoichiometry ensures the right mole ratios. Same principle applies when mixing cement for building construction in Bangladesh."
+},
+
+    "chem2-04-01": {
+        "title": "Electrochemistry",
+        "learning_objectives": [
+                "Calculate cell potential using E° values",
+                "Apply Nernst equation",
+                "Explain Faraday's laws of electrolysis",
+                "Distinguish galvanic from electrolytic cells"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: how does a battery produce electricity? What's happening inside at the atomic level?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Galvanic cell: spontaneous redox → electricity. E°cell = E°cathode - E°anode. If E°cell > 0, reaction is spontaneous."
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Faraday's law: mass deposited ∝ charge passed. m = (M × I × t)/(n × F). F = 96500 C/mol. Solve: how much copper deposited by 2A current for 1 hour?"
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "Calculate E°cell for Zn-Cu cell. E°(Zn²⁺/Zn) = -0.76V, E°(Cu²⁺/Cu) = +0.34V."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about Nernst equation or electrolysis calculation."
+                }
+        ],
+        "key_formulas": [
+                "E°cell = E°cathode - E°anode",
+                "Nernst: E = E° - (RT/nF)ln Q",
+                "Faraday: m = MIt/nF",
+                "F = 96500 C/mol"
+        ],
+        "common_mistakes": [
+                "Getting anode and cathode confused (anode = oxidation, cathode = reduction)",
+                "Forgetting to convert time to seconds in Faraday's law",
+                "Using wrong n (number of electrons transferred) in Nernst equation"
+        ],
+        "practice_prompts": [
+                "Is a cell with E°cell = -0.5V spontaneous?",
+                "How long to deposit 63.5g Cu from CuSO₄ using 5A current?"
+        ],
+        "real_world_example": "The battery rickshaws (ব্যাটারি চালিত রিকশা) in Dhaka use lead-acid batteries — a galvanic cell where lead reacts with sulfuric acid. When you charge your phone, that's an electrolytic cell — using electricity to reverse the chemical reaction."
+},
+
+    "hm1-04-01": {
+        "title": "Circles",
+        "learning_objectives": [
+                "Write equation of circle from center and radius",
+                "Convert general form to standard form",
+                "Find tangent and normal to a circle",
+                "Determine position of a point relative to a circle"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: a wheel, a coin, a clock face — all circles. How would you describe a circle mathematically using just two pieces of information?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Standard form: (x-h)² + (y-k)² = r². General form: x² + y² + 2gx + 2fy + c = 0 where center=(-g,-f), r=√(g²+f²-c). Convert between them."
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Tangent at point (x₁,y₁): xx₁ + yy₁ = r² (for circle at origin). Condition for tangency: distance from center to line = radius."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "Find center and radius of x² + y² - 4x + 6y - 12 = 0."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "Find equation of tangent to circle x²+y²=25 at point (3,4)."
+                }
+        ],
+        "key_formulas": [
+                "(x-h)² + (y-k)² = r²",
+                "Center: (-g,-f), Radius: √(g²+f²-c)",
+                "Tangent condition: d = r",
+                "Length of tangent from external point: √(S₁)"
+        ],
+        "common_mistakes": [
+                "Forgetting to complete the square correctly when converting general to standard form",
+                "Getting signs wrong for center coordinates (-g, -f, not g, f)",
+                "Confusing tangent length with distance from center"
+        ],
+        "practice_prompts": [
+                "Write the equation of a circle with center (2,3) and radius 5.",
+                "Is the point (1,1) inside, on, or outside x²+y²=4?"
+        ],
+        "real_world_example": "The roundabouts (গোল চত্বর) at Shahbag or Farmgate in Dhaka are circular — if you know the center point and radius, you can write the equation. Engineers use circle equations to design the curves."
+},
+
+    "hm1-05-01": {
+        "title": "Permutations & Combinations",
+        "learning_objectives": [
+                "Distinguish permutation (order matters) from combination (order doesn't)",
+                "Calculate nPr and nCr",
+                "Apply to word arrangement and selection problems",
+                "Use the multiplication and addition principles"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: how many ways can 3 students sit in 3 chairs? What if we only need to choose 2 out of 3 — does the order matter?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Permutation: arrangement (order matters). nPr = n!/(n-r)!. Combination: selection (order doesn't). nCr = n!/(r!(n-r)!). Ask: is choosing a cricket team P or C?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Solve: how many 3-letter words from A,B,C,D,E? (permutation). How many ways to choose 3 players from 11? (combination)."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "How many ways to arrange the letters of 'BANGLADESH'? (note repeated letters)"
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ: a committee of 5 from 6 men and 4 women must have at least 2 women. How many ways?"
+                }
+        ],
+        "key_formulas": [
+                "nPr = n!/(n-r)!",
+                "nCr = n!/(r!(n-r)!)",
+                "Repeated: n!/(p!q!r!...)",
+                "nCr = nCn-r"
+        ],
+        "common_mistakes": [
+                "Using permutation when combination is needed (selection vs arrangement)",
+                "Forgetting to handle repeated elements in arrangements",
+                "Not breaking 'at least' problems into complementary cases"
+        ],
+        "practice_prompts": [
+                "How many ways to choose 3 books from 8 different books?",
+                "In how many ways can 5 people sit around a circular table?"
+        ],
+        "real_world_example": "When selecting the Bangladesh cricket team of 11 from 20 players, the selectors use combinations (who is chosen matters, not the order of selection). But when deciding the batting order, that's permutation — order matters!"
+},
+
+    "hm1-06-01": {
+        "title": "Trigonometric Ratios & Identities",
+        "learning_objectives": [
+                "Define all 6 trig ratios and their relationships",
+                "Prove fundamental trigonometric identities",
+                "Solve trigonometric equations",
+                "Use allied angle formulas"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: if you know one angle and one side of a right triangle, can you find everything else? How?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "sin²θ + cos²θ = 1, 1 + tan²θ = sec²θ, 1 + cot²θ = cosec²θ. Ask: if sinθ = 3/5, find cosθ and tanθ."
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Allied angles: sin(90°-θ) = cosθ, cos(180°-θ) = -cosθ. Use ASTC rule (All Students Take Coffee) for sign in each quadrant."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "Prove: (1-cos²θ)(1+cot²θ) = 1. Then: solve sin2θ = 1 for 0° ≤ θ ≤ 360°."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ: simplify a complex trig expression or solve a trig equation."
+                }
+        ],
+        "key_formulas": [
+                "sin²θ + cos²θ = 1",
+                "1 + tan²θ = sec²θ",
+                "sin(90°-θ) = cosθ",
+                "ASTC: Q1 all+, Q2 sin+, Q3 tan+, Q4 cos+"
+        ],
+        "common_mistakes": [
+                "Forgetting which ratios are positive in which quadrant",
+                "Not finding ALL solutions in the given range (e.g., sinθ=½ has two solutions in [0°,360°])",
+                "Dividing both sides by a trig function that could be zero"
+        ],
+        "practice_prompts": [
+                "If tanθ = -1 and θ is in Q2, find sinθ and cosθ.",
+                "Solve: 2cos²θ - cosθ - 1 = 0 for 0° ≤ θ ≤ 360°."
+        ],
+        "real_world_example": "Surveyors measuring land in rural Bangladesh use trigonometry — by measuring one angle and one distance, they can calculate the height of a tree or width of a river without crossing it. Same principle used in building মসজিদ (mosque) minarets."
+},
+
+    "hm1-09-01": {
+        "title": "Limits & Differentiation",
+        "learning_objectives": [
+                "Evaluate limits using algebraic techniques",
+                "Differentiate using power rule, chain rule, product rule",
+                "Find derivatives of trigonometric and exponential functions",
+                "Apply L'Hôpital's rule for indeterminate forms"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: what happens to 1/x as x gets bigger and bigger? What about as x approaches 0?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Limit: value a function approaches. lim(x→a) f(x). Derivative: rate of change, f'(x) = lim(h→0) [f(x+h)-f(x)]/h. Power rule: d/dx(xⁿ) = nxⁿ⁻¹."
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Chain rule: d/dx[f(g(x))] = f'(g(x))·g'(x). Product rule: (uv)' = u'v + uv'. Find d/dx(sin(3x²))."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "Differentiate: (a) x³ + 2x² - 5x + 7, (b) sin(x)·eˣ, (c) (2x+1)⁵"
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ: find derivative of a composite function or evaluate a limit."
+                }
+        ],
+        "key_formulas": [
+                "d/dx(xⁿ) = nxⁿ⁻¹",
+                "d/dx(sinx) = cosx",
+                "d/dx(eˣ) = eˣ",
+                "Chain: (f∘g)' = f'(g(x))·g'(x)",
+                "Product: (uv)' = u'v + uv'"
+        ],
+        "common_mistakes": [
+                "Forgetting the chain rule for composite functions",
+                "Not applying product rule when needed (treating uv as just u'·v')",
+                "Confusing d/dx(sinx)=cosx with d/dx(cosx)=-sinx (the minus sign)"
+        ],
+        "practice_prompts": [
+                "Find dy/dx if y = (3x² + 1)⁴",
+                "Evaluate lim(x→0) sin(x)/x"
+        ],
+        "real_world_example": "When engineers design the Dhaka Elevated Expressway curves, they use derivatives to ensure the slope changes smoothly — a sudden change in slope would make cars bounce. The derivative of position = velocity, derivative of velocity = acceleration."
+},
+
+    "hm1-10-01": {
+        "title": "Integration Basics",
+        "learning_objectives": [
+                "Integrate using power rule and basic formulas",
+                "Apply substitution method",
+                "Integrate trigonometric and exponential functions",
+                "Understand integration as reverse of differentiation"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: if differentiation finds the slope, what does the reverse process give you? If d/dx(x²) = 2x, then what is ∫2x dx?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "∫xⁿ dx = xⁿ⁺¹/(n+1) + C. Don't forget +C! ∫sinx dx = -cosx + C. Ask: why do we need the constant C?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Substitution: let u = inner function. ∫2x·cos(x²) dx — let u=x², du=2x dx → ∫cos(u) du = sin(u) + C = sin(x²) + C."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "Integrate: (a) ∫(3x² + 4x - 1) dx, (b) ∫cos(5x) dx, (c) ∫x·eˣ² dx"
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ: integration by substitution or standard integrals."
+                }
+        ],
+        "key_formulas": [
+                "∫xⁿ dx = xⁿ⁺¹/(n+1) + C (n≠-1)",
+                "∫sinx dx = -cosx + C",
+                "∫eˣ dx = eˣ + C",
+                "∫1/x dx = ln|x| + C"
+        ],
+        "common_mistakes": [
+                "Forgetting the constant of integration (+C)",
+                "Not adjusting for the coefficient when integrating cos(5x) → (1/5)sin(5x)",
+                "Applying power rule to ∫1/x (should be ln|x|, not x⁰/0)"
+        ],
+        "practice_prompts": [
+                "Find ∫(x³ - 2x + 1) dx",
+                "Evaluate ∫sin(3x) dx"
+        ],
+        "real_world_example": "Integration calculates area — the total area of rice paddies in Bangladesh could be calculated by integrating the boundary function. In economics, if you know the rate of GDP growth (derivative), integration gives you the total GDP over time."
+},
 }
 
 
