@@ -2804,218 +2804,2403 @@ LESSON_CONTENT: dict[str, dict] = {
 
 
 
-    # ══ CHEMISTRY, MATH, BIOLOGY — Chapters 4-10 ══
+    # ══════════════════════════════════════════════════════════════
+    # ══ BIOLOGY — Chapter 4: অণুজীব (Microorganisms) ══
+    # ══════════════════════════════════════════════════════════════
+
     "bio1-04-01": {
-        "title": "Microorganisms",
+        "title": "Microorganisms — Viruses and Bacteria",
         "learning_objectives": [
-                "Describe virus structure and classification",
-                "Compare bacteria cell structure with eukaryotes",
-                "Explain Koch's postulates",
-                "Describe beneficial and harmful microorganisms"
+            "Describe the general structure of viruses (nucleic acid core, protein capsid, envelope) and explain why viruses are considered non-living outside a host",
+            "Classify viruses based on nucleic acid type (DNA virus, RNA virus), host range (bacteriophage, plant virus, animal virus), and shape (icosahedral, helical, complex)",
+            "Describe the structure of bacteria (cell wall, cell membrane, capsule, flagella, pili, nucleoid, plasmid, ribosome 70S) and classify by shape (coccus, bacillus, spirillum, vibrio)",
+            "Explain the lytic and lysogenic cycles of bacteriophage replication and compare bacterial reproduction (binary fission) with conjugation, transformation, and transduction",
         ],
         "teaching_steps": [
-                {
-                        "step": 1,
-                        "type": "intro",
-                        "prompt": "Ask: are viruses living or non-living? They can't reproduce on their own, but they evolve. What do you think?"
-                },
-                {
-                        "step": 2,
-                        "type": "concept",
-                        "prompt": "Virus structure: protein coat (capsid) + nucleic acid (DNA or RNA). Not cellular. Bacteria: prokaryotic cell. Ask: why don't antibiotics work on viruses?"
-                },
-                {
-                        "step": 3,
-                        "type": "teach",
-                        "prompt": "Koch's postulates: how to prove a microbe causes disease. 4 steps. Discuss: bacteriophage (virus that kills bacteria) — potential alternative to antibiotics."
-                },
-                {
-                        "step": 4,
-                        "type": "practice",
-                        "prompt": "Compare: virus vs bacteria — size, structure, reproduction, treatment. Make a table."
-                },
-                {
-                        "step": 5,
-                        "type": "mastery",
-                        "prompt": "Medical admission MCQ about virus classification or bacterial structure."
-                }
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: during COVID-19, we all learned about viruses. But is a virus truly alive? It cannot eat, grow, or reproduce on its own. So what exactly is it? And the bacteria in your doi (yogurt) — are they the same kind of organism as a virus?",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Teach virus structure: nucleic acid (DNA or RNA, never both) surrounded by a protein coat (capsid) made of capsomeres. Some have an outer lipid envelope with glycoprotein spikes (e.g., SARS-CoV-2 spike protein). Ask: why can\'t viruses reproduce without a host cell? (No ribosomes, no metabolic machinery). Discuss: are viruses living or non-living? They show characteristics of life only inside a host — obligate intracellular parasites.",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Teach the lytic cycle: attachment -> penetration -> biosynthesis -> assembly -> lysis (host cell bursts, releases new virions). Then lysogenic cycle: viral DNA integrates into host genome as prophage, replicates with host, can switch to lytic cycle under stress. Ask: which cycle does HIV follow initially? (Lysogenic — integrates as provirus, then activates). Then teach bacterial structure: compare with eukaryotic cell. Key features — peptidoglycan cell wall (Gram+ thick, Gram- thin with outer membrane), 70S ribosomes, single circular chromosome + plasmids. Classification by shape: coccus (gol — round), bacillus (dondo — rod), spirillum (pechano — spiral), vibrio (comma-shaped, like Vibrio cholerae that causes cholera in Bangladesh).",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Classification exercise: classify these microorganisms — Tobacco Mosaic Virus (RNA, helical, plant virus), Bacteriophage T4 (DNA, complex, bacterial virus), HIV (RNA retrovirus, animal virus), Vibrio cholerae (Gram- vibrio bacterium), Mycobacterium tuberculosis (acid-fast bacillus), Staphylococcus aureus (Gram+ coccus). Ask: which of these are particularly relevant to Bangladesh\'s public health? (Vibrio cholerae — cholera is endemic; TB is a major burden).",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "Medical admission MCQ: \'Which of the following is TRUE about viruses? (a) They have both DNA and RNA (b) They can reproduce independently (c) They have 70S ribosomes (d) They are obligate intracellular parasites.\' Follow up: \'A bacteriophage infects E. coli and its DNA integrates into the host chromosome. What is this integrated viral DNA called? (Prophage). What triggers the switch from lysogenic to lytic cycle?\' Then: \'Explain how antibiotic resistance spreads between bacteria via plasmid transfer (conjugation). Why is this a major public health concern in Bangladesh where antibiotics are sold without prescription?\'",
+            },
         ],
         "key_formulas": [
-                "Virus: obligate intracellular parasite",
-                "Bacteria: 0.5-5 μm, virus: 20-300 nm",
-                "Koch's 4 postulates",
-                "Lytic vs lysogenic cycle"
+            "Virus = nucleic acid (DNA or RNA, not both) + protein capsid (capsomeres) +/- lipid envelope",
+            "Lytic cycle: attachment -> penetration -> biosynthesis -> assembly -> lysis (host cell dies)",
+            "Lysogenic cycle: viral DNA integrates as prophage -> replicates with host -> can switch to lytic under stress",
+            "Bacteria classification by shape: coccus (spherical), bacillus (rod), spirillum (spiral), vibrio (comma)",
+            "Gram staining: Gram+ (thick peptidoglycan, retains crystal violet — purple) vs Gram- (thin peptidoglycan + outer membrane, takes safranin — pink)",
+            "Bacterial reproduction: binary fission (asexual); gene transfer — conjugation (F pilus), transformation (free DNA uptake), transduction (via bacteriophage)",
         ],
         "common_mistakes": [
-                "Saying viruses are living organisms (they're at the boundary)",
-                "Thinking all bacteria are harmful (many are beneficial — gut flora)",
-                "Confusing bacteriophage with pathogenic virus"
+            "Saying viruses have both DNA and RNA — a virus has EITHER DNA or RNA, never both (exception: some textbooks mention cytomegalovirus having both, but for HSC exam, the rule is one or the other)",
+            "Confusing the lytic and lysogenic cycles — in lysogenic, the host cell does NOT lyse immediately; the viral DNA quietly integrates and replicates with the host. Students often describe lysis occurring in the lysogenic cycle.",
+            "Thinking all bacteria are harmful — beneficial bacteria include Lactobacillus (doi/yogurt), Rhizobium (nitrogen fixation in legume root nodules), E. coli (vitamin K synthesis in human gut). Only pathogenic bacteria cause disease.",
+            "Confusing Gram+ and Gram- — Gram+ has a THICKER peptidoglycan wall (retains crystal violet stain), Gram- has a THINNER wall but has an additional outer membrane. Students often reverse these.",
         ],
         "practice_prompts": [
-                "Name a DNA virus and an RNA virus that affect humans.",
-                "Why can't antibiotics kill viruses?"
+            "Compare the structure of a bacteriophage T4 with HIV in a table covering: nucleic acid type, capsid shape, envelope (present/absent), host cell, and mode of replication.",
+            "A patient has cholera caused by Vibrio cholerae. Describe the shape and Gram stain result of this bacterium. Explain how it causes profuse watery diarrhea (cholera toxin activates cAMP pathway in intestinal cells).",
+            "Explain why antibiotics work against bacteria but NOT against viruses. What type of drugs are used against viruses? (Antivirals like oseltamivir, remdesivir). Why is it harder to develop antiviral drugs?",
         ],
-        "real_world_example": "COVID-19 is caused by SARS-CoV-2, an RNA virus. In Bangladesh, diarrhea from Vibrio cholerae (bacteria) is treated with ORS and antibiotics — but viral diarrhea (rotavirus) needs only ORS because antibiotics don't work on viruses. Understanding this difference saves lives."
-},
+        "real_world_example": "Bangladesh has a long history with cholera — Vibrio cholerae, a comma-shaped Gram-negative bacterium, thrives in contaminated water. ICDDR,B in Dhaka developed Oral Rehydration Solution (ORS) that has saved millions of lives globally. Meanwhile, the COVID-19 pandemic showed how RNA viruses like SARS-CoV-2 can mutate rapidly. The pond water in rural Bangladesh often contains cyanobacteria (Nostoc, Anabaena) that fix nitrogen, enriching rice paddy fields naturally — these are beneficial microorganisms that boost rice yields without chemical fertilizer.",
+    },
+
+    # ══════════════════════════════════════════════════════════════
+    # ══ BIOLOGY — Chapter 5: শৈবাল ও ছত্রাক (Algae & Fungi) ══
+    # ══════════════════════════════════════════════════════════════
+
+    "bio1-05-01": {
+        "title": "Algae and Fungi — Structure, Classification & Reproduction",
+        "learning_objectives": [
+            "Describe the general characteristics of algae — photosynthetic, aquatic thallophytes with chlorophyll a as the universal pigment",
+            "Classify algae into major divisions: Chlorophyta (green algae — Spirogyra, Volvox), Phaeophyta (brown algae — Sargassum, Fucus), Rhodophyta (red algae — Polysiphonia) based on pigments and storage products",
+            "Describe the general characteristics of fungi — heterotrophic, cell wall of chitin, saprophytic or parasitic nutrition, reproduce by spores",
+            "Classify fungi into Zygomycetes (Mucor, Rhizopus), Ascomycetes (Saccharomyces/yeast, Penicillium), Basidiomycetes (Agaricus/mushroom, Puccinia/wheat rust), and Deuteromycetes (Fungi Imperfecti)",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: have you seen green slimy stuff floating on a pond in the village? That is algae — Spirogyra and other species. And the mushrooms that people now farm commercially — those are fungi. Both are very different from higher plants. How?",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Teach algae characteristics: eukaryotic, photosynthetic (autotrophic), mostly aquatic, thallus body (no true root/stem/leaf), cell wall of cellulose. Classification by pigment: Chlorophyta (chlorophyll a, b — green), Phaeophyta (chlorophyll a, c + fucoxanthin — brown), Rhodophyta (chlorophyll a, d + phycoerythrin — red). Ask: why are red algae found in deeper ocean waters? (Phycoerythrin absorbs blue-green light that penetrates deep water). Storage products differ too: starch (green), laminarin (brown), floridean starch (red).",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Teach algal reproduction: vegetative (fragmentation — Spirogyra breaks), asexual (zoospores — motile spores), sexual (isogamy, anisogamy, oogamy). Use Spirogyra as example: scalariform conjugation (lateral/transverse). Then teach fungi: heterotrophic (no chlorophyll), body is mycelium (network of hyphae), cell wall of chitin (not cellulose!). Hyphae can be septate (Penicillium) or coenocytic/aseptate (Mucor). Nutrition: saprophytic (decomposers — Rhizopus on ruti/bread), parasitic (Puccinia on wheat), mutualistic (lichens = algae + fungi, mycorrhizae). Reproduction: vegetative (fragmentation, budding in yeast), asexual (sporangiospores — Mucor, conidia — Penicillium/Aspergillus), sexual (zygospore, ascospore, basidiospore). Classify: Zygomycetes (zygospore — Mucor, Rhizopus), Ascomycetes (ascospore in ascus — yeast, Penicillium), Basidiomycetes (basidiospore on basidium — Agaricus mushroom, Puccinia rust).",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Comparison exercise: make a table comparing algae and fungi on: nutrition mode, cell wall composition, pigments, body organization, habitat, storage product, examples. Then ask: classify these organisms — Spirogyra (Chlorophyta), Sargassum (Phaeophyta), Polysiphonia (Rhodophyta), Mucor (Zygomycetes), Penicillium (Ascomycetes), Agaricus (Basidiomycetes). Ask: which of these is used to produce antibiotics? (Penicillium — produces penicillin).",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "Medical admission MCQ: \'The cell wall of fungi is made of: (a) Cellulose (b) Peptidoglycan (c) Chitin (d) Pectin.\' Follow up: \'In the life cycle of Mucor, what type of sexual spore is formed? Describe the process of zygospore formation.\' Then: \'Lichens are indicators of air pollution — explain why. What are the two components of a lichen and what is the relationship between them (mutualism)?\' Finally: \'Explain how Saccharomyces cerevisiae (yeast) is used in both bread-making and alcohol fermentation. Write the fermentation equation.\'",
+            },
+        ],
+        "key_formulas": [
+            "Algae pigment classification: Chlorophyta (Chl a, b — green), Phaeophyta (Chl a, c + fucoxanthin — brown), Rhodophyta (Chl a, d + phycoerythrin — red)",
+            "Fungal cell wall: chitin (polymer of N-acetylglucosamine) — NOT cellulose",
+            "Fungi classification by sexual spore: Zygomycetes (zygospore), Ascomycetes (ascospore in ascus), Basidiomycetes (basidiospore on basidium), Deuteromycetes (no known sexual stage)",
+            "Yeast fermentation: C6H12O6 -> 2C2H5OH + 2CO2 + energy (anaerobic)",
+            "Lichen = algal/cyanobacterial partner (photobiont) + fungal partner (mycobiont) — mutualistic symbiosis",
+            "Algal reproduction types: isogamy (similar gametes), anisogamy (dissimilar but both motile), oogamy (large non-motile egg + small motile sperm)",
+        ],
+        "common_mistakes": [
+            "Saying fungi have cellulose cell walls like plants — fungi have CHITIN cell walls, which is the same material found in insect exoskeletons. This is a very commonly tested distinction.",
+            "Confusing algae as plants — algae are thallophytes with no true roots, stems, or leaves. They lack vascular tissue. Although photosynthetic, they are classified separately from bryophytes and tracheophytes.",
+            "Mixing up fungal spore types — students confuse sporangiospores (inside sporangium — Mucor), conidia (on conidiophore tips — Penicillium, Aspergillus), and basidiospores (on basidia — mushrooms). Each class has its characteristic asexual and sexual spore types.",
+            "Thinking all fungi are harmful — yeast (Saccharomyces) is used in bread and fermentation, Penicillium gives us penicillin, mushrooms (Agaricus) are edible, and mycorrhizal fungi help plant roots absorb minerals.",
+        ],
+        "practice_prompts": [
+            "A student observes a filamentous green organism under the microscope. It has a spiral chloroplast and is undergoing conjugation. Identify the organism (Spirogyra), its division (Chlorophyta), and describe the process of scalariform conjugation.",
+            "Compare Mucor (Zygomycetes) and Penicillium (Ascomycetes) in terms of: hyphal structure (septate vs aseptate), asexual spores (sporangiospores vs conidia), sexual spores (zygospore vs ascospore), and economic importance.",
+            "Explain why red algae can survive at greater ocean depths than green algae. Which accessory pigment is responsible, and how does it help in photosynthesis at those depths?",
+        ],
+        "real_world_example": "In rural Bangladesh, ponds and ditches often develop thick green mats of Spirogyra and other filamentous algae, especially during the warm monsoon season — this is called algal bloom, caused by excess nitrogen and phosphorus from fertilizer runoff into water bodies. Mushroom farming (Agaricus bisporus and oyster mushroom/Pleurotus) has become a profitable cottage industry in Bangladesh, especially in Savar and Manikganj, requiring minimal land — just a damp room with straw substrate. The antibiotic penicillin, discovered from the fungus Penicillium notatum by Alexander Fleming, has saved countless lives in Bangladesh from bacterial infections. Even the ruti (bread) you eat rises because of yeast fermentation producing CO2 gas.",
+    },
+
+    # ══════════════════════════════════════════════════════════════
+    # ══ BIOLOGY — Chapter 6: ব্রায়োফাইটা ও টেরিডোফাইটা (Bryophyta & Pteridophyta) ══
+    # ══════════════════════════════════════════════════════════════
+
+    "bio1-06-01": {
+        "title": "Bryophyta and Pteridophyta — Alternation of Generations",
+        "learning_objectives": [
+            "Describe the general characteristics of bryophytes — non-vascular, dominant gametophyte generation, require water for fertilization",
+            "Explain the life cycle of a moss (Funaria) showing alternation of generations between gametophyte (n) and sporophyte (2n)",
+            "Describe the general characteristics of pteridophytes — first vascular plants, dominant sporophyte generation, homosporous and heterosporous types",
+            "Explain the life cycle of a fern (Dryopteris/Pteris) showing alternation of generations with independent gametophyte (prothallus)",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: have you noticed soft green cushion-like patches on old brick walls during the rainy season in Bangladesh? Those are mosses — bryophytes! And the ferns (dheki shak) that grow in shady, moist places — those are pteridophytes. Both have something special: they alternate between two completely different body forms in their life cycle. What could this mean?",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Teach the concept of alternation of generations: the plant alternates between a haploid gametophyte (n) that produces gametes by mitosis, and a diploid sporophyte (2n) that produces spores by meiosis. This is the central concept. In bryophytes: the GAMETOPHYTE is the dominant, visible, independent plant body (the green mossy part). The sporophyte is dependent on the gametophyte (it grows on top of it — like the capsule on a stalk). In pteridophytes: the SPOROPHYTE is the dominant, visible, independent plant (the fern fronds you see). The gametophyte (prothallus) is tiny, heart-shaped, and short-lived. Ask: why is this shift from dominant gametophyte to dominant sporophyte considered an evolutionary advancement?",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Teach the life cycle of Funaria (moss) in detail: Spore (n) germinates into protonema -> develops into leafy gametophyte (n) -> male (antheridium produces antherozoids/sperm) and female (archegonium produces egg) -> antherozoids swim through water to reach egg (WHY bryophytes need moist habitats!) -> fertilization -> zygote (2n) -> develops into sporophyte (foot + seta + capsule) attached to gametophyte -> meiosis in capsule produces spores (n) -> spores disperse -> cycle repeats. Key point: in Funaria, male and female gametophytes are separate plants (dioecious). Then teach fern (Dryopteris) life cycle: Sporophyte (2n, the visible fern plant) -> sporangia on underside of fronds (in sori) -> meiosis produces spores (n) -> spore germinates into prothallus (n, heart-shaped gametophyte) -> prothallus has both antheridia and archegonia (monoecious) -> antherozoids swim to egg -> fertilization -> zygote (2n) -> grows into new sporophyte. Ask: why is the fern sporophyte independent but the moss sporophyte is not?",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Comparison table: Bryophytes vs Pteridophytes — dominant generation, vascular tissue (absent vs present), true roots/stems/leaves, sporophyte dependence, examples. Then ask: in a moss life cycle diagram, identify all haploid structures and all diploid structures. Which process converts 2n to n? (Meiosis — in sporangium). Which process converts n to 2n? (Fertilization). A fern leaf shows brown dots on its underside — what are these? (Sori — clusters of sporangia).",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "Medical admission MCQ: \'In the life cycle of a fern, the gametophyte is: (a) The leafy fern plant (b) The prothallus (c) The sporangium (d) The rhizome.\' Follow up: \'Explain why bryophytes are called the amphibians of the plant kingdom. How does the requirement of water for fertilization limit their distribution?\' Then: \'What is heterospory? Which group first showed heterospory — some pteridophytes like Selaginella produce microspores (male) and megaspores (female). Explain how heterospory is considered a precursor to seed formation in higher plants.\'",
+            },
+        ],
+        "key_formulas": [
+            "Alternation of generations: Gametophyte (n) --mitosis--> gametes --fertilization--> Zygote (2n) --mitosis--> Sporophyte (2n) --meiosis--> Spores (n) --mitosis--> Gametophyte (n)",
+            "Bryophytes: GAMETOPHYTE dominant (n), sporophyte dependent on gametophyte",
+            "Pteridophytes: SPOROPHYTE dominant (2n), gametophyte (prothallus) is small and independent but short-lived",
+            "Mosses: spore -> protonema -> leafy gametophyte -> archegonium (egg) + antheridium (sperm) -> fertilization (needs water) -> sporophyte (capsule)",
+            "Ferns: sporophyte (visible fern) -> sori (sporangia) -> meiosis -> spores -> prothallus (gametophyte) -> gametes -> fertilization (needs water) -> new sporophyte",
+            "Homosporous: all spores identical (most ferns); Heterosporous: microspores (male) and megaspores (female) — Selaginella, Marsilea",
+        ],
+        "common_mistakes": [
+            "Confusing which generation is dominant — in bryophytes, GAMETOPHYTE is dominant (the green plant you see); in pteridophytes, SPOROPHYTE is dominant (the fern you see). Students frequently reverse these.",
+            "Thinking spores are produced by mitosis — spores are produced by MEIOSIS (that is how the sporophyte 2n produces haploid n spores). Gametes are produced by MITOSIS from the already haploid gametophyte. This is opposite to animals where gametes come from meiosis!",
+            "Forgetting that BOTH bryophytes and pteridophytes need water for fertilization (motile sperm must swim to egg). This is why they are mostly found in moist habitats. Seed plants overcame this with pollen tubes.",
+            "Confusing sori with seeds or spores — sori are clusters of sporangia (spore-producing structures) found on the underside of fern fronds, not the spores themselves.",
+        ],
+        "practice_prompts": [
+            "Draw a flow diagram of the complete life cycle of Funaria (moss), labeling all haploid (n) and diploid (2n) stages. Indicate where meiosis and fertilization occur.",
+            "Explain the evolutionary significance of the shift from dominant gametophyte (bryophytes) to dominant sporophyte (pteridophytes and seed plants). What advantage does a diploid sporophyte body provide?",
+            "Selaginella is heterosporous. Explain the difference between microspores and megaspores. How is heterospory in Selaginella considered a step towards seed habit? Compare with the homosporous condition in most ferns.",
+        ],
+        "real_world_example": "During the Bangladeshi monsoon (borsha kal), you can see mosses covering old brick walls, tin roofs, and tree bark in moist areas — these are bryophytes thriving because rain provides the water film their sperm need to swim to the egg. Dheki shak (a fern, Diplazium esculentum) is eaten as a vegetable in many parts of Bangladesh — the young coiled fronds (fiddleheads/croziers) are collected from shady, damp areas near ponds. The Sundarbans mangrove forest floor has many fern species (Acrostichum aureum — the mangrove fern) adapted to brackish water. Tree ferns are also found in the hilly forests of the Chittagong Hill Tracts and Sylhet.",
+    },
+
+    # ══════════════════════════════════════════════════════════════
+    # ══ BIOLOGY — Chapter 7: নগ্নবীজী ও আবৃতবীজী উদ্ভিদ (Seed Plants) ══
+    # ══════════════════════════════════════════════════════════════
+
+    "bio1-07-01": {
+        "title": "Seed Plants — Gymnosperms, Monocots and Dicots",
+        "learning_objectives": [
+            "Describe general characteristics of gymnosperms (naked seeds, no fruit, cones/strobili, needle-like leaves) and give examples (Pinus, Cycas, Gnetum)",
+            "Describe general characteristics of angiosperms (enclosed seeds, flowers, fruit formation, double fertilization) as the most evolved and dominant plant group",
+            "Distinguish monocotyledons and dicotyledons based on seed structure, root system, leaf venation, flower parts, vascular bundle arrangement, and secondary growth",
+            "Explain the evolutionary progression from gymnosperms to angiosperms and why angiosperms dominate Earth\'s flora",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: think about the plants around you — dhan (rice), aam (mango), narikel (coconut), kola (banana), kadam, krishnachura. All of these produce seeds inside fruits. But some plants like pine trees produce seeds without fruits — seeds sit exposed on cone scales. What is the key difference? This leads us to gymnosperms vs angiosperms.",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Teach gymnosperms: \'gymnos\' = naked, \'sperma\' = seed. Seeds are not enclosed in an ovary/fruit. They produce cones (strobili) instead of flowers. Examples: Pinus (pine — Christmas tree), Cycas (looks like a palm, living fossil), Gnetum (found in Chittagong Hill Tracts). Characteristics: mostly evergreen trees, needle-like or scale-like leaves (xerophytic adaptation), wind-pollinated, no vessels in xylem (tracheids only — except Gnetum), no companion cells in phloem. Then teach angiosperms: \'angeion\' = vessel/container, \'sperma\' = seed. Seeds enclosed in fruit (developed from ovary). Key features: flowers (reproductive structure), double fertilization (unique to angiosperms), fruit formation, both tracheids and vessels in xylem, sieve tubes with companion cells in phloem. Ask: why are angiosperms the most successful plant group on Earth? (Flowers attract pollinators — more efficient than wind pollination; fruits protect seeds and aid dispersal; double fertilization provides endosperm nutrition for developing embryo).",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Teach the dicot vs monocot comparison in detail. This is extremely important for medical admission. Create a comprehensive comparison: (1) Cotyledons: dicot = 2, monocot = 1. (2) Root system: dicot = taproot (mango, neem), monocot = fibrous roots (rice, grass). (3) Leaf venation: dicot = reticulate/netted (mango leaf), monocot = parallel (rice leaf, banana leaf). (4) Flower parts: dicot = multiples of 4 or 5 (jaba/hibiscus has 5 petals), monocot = multiples of 3 (lily has 3+3 tepals). (5) Vascular bundles in stem: dicot = arranged in a ring with cambium (open, allows secondary growth), monocot = scattered without cambium (closed, no secondary growth — except coconut palm which grows differently). (6) Stem growth: dicot can show secondary growth (neem tree gets thicker yearly), monocot generally no secondary thickening. (7) Pollen: dicot = tricolpate (3 pores), monocot = monocolpate (1 pore). Ask student to classify common Bangladeshi plants: dhan, aam, kathal, narikel, taal, jaba, golap, kadam, kola.",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Classification exercise: classify these as gymnosperm, monocot, or dicot — Pinus (gymnosperm), rice/dhan (monocot), mango/aam (dicot), coconut/narikel (monocot), wheat (monocot), jackfruit/kathal (dicot), Cycas (gymnosperm), banana/kola (monocot), neem (dicot), bamboo/bash (monocot), jute/paat (dicot), tea/cha (dicot), tulip (monocot). Ask for the reasoning in each case. Then: draw a cross-section comparison of a dicot stem vs monocot stem showing vascular bundle arrangement.",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "Medical admission MCQ: \'Which of the following is a characteristic of monocotyledons? (a) Taproot system (b) Reticulate venation (c) Scattered vascular bundles (d) Flower parts in multiples of 5.\' Follow up: \'Coconut palm is a monocot but it grows tall and has a thick trunk — if monocots lack secondary growth (no vascular cambium), how does the coconut trunk become thick? (Primary thickening meristem + diffuse secondary growth).\' Then: \'Explain double fertilization in angiosperms. Why is this considered an evolutionary advantage over gymnosperms? What is the ploidy of the endosperm (3n) and how does it form?\'",
+            },
+        ],
+        "key_formulas": [
+            "Gymnosperm: naked seed (no fruit), cones instead of flowers, wind-pollinated, tracheids only (no vessels, except Gnetum)",
+            "Angiosperm: seeds enclosed in fruit, flowers present, double fertilization, vessels + tracheids in xylem",
+            "Dicot vs Monocot comparison: cotyledons (2 vs 1), root (tap vs fibrous), venation (reticulate vs parallel), flower parts (4/5 vs 3), vascular bundles (ring/open vs scattered/closed), secondary growth (present vs absent)",
+            "Double fertilization: one sperm + egg -> zygote (2n); other sperm + two polar nuclei -> primary endosperm nucleus (3n) -> endosperm",
+            "Angiosperm = Dicotyledonae (Magnoliopsida) + Monocotyledonae (Liliopsida)",
+        ],
+        "common_mistakes": [
+            "Thinking coconut is a dicot because it is a large tree with a thick trunk — coconut (Cocos nucifera) is a MONOCOT. Verify: fibrous roots, parallel venation in leaves, flower parts in 3s, scattered vascular bundles.",
+            "Confusing gymnosperms with angiosperms — students sometimes call pine cones \'fruits\'. Pine cones are NOT fruits; they are strobili. Fruits develop only from ovaries, which gymnosperms lack.",
+            "Saying monocots never show secondary growth — while true that monocots lack vascular cambium for typical secondary growth, palms (coconut, taal) show anomalous secondary growth or primary thickening that increases trunk girth.",
+            "Forgetting that banana has no seeds in cultivated varieties (parthenocarpy) but is still classified as a monocot angiosperm — classification is based on structural features, not just seed presence.",
+        ],
+        "practice_prompts": [
+            "A farmer brings you two seedlings. One has a single cotyledon, fibrous roots, and parallel-veined leaves. The other has two cotyledons, a taproot, and net-veined leaves. Identify which is the monocot and which is the dicot. Give 3 examples of crop plants for each from Bangladesh.",
+            "Compare a pine cone (gymnosperm) with a mango fruit (angiosperm). Where are the seeds located in each? Which provides better protection for the developing embryo and why?",
+            "Explain how double fertilization works in angiosperms. What is the biological significance of endosperm formation? Why is the endosperm triploid (3n)?",
+        ],
+        "real_world_example": "Almost every food crop in Bangladesh is an angiosperm — dhan (rice, monocot) feeds 160 million Bangladeshis, paat (jute, dicot) was once the golden fiber earning foreign exchange, cha (tea, dicot) grows in the hills of Sylhet, and aam (mango, dicot) from Rajshahi is famous nationwide. Narikel (coconut, monocot) lines the coast of Cox\'s Bazar and Sundarbans. Bash (bamboo, monocot) is used for construction and furniture across rural Bangladesh. Understanding the monocot-dicot distinction helps agricultural scientists develop specific farming techniques — for example, many selective herbicides kill dicot weeds in monocot rice paddies by exploiting their structural and biochemical differences.",
+    },
+
+    # ══════════════════════════════════════════════════════════════
+    # ══ BIOLOGY — Chapter 8: উদ্ভিদ টিস্যু (Plant Tissues) ══
+    # ══════════════════════════════════════════════════════════════
+
+    "bio1-08-01": {
+        "title": "Plant Tissues — Meristematic, Simple, Complex (Xylem & Phloem)",
+        "learning_objectives": [
+            "Classify plant tissues into meristematic (apical, lateral, intercalary) and permanent (simple and complex) tissues",
+            "Describe the structure and function of simple permanent tissues: parenchyma, collenchyma, and sclerenchyma",
+            "Describe the structure, components, and function of xylem (tracheids, vessels, xylem fibers, xylem parenchyma) for water and mineral transport",
+            "Describe the structure, components, and function of phloem (sieve tubes, companion cells, phloem fibers, phloem parenchyma) for food translocation",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: how does water travel from the roots of a tall coconut tree (30 meters!) all the way to the topmost leaf? And how does the sugar made in the leaves during photosynthesis travel DOWN to the roots? The answer lies in two specialized transport tissues — xylem and phloem. Just like blood vessels carry blood in your body, these tissues form the \'circulatory system\' of plants.",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Teach meristematic tissues first: undifferentiated, actively dividing cells with thin walls, dense cytoplasm, large nucleus, no vacuole. Types by position: apical meristem (root/shoot tips — primary growth, elongation), lateral meristem (vascular cambium, cork cambium — secondary growth, thickening), intercalary meristem (base of internodes — found in grasses/bamboo, that is why grass grows back after cutting!). Then teach simple permanent tissues: (1) Parenchyma — thin-walled, living, stores food, performs photosynthesis in mesophyll (chlorenchyma), stores air in aquatic plants (aerenchyma in water hyacinth/kochuripana). (2) Collenchyma — thickened at corners (angular) or surfaces, living, provides flexible support in young stems and petioles. (3) Sclerenchyma — thick-walled with lignin, dead at maturity, provides rigid mechanical support — two types: fibers (long, narrow — jute/paat fiber is sclerenchyma!) and sclereids/stone cells (short, isodiametric — hardness of narikel/coconut shell, pear fruit grit). Ask: why is jute fiber so strong? (Sclerenchyma fibers with heavy lignin deposition).",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Teach complex tissues in detail. XYLEM (water-conducting tissue, also called wood): (1) Tracheids — long, narrow, tapered ends, dead, lignified walls with pits — primitive (found in all vascular plants including gymnosperms). (2) Vessels (trachea) — shorter, wider, open ends (perforation plates), dead, more efficient — advanced (mainly in angiosperms). (3) Xylem fibers — dead, sclerenchyma type, mechanical support. (4) Xylem parenchyma — living, stores food and water. Xylem transport: water moves UP from roots to leaves by transpiration pull (cohesion-tension theory). Xylem is unidirectional. PHLOEM (food-conducting tissue): (1) Sieve tubes — living but no nucleus at maturity, end walls have sieve plates with pores. (2) Companion cells — living, have nucleus, connected to sieve tubes by plasmodesmata, provide metabolic support (companion cells are ABSENT in gymnosperms — they have albuminous cells instead). (3) Phloem fibers (bast fibers) — dead, mechanical support. (4) Phloem parenchyma — living, stores food. Phloem transport: food (mainly sucrose) moves from source (leaves) to sink (roots, fruits, growing tips) — bidirectional. Ask: which xylem element is more efficient at water transport — tracheids or vessels? Why? (Vessels — wider, open ends, less resistance).",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Comparison exercise: make a detailed table comparing xylem and phloem on: function, direction of transport, main conducting element, living/dead status of conducting elements, cell wall composition, associated cells, presence in gymnosperms vs angiosperms. Then classify: \'I am dead, lignified, and transport water upward\' — vessel/tracheid (xylem). \'I am alive, lack a nucleus, and have sieve plates\' — sieve tube (phloem). \'I am living, have a nucleus, and support the sieve tube\' — companion cell (phloem). Ask: a ring of xylem and phloem is visible in a dicot stem cross-section. Which is on the inner side and which on the outer side? (Xylem inner, phloem outer, with cambium between them).",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "Medical admission MCQ: \'Which of the following is a living component of xylem? (a) Tracheids (b) Vessels (c) Xylem fibers (d) Xylem parenchyma.\' Follow up: \'If the phloem of a tree is stripped in a ring around the trunk (girdling), predict what will happen. Where will sugars accumulate? What happens to the roots? Will the tree die immediately or slowly?\' (Sugars accumulate above the ring as phloem transport is blocked; roots starve and die; tree eventually dies — this is the classical Malpighi girdling experiment). Then: \'Explain the cohesion-tension theory of water transport in xylem. What role does transpiration, cohesion of water molecules (H-bonding), and adhesion to vessel walls play?\'",
+            },
+        ],
+        "key_formulas": [
+            "Meristematic tissue types: apical (primary growth — length), lateral (secondary growth — girth), intercalary (elongation at nodes — grasses)",
+            "Simple tissues: parenchyma (storage, thin walls), collenchyma (flexible support, corner thickening), sclerenchyma (rigid support, lignified, dead — fibers and sclereids)",
+            "Xylem components: tracheids (dead, primitive) + vessels (dead, advanced, open ends) + xylem fibers (dead) + xylem parenchyma (living)",
+            "Phloem components: sieve tubes (living, no nucleus) + companion cells (living, has nucleus, absent in gymnosperms) + phloem fibers (dead) + phloem parenchyma (living)",
+            "Xylem transport: unidirectional (root -> leaf), by transpiration pull/cohesion-tension; transports water + minerals",
+            "Phloem transport: bidirectional (source -> sink), by pressure flow/Munch hypothesis; transports sucrose (organic food)",
+        ],
+        "common_mistakes": [
+            "Saying all xylem cells are dead — xylem PARENCHYMA is living! Similarly, not all phloem cells are living — phloem FIBERS are dead. Students must know which specific cells in each tissue are living vs dead.",
+            "Confusing tracheids and vessels — tracheids are long, narrow with tapered closed ends and pits (found in ALL vascular plants); vessels are shorter, wider with open perforation plates (mainly in angiosperms). Gymnosperms have tracheids but generally lack vessels (except Gnetum).",
+            "Thinking phloem transport is unidirectional like xylem — phloem is BIDIRECTIONAL (source to sink), so sugars can move upward to growing buds or downward to roots depending on where the sink is.",
+            "Forgetting companion cells are absent in gymnosperms — gymnosperms have albuminous cells instead, which perform a similar function. This is a frequently tested distinction.",
+        ],
+        "practice_prompts": [
+            "A farmer cuts a ring of bark (which includes phloem) from around a mango tree trunk. Predict what happens above and below the ring over the next few weeks. Explain using your knowledge of phloem function. (Malpighi\'s girdling experiment).",
+            "Compare tracheids and vessels in a table with at least 5 differences. Why are vessels considered more efficient? In which plant group are vessels generally absent?",
+            "Explain how water reaches the top of a 30-meter-tall coconut tree against gravity without any pump. Describe the cohesion-tension theory, mentioning the roles of transpiration, root pressure, cohesion, and adhesion.",
+        ],
+        "real_world_example": "The jute fiber (paat) that made Bangladesh the \'Golden Fiber country\' is actually sclerenchyma fiber from the phloem region of the jute stem (bast fiber). When jute stems are retted (soaked in water for weeks), the softer tissues rot away, leaving behind the tough sclerenchyma fibers used for making rope, sacks, and now biodegradable bags. The wood of a mahogany or teak tree used in Bangladeshi furniture is actually secondary xylem — layers of dead xylem cells accumulated over years of secondary growth. The harder the wood (more lignin), the more valuable it is. When rubber tappers in Chittagong Hill Tracts cut into a rubber tree, they cut just deep enough to sever the phloem (where latex flows in specialized laticiferous tubes) without damaging the xylem — a practical application of plant tissue anatomy.",
+    },
+
+    # ══════════════════════════════════════════════════════════════
+    # ══ BIOLOGY — Chapter 9: উদ্ভিদ শরীরতত্ত্ব (Plant Physiology) ══
+    # ══════════════════════════════════════════════════════════════
 
     "bio1-09-01": {
-        "title": "Photosynthesis",
+        "title": "Photosynthesis — Light Reactions, Calvin Cycle & Factors",
         "learning_objectives": [
-                "Write the overall equation of photosynthesis",
-                "Describe light-dependent reactions (thylakoid)",
-                "Describe light-independent reactions (Calvin cycle, stroma)",
-                "Explain factors affecting photosynthesis rate"
+            "Write and explain the overall equation of photosynthesis: 6CO2 + 6H2O -> C6H12O6 + 6O2 (in presence of light and chlorophyll)",
+            "Describe the light-dependent reactions (in thylakoid membranes): photolysis of water, electron transport chain, photophosphorylation (cyclic and non-cyclic), NADPH and ATP production",
+            "Describe the light-independent reactions / Calvin cycle (in stroma): carbon fixation by RuBisCO, reduction of 3-PGA to G3P, regeneration of RuBP",
+            "Explain factors affecting photosynthesis (light intensity, CO2 concentration, temperature) and Blackman\'s law of limiting factors",
         ],
         "teaching_steps": [
-                {
-                        "step": 1,
-                        "type": "intro",
-                        "prompt": "Ask: plants make their own food — but how? Where does the energy come from? Where does the carbon come from?"
-                },
-                {
-                        "step": 2,
-                        "type": "concept",
-                        "prompt": "6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂ (in presence of light + chlorophyll). Light reactions in thylakoid: water split, O₂ released, ATP + NADPH made. Ask: where does the oxygen come from — CO₂ or H₂O?"
-                },
-                {
-                        "step": 3,
-                        "type": "teach",
-                        "prompt": "Calvin cycle in stroma: CO₂ fixed by RuBisCO → G3P → glucose. Needs ATP and NADPH from light reactions. Ask: can Calvin cycle run in the dark if given ATP and NADPH?"
-                },
-                {
-                        "step": 4,
-                        "type": "practice",
-                        "prompt": "Factors: light intensity, CO₂ concentration, temperature. Draw a graph of photosynthesis rate vs light intensity — why does it plateau?"
-                },
-                {
-                        "step": 5,
-                        "type": "mastery",
-                        "prompt": "Medical admission MCQ about photosynthesis stages or limiting factors."
-                }
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: where does the food you eat ultimately come from? Even the mach (fish) you eat — it ate smaller organisms that ate algae. All food energy traces back to photosynthesis. Plants are the ultimate food factories. The equation 6CO2 + 6H2O -> C6H12O6 + 6O2 is arguably the most important chemical reaction on Earth. Why? (It produces ALL our food AND the oxygen we breathe!)",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Teach the light reactions (thylakoid membranes): (1) Photosystem II (P680) absorbs light -> water is split (photolysis: 2H2O -> 4H+ + 4e- + O2) — this is where O2 comes from. (2) Electrons pass through the electron transport chain (Plastoquinone -> Cytochrome b6f -> Plastocyanin). (3) At Cytochrome b6f, H+ ions are pumped into the thylakoid lumen, creating a proton gradient for ATP synthesis by ATP synthase (chemiosmosis/photophosphorylation). (4) Photosystem I (P700) re-energizes electrons -> passed via Ferredoxin to NADP+ reductase -> NADPH formed. This is NON-CYCLIC photophosphorylation (produces ATP + NADPH + O2). In CYCLIC photophosphorylation: only PSI involved, electrons cycle back, only ATP produced (no NADPH, no O2). Ask: why would a plant need cyclic photophosphorylation? (Calvin cycle needs more ATP than NADPH — 3ATP:2NADPH ratio).",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Teach the Calvin cycle (dark reactions/light-independent reactions, in stroma): (1) Carbon fixation: CO2 + RuBP (5C) --RuBisCO enzyme--> 2 molecules of 3-PGA (3C). RuBisCO is the most abundant protein on Earth! (2) Reduction: 3-PGA is reduced to G3P (glyceraldehyde-3-phosphate) using ATP and NADPH from light reactions. (3) Regeneration: 5 out of 6 G3P molecules are used to regenerate 3 RuBP (requires ATP). 1 G3P (out of 6) is the net product -> used to make glucose. To make 1 glucose: 6 turns of Calvin cycle, fixing 6 CO2, using 18 ATP and 12 NADPH. Then teach limiting factors: light intensity (increases rate until light saturation), CO2 concentration (normal 0.03%, increasing to 0.05% boosts rate), temperature (enzyme-dependent, optimum ~25-35 degrees C). Blackman\'s law: the rate of photosynthesis is limited by the factor that is nearest to its minimum value.",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Calculation problem: For the production of ONE molecule of glucose via the Calvin cycle, calculate: (a) How many CO2 molecules are fixed? (6) (b) How many turns of the Calvin cycle? (6) (c) How many ATP molecules used? (18) (d) How many NADPH molecules used? (12) (e) How many G3P molecules formed in total? (12) (f) How many G3P molecules used for RuBP regeneration? (10) (g) Net G3P output? (2, which combine to form 1 glucose). Then conceptual question: a student covers a geranium leaf with black paper for 48 hours, then tests for starch with iodine. Predict and explain the result. (No starch — no photosynthesis without light; existing starch was used up in respiration).",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "Medical admission MCQ: \'The oxygen released during photosynthesis comes from: (a) CO2 (b) H2O (c) C6H12O6 (d) Both CO2 and H2O.\' (Answer: H2O — proven by Hill\'s experiment using isotopic oxygen O-18). Follow up: \'Draw and explain the Z-scheme of electron transport in the light reactions, showing both PSI and PSII, the electron carriers, and where ATP and NADPH are produced.\' Then: \'A rice field in Bangladesh has adequate water and sunlight. The farmer adds extra CO2 by burning husk at the field edge. Explain using the law of limiting factors whether this would increase rice yield and under what conditions CO2 would no longer be the limiting factor.\'",
+            },
         ],
         "key_formulas": [
-                "6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂",
-                "Light reactions: H₂O → O₂ + ATP + NADPH",
-                "Calvin cycle: CO₂ → G3P → glucose",
-                "RuBisCO fixes CO₂"
+            "Overall equation: 6CO2 + 6H2O --light, chlorophyll--> C6H12O6 + 6O2",
+            "Photolysis of water (Hill reaction): 2H2O -> 4H+ + 4e- + O2 (occurs at PSII, O2 comes from water)",
+            "Non-cyclic photophosphorylation: H2O -> PSII -> PQ -> Cyt b6f -> PC -> PSI -> Fd -> NADP+ reductase -> NADPH (produces ATP + NADPH + O2)",
+            "Cyclic photophosphorylation: PSI -> Fd -> Cyt b6f -> PC -> PSI (produces only ATP, no NADPH, no O2)",
+            "Calvin cycle per 1 glucose: 6CO2 + 18ATP + 12NADPH -> C6H12O6 + 18ADP + 12NADP+ + 6H2O",
+            "RuBisCO reaction: CO2 + RuBP (5C) -> 2 x 3-PGA (3C) — carbon fixation step",
+            "Blackman\'s law of limiting factors: rate limited by the factor at its minimum",
         ],
         "common_mistakes": [
-                "Thinking O₂ comes from CO₂ (it comes from splitting H₂O)",
-                "Saying photosynthesis only happens in light (Calvin cycle uses products from light, but doesn't need light directly)",
-                "Confusing C3 and C4 photosynthesis pathways"
+            "Saying O2 comes from CO2 — the oxygen released in photosynthesis comes from WATER (H2O), not CO2. This was proven by Hill\'s experiment and later by Ruben and Kamen using O-18 isotope.",
+            "Calling the Calvin cycle \'dark reactions\' and thinking it occurs in the dark — it does NOT require darkness; it simply does not directly need light. It needs ATP and NADPH which come from light reactions, so it occurs simultaneously with light reactions during the day.",
+            "Confusing the Calvin cycle stoichiometry — it takes 6 turns (fixing 6 CO2) to produce 1 net glucose. Students often say 1 turn = 1 glucose. Each turn produces 2 G3P, but 10 out of 12 G3P are recycled to regenerate RuBP.",
+            "Confusing cyclic and non-cyclic photophosphorylation — non-cyclic involves both PSI and PSII, produces ATP + NADPH + O2; cyclic involves only PSI, produces only ATP. Students must know when and why the plant uses each.",
         ],
         "practice_prompts": [
-                "In which part of the chloroplast do light reactions occur?",
-                "What would happen to photosynthesis if CO₂ concentration is doubled?"
+            "Trace the path of a carbon atom from atmospheric CO2 to glucose, naming each intermediate in the Calvin cycle. At which step is ATP used? At which step is NADPH used?",
+            "Explain the Z-scheme of photosynthetic electron transport. Why is it called a Z-scheme? Include the roles of PSII (P680), PSI (P700), and all electron carriers.",
+            "A greenhouse farmer in Jessore wants to maximize tomato yield. Currently light and water are abundant. Explain how increasing CO2 concentration from 0.03% to 0.1% would affect photosynthesis rate. At what point would CO2 no longer be the limiting factor?",
         ],
-        "real_world_example": "Bangladesh's ধান (rice) fields are massive photosynthesis factories — rice plants convert sunlight into grain that feeds 170 million people. In the Sundarbans, mangrove trees photosynthesize even in salty water, producing the oxygen that supports the entire ecosystem including the Royal Bengal Tiger."
-},
+        "real_world_example": "Bangladesh\'s entire rice agriculture depends on photosynthesis. The IRRI and BRRI are researching C4 rice — engineering the more efficient C4 photosynthesis pathway (used by sugarcane and maize) into rice (which is a C3 plant) to boost yields by 50%. Currently, rice loses up to 30% efficiency due to photorespiration (RuBisCO fixing O2 instead of CO2 in hot conditions). In Bangladeshi tea gardens of Sylhet, tea bushes are often planted under shade trees because tea performs better at moderate light intensity — too much direct sunlight can cause photoinhibition and damage the photosynthetic machinery.",
+    },
 
     "bio1-09-02": {
-        "title": "Respiration & Transpiration",
+        "title": "Respiration and Transpiration",
         "learning_objectives": [
-                "Compare aerobic and anaerobic respiration",
-                "Describe glycolysis, Krebs cycle, and ETC",
-                "Calculate ATP yield from one glucose molecule",
-                "Explain transpiration and its importance in plants"
+            "Describe the complete process of aerobic cellular respiration: glycolysis (cytoplasm), pyruvate oxidation (mitochondrial matrix), Krebs cycle (matrix), and oxidative phosphorylation/ETC (inner mitochondrial membrane)",
+            "Calculate the net ATP yield from one glucose molecule (theoretical maximum 36-38 ATP) and explain the role of NADH and FADH2 as electron carriers",
+            "Compare aerobic and anaerobic respiration (fermentation) — alcoholic fermentation in yeast (ethanol + CO2) and lactic acid fermentation in muscle",
+            "Explain transpiration (types, mechanism, significance), stomatal opening/closing mechanism (K+ ion theory), and factors affecting transpiration rate",
         ],
         "teaching_steps": [
-                {
-                        "step": 1,
-                        "type": "intro",
-                        "prompt": "Ask: photosynthesis makes glucose, but how do cells actually USE that glucose for energy? What molecule is the 'energy currency'?"
-                },
-                {
-                        "step": 2,
-                        "type": "concept",
-                        "prompt": "Respiration: C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + ATP. Three stages: glycolysis (cytoplasm), Krebs cycle (matrix), ETC (inner membrane). Ask: which stage produces the most ATP?"
-                },
-                {
-                        "step": 3,
-                        "type": "teach",
-                        "prompt": "ATP count: glycolysis = 2 ATP net, Krebs = 2 ATP, ETC = 34 ATP. Total ≈ 38 ATP per glucose. Anaerobic: only glycolysis = 2 ATP. Teach transpiration: water loss through stomata."
-                },
-                {
-                        "step": 4,
-                        "type": "practice",
-                        "prompt": "Compare aerobic vs anaerobic respiration in a table. Why do muscles produce lactic acid during intense exercise?"
-                },
-                {
-                        "step": 5,
-                        "type": "mastery",
-                        "prompt": "Medical admission MCQ about ATP yield or Krebs cycle products."
-                }
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: you eat bhat (rice) for energy, but how does your body actually extract energy from glucose? You cannot burn rice inside your body like burning wood! The process of cellular respiration breaks glucose down step by step, capturing energy in ATP — the energy currency of the cell. Meanwhile, plants lose over 90% of absorbed water through transpiration from leaves. Why would they \'waste\' so much water?",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Teach glycolysis (Embden-Meyerhof pathway, in cytoplasm): Glucose (6C) -> 2 Pyruvate (3C). Net gain: 2 ATP (substrate-level phosphorylation) + 2 NADH. Key steps: glucose is phosphorylated (uses 2 ATP), split into two 3C molecules, oxidized to pyruvate (produces 4 ATP and 2 NADH). Net: 2 ATP. Glycolysis is ANAEROBIC (does not need oxygen) and is common to both aerobic and anaerobic respiration. Then: if O2 is available -> pyruvate enters mitochondria. Pyruvate decarboxylation (link reaction): pyruvate (3C) -> acetyl CoA (2C) + CO2 + NADH (occurs in mitochondrial matrix). Then teach the Krebs cycle (citric acid cycle, in matrix): Acetyl CoA (2C) + OAA (4C) -> Citrate (6C) -> through a series of reactions, 2 CO2 are released, regenerating OAA. Per turn: 3 NADH + 1 FADH2 + 1 GTP (=1 ATP). Since 1 glucose gives 2 acetyl CoA, the Krebs cycle turns TWICE per glucose. Ask: where is CO2 produced in respiration? (Pyruvate decarboxylation and Krebs cycle — NOT in ETC!)",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Teach ETC and oxidative phosphorylation (inner mitochondrial membrane): NADH and FADH2 donate electrons to the electron transport chain (Complex I -> Ubiquinone -> Complex III -> Cytochrome c -> Complex IV -> O2). As electrons flow, protons (H+) are pumped into the intermembrane space, creating a proton gradient. H+ flows back through ATP synthase (chemiosmosis) -> ATP is produced. O2 is the final electron acceptor -> combines with H+ and electrons to form H2O. This is WHY we breathe oxygen! ATP yield: each NADH -> ~2.5 ATP, each FADH2 -> ~1.5 ATP. Total per glucose: Glycolysis (2 ATP + 2 NADH), Link reaction (2 NADH), Krebs (2 ATP + 6 NADH + 2 FADH2). Total NADH = 10 x 2.5 = 25 ATP; FADH2 = 2 x 1.5 = 3 ATP; direct ATP/GTP = 4. Grand total ~ 30-32 ATP (or 36-38 by older counting). Then teach anaerobic respiration: in absence of O2, pyruvate is not sent to mitochondria. Alcoholic fermentation (yeast): pyruvate -> ethanol + CO2 (used in bread, beer). Lactic acid fermentation (muscles): pyruvate -> lactate (causes muscle cramp during intense exercise). Only 2 ATP per glucose in anaerobic — much less efficient. Then teach transpiration: loss of water vapor from aerial parts (mainly leaves via stomata). Types: stomatal (90%), cuticular, lenticular. Stomatal mechanism: K+ ion theory — light triggers K+ influx into guard cells -> water enters by osmosis -> guard cells swell and open stomatal pore. In dark, K+ leaves -> water exits -> stomata close. Significance of transpiration: cooling effect (evaporative cooling), creates transpiration pull for water transport in xylem (cohesion-tension), helps mineral absorption and distribution. Factors: light, temperature, humidity, wind, CO2 concentration.",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "ATP accounting exercise: for the complete aerobic oxidation of 1 glucose molecule, make a table showing ATP production at each stage. Stage: Glycolysis — 2 ATP + 2 NADH (= 2 + 5 = 7). Link reaction — 2 NADH (= 5). Krebs cycle (x2 turns) — 2 GTP + 6 NADH + 2 FADH2 (= 2 + 15 + 3 = 20). Grand total: ~30-32 ATP. Then comparison: aerobic (glucose -> CO2 + H2O + 30-32 ATP) vs anaerobic alcoholic (glucose -> ethanol + CO2 + 2 ATP) vs lactic acid (glucose -> lactate + 2 ATP). Ask: why is aerobic respiration so much more efficient? (ETC extracts energy from NADH and FADH2 that is wasted in fermentation). For transpiration: draw and label a stomatal apparatus showing guard cells, subsidiary cells, and stomatal pore. Explain the K+ ion mechanism of stomatal opening.",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "Medical admission MCQ: \'The net gain of ATP from glycolysis is: (a) 4 (b) 2 (c) 8 (d) 38.\' Follow up: \'Cyanide is a deadly poison that blocks Complex IV (cytochrome oxidase) of the ETC. Explain step by step what happens when cyanide enters a cell: why does ATP production stop? Why does the cell die? Can glycolysis still occur?\' (Yes, but only 2 ATP — not enough to sustain life). Then: \'A farmer notices that his rice plants wilt at midday even though the soil is moist. Explain this using the concept of transpiration exceeding absorption. What is the role of root pressure vs transpiration pull? Why does temporary wilting recover by evening?\'",
+            },
         ],
         "key_formulas": [
-                "C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + 38 ATP",
-                "Glycolysis: glucose → 2 pyruvate + 2 ATP (cytoplasm)",
-                "Krebs: acetyl CoA → CO₂ + NADH + FADH₂ (mitochondria)",
-                "ETC: NADH/FADH₂ → ATP (34 ATP)"
+            "Aerobic respiration overall: C6H12O6 + 6O2 -> 6CO2 + 6H2O + ~30-32 ATP (energy)",
+            "Glycolysis: Glucose (6C) -> 2 Pyruvate (3C) + 2 ATP + 2 NADH (cytoplasm, anaerobic)",
+            "Pyruvate decarboxylation: Pyruvate (3C) -> Acetyl CoA (2C) + CO2 + NADH (mitochondrial matrix)",
+            "Krebs cycle (per turn): Acetyl CoA + OAA -> Citrate -> ... -> OAA + 2CO2 + 3 NADH + 1 FADH2 + 1 GTP (x2 turns per glucose)",
+            "ETC: NADH -> 2.5 ATP; FADH2 -> 1.5 ATP; O2 = final electron acceptor -> H2O",
+            "Alcoholic fermentation: Pyruvate -> Ethanol + CO2 (by yeast/Saccharomyces; used in baking/brewing)",
+            "Lactic acid fermentation: Pyruvate -> Lactate (in muscles during intense exercise; by Lactobacillus in doi/yogurt)",
+            "Transpiration pull: cohesion-tension theory — transpiration from leaves pulls water column up xylem",
+            "Stomatal opening: light -> K+ into guard cells -> osmotic water entry -> guard cells swell -> pore opens",
         ],
         "common_mistakes": [
-                "Thinking respiration only happens at night in plants (it happens 24/7)",
-                "Confusing fermentation products: yeast produces ethanol, muscles produce lactic acid",
-                "Saying glycolysis needs oxygen (it's anaerobic — happens without O₂)"
+            "Saying glycolysis produces 4 ATP — it PRODUCES 4 ATP but USES 2 ATP, so NET gain is only 2 ATP. Students must distinguish gross from net ATP production.",
+            "Thinking O2 is needed for glycolysis — glycolysis is ANAEROBIC and occurs in the cytoplasm. O2 is only needed for the ETC (oxidative phosphorylation) in mitochondria.",
+            "Confusing where each stage occurs — Glycolysis: cytoplasm; Pyruvate decarboxylation and Krebs cycle: mitochondrial matrix; ETC: inner mitochondrial membrane. Students often say Krebs cycle occurs in the cristae (it occurs in the matrix).",
+            "Thinking transpiration is a waste of water — transpiration is essential for creating the pulling force (transpiration pull) for water transport, for evaporative cooling of leaves, and for mineral transport. Without transpiration, water and minerals could not reach tall tree canopies.",
         ],
         "practice_prompts": [
-                "Where exactly in the mitochondria does the Krebs cycle occur?",
-                "Why can yeast survive without oxygen but most animals can't survive long?"
+            "Trace the complete oxidation of one glucose molecule through all stages of aerobic respiration, showing ATP, NADH, FADH2, and CO2 produced at each stage. Where is the most ATP generated?",
+            "A yeast culture is placed in a sugar solution in a sealed flask. Initially it respires aerobically. As oxygen is used up, what switch occurs? Write the equation for alcoholic fermentation. Why does bread dough rise? Why does the yeast eventually stop fermenting?",
+            "Explain why plants transpire mostly during the day but respire 24 hours a day. Draw a graph showing how net CO2 exchange changes over a 24-hour cycle. At what point is the compensation point reached (photosynthesis = respiration)?",
         ],
-        "real_world_example": "When you eat ভাত (rice), your body breaks the starch into glucose, then cellular respiration converts it to ATP — that's the energy that lets you walk, think, and study. In making পান্তা ভাত (fermented rice), yeast does anaerobic respiration producing CO₂ bubbles and a slightly sour taste from organic acids."
-},
+        "real_world_example": "In Bangladesh, alcoholic fermentation by yeast is used to make tari (palm wine) from the sap of tal/taal (palmyra palm) and khejur (date palm) — the CO2 makes it fizzy and the ethanol gives the kick. Lactic acid fermentation by Lactobacillus converts milk to doi (yogurt) and mishti doi (sweetened yogurt, a Bengali specialty). In rice paddies, waterlogged soil has no oxygen, so rice roots perform anaerobic respiration, and the soil bacteria produce methane (CH4) — this is why rice paddies are a significant source of greenhouse gas globally. Bangladesh\'s millions of hectares of rice paddies contribute to methane emissions. Tea garden workers in Sylhet time plucking for early morning when stomata are just opening and transpiration is low — leaves retain more moisture and weigh more, which means better pay per kilogram!",
+    },
+
+    # ══════════════════════════════════════════════════════════════
+    # ══ BIOLOGY — Chapter 10: উদ্ভিদের জনন (Plant Reproduction) ══
+    # ══════════════════════════════════════════════════════════════
 
     "bio1-10-01": {
-        "title": "Plant Reproduction",
+        "title": "Plant Reproduction — Pollination, Double Fertilization & Fruit Formation",
         "learning_objectives": [
-                "Describe structure of a flower and functions of each part",
-                "Explain pollination types (self vs cross)",
-                "Describe double fertilization in angiosperms",
-                "Distinguish monocot and dicot seeds"
+            "Describe the structure of a typical flower (calyx, corolla, androecium, gynoecium) and distinguish between complete and incomplete flowers",
+            "Explain pollination types (self-pollination vs cross-pollination) and adaptations for each (wind, insect, water pollination with examples)",
+            "Describe the process of double fertilization unique to angiosperms: one sperm + egg -> zygote (2n), other sperm + polar nuclei -> endosperm (3n)",
+            "Explain post-fertilization changes: ovule -> seed, ovary -> fruit, and types of fruits (simple, aggregate, composite) with Bangladeshi examples",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: have you seen bees buzzing around jaba (hibiscus) or shiuli flowers? Or noticed the fine powder (pollen) that falls from a shimul tree flower? Why do flowers exist — just to look beautiful? No! Flowers are the reproductive organs of angiosperms. The bright colors, sweet nectar, and fragrance all serve one purpose: getting pollen from one flower to another. Let us learn how plants reproduce and how every aam (mango), litchi, and kathal (jackfruit) you eat is actually a fertilized ovary!",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Teach flower structure: (1) Calyx (sepals — protect bud), (2) Corolla (petals — attract pollinators), (3) Androecium (stamens = filament + anther; anther contains pollen sacs that produce pollen grains/microspores), (4) Gynoecium (pistil = stigma + style + ovary; ovary contains ovules with embryo sac/megaspore). If a flower has all 4 whorls, it is complete. If it has both stamens and pistil, it is bisexual/perfect (e.g., jaba/hibiscus, rose). If only stamens = staminate/male; if only pistil = pistillate/female (e.g., lau/gourd, kumra/pumpkin have separate male and female flowers on same plant — monoecious). Then teach pollination: transfer of pollen from anther to stigma. Self-pollination: same flower or same plant (ensures reproduction but no genetic variation). Cross-pollination: different plant of same species (produces genetic variation). Adaptations: insect pollination (entomophily) — bright colored, scented, nectar-producing (jaba, rose, mustard/shorishe); wind pollination (anemophily) — small, no color/scent, light/abundant pollen, feathery stigma (rice/dhan, wheat, corn/bhutta, grass); water pollination (hydrophily) — rare, in aquatic plants (Vallisneria, Hydrilla). Ask: is rice pollinated by insects or wind? (Wind — that is why rice flowers are small and inconspicuous).",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Teach double fertilization in detail — this is the MOST important topic in plant reproduction for medical admission. After pollination, pollen grain germinates on stigma -> pollen tube grows down through style to ovary -> enters ovule through micropyle. The pollen tube has 2 male gametes (sperm cells) and 1 tube nucleus. Inside the ovule, the embryo sac has: egg cell (n) + 2 synergids (at micropylar end), 3 antipodal cells (at chalazal end), and 2 polar nuclei in central cell. DOUBLE FERTILIZATION: First sperm (n) + Egg (n) -> Zygote (2n) -> develops into embryo. Second sperm (n) + 2 polar nuclei (n + n) -> Primary endosperm nucleus (3n) -> develops into endosperm (nutrition for embryo). This is UNIQUE to angiosperms — does not occur in gymnosperms! Discovered by Nawaschin (1898). Post-fertilization: ovule -> seed (seed coat from integuments, embryo from zygote, endosperm from PEN). Ovary -> fruit (ovary wall becomes pericarp — epicarp, mesocarp, endocarp). Ask: in a mango, which part is the seed? Which part is the fruit? (The hard stone/athi is the endocarp, the fleshy part is mesocarp, the skin is epicarp; the seed is inside the stone).",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Identification exercise using Bangladeshi fruits: (1) Aam (mango) — drupe (single seed with stony endocarp). (2) Kathal (jackfruit) — composite/multiple fruit (from entire inflorescence). (3) Kola (banana) — berry (seedless in cultivated varieties — parthenocarpy). (4) Litchi — nut-like drupe with fleshy aril. (5) Narikel (coconut) — drupe (coir = mesocarp, shell = endocarp, white flesh = endosperm, coconut water = liquid endosperm). (6) Dhan (rice grain) — caryopsis (pericarp fused with seed coat). Ask students to identify the edible part in each: mango — mesocarp; coconut — endosperm; rice — endosperm (the white rice we eat is starchy endosperm!); jackfruit — perianth and seeds. Then: explain why the banana is seedless. (Parthenocarpy — fruit develops without fertilization; cultivated banana is triploid 3n, so meiosis fails and seeds do not develop).",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "Medical admission MCQ: \'Double fertilization involves: (a) Fusion of two eggs with two sperms (b) Fusion of one sperm with egg and another sperm with secondary nucleus (c) Fusion of two polar nuclei (d) Fusion of egg with polar nuclei.\' Follow up: \'Explain what happens if pollination occurs but one of the two sperms fails to fuse. Can a seed still develop without endosperm formation? (Generally no — endosperm provides nutrition for embryo development; without it, the seed usually aborts).\' Then: \'A mango farmer in Rajshahi wants to ensure good mango production. Explain the role of pollinators. What happens if the mango orchard is treated with pesticides that kill bees and flies? Suggest alternatives (integrated pest management, maintaining pollinator habitats).\' Finally: \'Explain why coconut water is considered liquid endosperm. What is the ploidy of coconut water? (3n — triploid, like all endosperm in angiosperms).\'",
+            },
+        ],
+        "key_formulas": [
+            "Flower structure: Calyx (sepals) + Corolla (petals) + Androecium (stamens: filament + anther) + Gynoecium (pistil: stigma + style + ovary with ovules)",
+            "Pollination types: self (autogamy) vs cross (allogamy/xenogamy); agents — wind (anemophily), insect (entomophily), water (hydrophily), bird (ornithophily)",
+            "Double fertilization: 1st sperm (n) + egg (n) -> zygote (2n) -> embryo; 2nd sperm (n) + 2 polar nuclei (n+n) -> PEN (3n) -> endosperm",
+            "Post-fertilization: ovule -> seed (integuments -> seed coat, zygote -> embryo, PEN -> endosperm); ovary -> fruit (ovary wall -> pericarp)",
+            "Endosperm is triploid (3n) — formed from fusion of one sperm nucleus with two polar nuclei",
+            "Parthenocarpy: fruit development without fertilization (seedless fruits — banana, seedless watermelon)",
+            "Types of fruits: simple (from single ovary — mango/drupe, tomato/berry), aggregate (from multiple carpels of one flower — custard apple/ata), composite/multiple (from inflorescence — jackfruit/kathal, pineapple/anaros)",
+        ],
+        "common_mistakes": [
+            "Confusing pollination with fertilization — pollination is merely the transfer of pollen to stigma (an external event). Fertilization is the fusion of gametes inside the ovule (internal event). Pollination can occur without fertilization (incompatible pollen, for example).",
+            "Forgetting that endosperm is 3n (triploid) — one sperm nucleus (n) fuses with TWO polar nuclei (n + n) to give 3n. Students often say 2n. The 3n endosperm is a key distinguishing feature of angiosperms.",
+            "Thinking the fruit is the seed — in a mango, the stone/athi is NOT the seed; it is the endocarp (inner layer of the fruit). The actual seed is inside the stone. Similarly, the rice grain\'s white part we eat is endosperm, not the whole seed.",
+            "Confusing wind-pollinated and insect-pollinated flowers — wind-pollinated flowers (rice, wheat, corn) are small, dull, unscented with abundant light pollen and feathery stigmas. Insect-pollinated flowers (mustard, rose, hibiscus) are large, colorful, scented with sticky pollen and nectar. Students mix up these adaptations.",
+        ],
+        "practice_prompts": [
+            "Draw a labeled diagram of the embryo sac (female gametophyte) of an angiosperm showing all 7 cells and 8 nuclei. Describe the role of each cell type (egg, synergids, antipodals, central cell) during fertilization.",
+            "Trace the path of a pollen grain from the time it lands on the stigma to the completion of double fertilization inside the ovule. Name all structures encountered along the way.",
+            "A Rajshahi mango farmer and a Dinajpur rice farmer both need successful pollination for their crops. Compare the pollination mechanisms in mango (insect-pollinated) and rice (wind-pollinated). What adaptations does each flower have for its pollination method?",
+        ],
+        "real_world_example": "Every grain of rice you eat is a product of double fertilization — the starchy white part (endosperm, 3n) nourished the rice embryo, and now it nourishes you. The Rajshahi mango is famous because the warm, dry pre-monsoon climate is perfect for insect pollinators like flies and bees to visit mango flowers. Kathal (jackfruit), the national fruit of Bangladesh, is a composite fruit formed from an entire female inflorescence — hundreds of individual fruits fused together. The narikel (coconut) of coastal Bangladesh is a drupe where we eat the endosperm (white flesh and water). Bangladeshi mustard fields (shorishe khet) turn bright yellow to attract bees for cross-pollination — and beekeepers place hives near these fields to produce mustard honey, a dual agricultural benefit. Seedless kola (banana) is triploid and parthenocarpic — the fruit develops without fertilization, which is why cultivated bananas have no seeds.",
+    },
+
+    # ══ CHEMISTRY, MATH — Additional Chapters ══
+    "chem1-03-02": {
+        "title": "Periodic Trends: Radius, IE, EA & Electronegativity",
+        "learning_objectives": [
+            "Explain trends in atomic radius, ionic radius across periods and down groups",
+            "Compare ionization energies and identify anomalies (Be>B, N>O)",
+            "Distinguish electron affinity and electronegativity",
+            "Use periodic trends to predict chemical behavior and bond type",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: which atom is bigger — Na or Cl? They are in the same period. What about Na or K? Why does size change across and down the table?",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Teach atomic radius trend: decreases across a period (more protons, same shell), increases down a group (more shells). Ask: why is Na+ much smaller than Na, but Cl^- is larger than Cl?",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Teach ionization energy trends and anomalies. IE increases across a period but B < Be (2p1 easier to remove than 2s2) and O < N (paired 2p4 electron easier than half-filled 2p3). Explain with orbital diagrams.",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Arrange in order of increasing first ionization energy: Na, Mg, Al, Si, P. Explain any anomalies. Then arrange O, S, Se in order of increasing electron affinity.",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "BUET-level: The first ionization energies (kJ/mol) of four consecutive elements are: 786, 1086, 1402, 1314. Identify the elements and explain why the 4th value is lower than the 3rd. Also predict which of these elements forms the most stable +2 ion.",
+            },
+        ],
+        "key_formulas": [
+            "Atomic radius: decreases L->R across period, increases top->bottom in group",
+            "Ionic radius: cation < atom < anion (for same element)",
+            "Isoelectronic species: more protons = smaller radius (O^2- > F^- > Na+ > Mg^2+)",
+            "IE1 < IE2 < IE3 ... (successive IEs always increase)",
+            "Electronegativity (Pauling): F(4.0) > O(3.5) > N(3.0) > Cl(3.0)",
+            "Electron affinity: most negative (exothermic) for halogens; noble gases ~0",
+        ],
+        "common_mistakes": [
+            "Thinking atomic radius always decreases across a period without exception — actually d-block elements show very small changes due to poor shielding by d electrons",
+            "Confusing electron affinity with electronegativity — EA is energy released when an atom gains one electron (measurable), electronegativity is the tendency to attract shared electrons in a bond (relative scale)",
+            "Not recognizing IE anomalies: Be > B and N > O due to subshell stability — this is a very common BUET/DU admission question",
+        ],
+        "practice_prompts": [
+            "Arrange the following isoelectronic species in order of increasing ionic radius: Na+, F^-, O^2-, Mg^2+, N^3-. Explain your reasoning.",
+            "The second ionization energy of Na is dramatically higher than its first IE, but for Mg the jump is less dramatic. Explain using electron configuration.",
+            "Which has a more negative electron affinity: Cl or F? Explain why, despite F being more electronegative. (Hint: consider the small size of the 2p orbital)",
+        ],
+        "real_world_example": "The reason table salt (NaCl) forms so readily is explained by periodic trends. Na has very low ionization energy (easy to lose its electron) and Cl has very high electron affinity (eager to gain one). This huge difference in electronegativity across period 3 drives the formation of ionic bonds — the same chemistry that preserves fish (shutki) in Cox's Bazar.",
+    },
+
+    # ══ HIGHER MATHEMATICS — Chapter 1: সেট ও ফাংশন (Sets & Functions) ══
+    "hm1-01-01": {
+        "title": "Sets, Subsets & Set Operations",
+        "learning_objectives": [
+            "Define sets using roster and set-builder notation and identify types (finite, infinite, empty, universal)",
+            "Determine subsets, proper subsets, and power sets of a given set",
+            "Perform union, intersection, difference, and complement operations",
+            "Apply De Morgan's laws and verify results using Venn diagrams",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: if I say 'the set of all rivers in Bangladesh', how would you list its elements? What if I say 'the set of all even numbers' — can you list them all?",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Explain roster vs set-builder notation. Ask student to write {x ∈ ℕ : x < 6} in roster form and vice versa. Introduce empty set ∅ and universal set U.",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Teach subset (⊆), proper subset (⊂), and power set P(A). Ask: if A = {1, 2, 3}, how many elements does P(A) have? Then introduce A ∪ B, A ∩ B, A − B, and A' with Venn diagrams.",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Problem: Let U = {1,2,3,...,10}, A = {1,2,3,4,5}, B = {3,4,5,6,7}. Find A ∪ B, A ∩ B, A − B, A', and verify (A ∪ B)' = A' ∩ B' (De Morgan's law).",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "BUET-level: If n(A) = 40, n(B) = 35, n(A ∪ B) = 60, n(U) = 80, find n(A ∩ B), n(A' ∩ B'), and n(A − B). Ask student to draw the Venn diagram with cardinalities in each region.",
+            },
+        ],
+        "key_formulas": [
+            "|P(A)| = 2ⁿ where n = |A|",
+            "n(A ∪ B) = n(A) + n(B) − n(A ∩ B)",
+            "(A ∪ B)' = A' ∩ B' and (A ∩ B)' = A' ∪ B' — De Morgan's laws",
+            "n(A ∪ B ∪ C) = n(A) + n(B) + n(C) − n(A∩B) − n(B∩C) − n(A∩C) + n(A∩B∩C)",
+        ],
+        "common_mistakes": [
+            "Confusing ∈ (element of) with ⊆ (subset of) — e.g., writing {1} ∈ {1,2} instead of {1} ⊆ {1,2}",
+            "Forgetting that ∅ is a subset of every set, and every set is a subset of itself",
+            "Errors in De Morgan's law — swapping union and intersection without also taking complements",
+        ],
+        "practice_prompts": [
+            "If A = {a, b, c}, list all subsets of A. How many are proper subsets?",
+            "In a class of 100 students, 60 take Physics, 50 take Math, 20 take both. How many take neither?",
+            "Prove using set algebra that A − (B ∩ C) = (A − B) ∪ (A − C).",
+        ],
+        "real_world_example": "Think of mobile phone plans in Bangladesh — Grameenphone's 4G coverage area is set A, Robi's is set B. The intersection A ∩ B is where both have 4G. The union A ∪ B is total 4G coverage. Areas with no coverage at all are (A ∪ B)'.",
+    },
+
+    "hm1-01-02": {
+        "title": "Functions, Domain & Range",
+        "learning_objectives": [
+            "Define a function as a special relation and distinguish from general relations",
+            "Determine domain, co-domain, and range of a function",
+            "Classify functions as one-one (injective), onto (surjective), and bijective",
+            "Compute composite functions (f∘g) and inverse functions (f⁻¹)",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: if every student in your class is assigned exactly one roll number, is this a function? What if two students share the same roll number — is it still a function from students to roll numbers?",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Define function f: A → B as a relation where every element of A maps to exactly one element of B. Explain domain, co-domain, range. Ask: if f(x) = √(x−2), what is the domain?",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Teach one-one, onto, bijective with arrow diagrams. Then introduce composite function: if f(x) = 2x+1 and g(x) = x², find (f∘g)(x) and (g∘f)(x). Ask: are they equal?",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Problem: f(x) = (3x−2)/(x+1). Find domain of f, then find f⁻¹(x). Verify that f(f⁻¹(x)) = x.",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "BUET-level: Let f: ℝ→ℝ, f(x) = x² − 4x + 3. Find the range of f. Is f one-one? If we restrict domain to [2, ∞), find f⁻¹(x) and state its domain.",
+            },
+        ],
+        "key_formulas": [
+            "Domain of f(x) = √(g(x)) requires g(x) ≥ 0",
+            "Domain of f(x) = 1/g(x) requires g(x) ≠ 0",
+            "(f∘g)(x) = f(g(x))",
+            "f⁻¹ exists iff f is bijective; solve y = f(x) for x to get f⁻¹(y)",
+        ],
+        "common_mistakes": [
+            "Confusing co-domain with range — range is the actual output set, co-domain is the declared target set",
+            "Assuming f∘g = g∘f — composite functions are generally not commutative",
+            "Forgetting to check domain restrictions when finding inverse (e.g., for quadratics, must restrict domain first)",
+        ],
+        "practice_prompts": [
+            "Find the domain and range of f(x) = 1/(x² − 9).",
+            "If f(x) = 2x + 3 and g(x) = (x − 3)/2, show that f and g are inverses of each other.",
+            "Is f(x) = |x| one-one? Is it onto when f: ℝ → ℝ? What about f: ℝ → [0, ∞)?",
+        ],
+        "real_world_example": "Think of your National ID card system — each citizen maps to exactly one NID number (function). If no two people share an NID, it is one-one. If every possible NID is assigned, it is onto. Bangladesh's NID is designed to be bijective — a perfect one-to-one correspondence.",
+    },
+
+    # ══ HIGHER MATHEMATICS — Chapter 2: বীজগাণিতিক রাশি (Algebraic Expressions) ══
+    "hm1-02-01": {
+        "title": "Polynomials & Factoring",
+        "learning_objectives": [
+            "Classify polynomials by degree and number of terms",
+            "Apply Factor Theorem and Remainder Theorem to find factors and remainders",
+            "Factor polynomials using grouping, identities, and synthetic division",
+            "Solve polynomial equations and find relationships between roots and coefficients",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: what is the remainder when you divide x³ − 3x² + 2x − 5 by (x − 1)? Can you guess without doing long division?",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Teach Remainder Theorem: f(a) = remainder when f(x) ÷ (x−a). Then Factor Theorem: (x−a) is a factor iff f(a) = 0. Ask student to check if (x−2) is a factor of x³ − 6x² + 11x − 6.",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Demonstrate synthetic division to factor x³ − 6x² + 11x − 6 completely. Teach sum/product of roots: for ax² + bx + c = 0, α+β = −b/a, αβ = c/a. Extend to cubic equations.",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Problem: Factor 2x³ + x² − 13x + 6 completely. Then find all roots. Verify using sum and product of roots.",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "BUET-level: If α, β are roots of x² − 5x + 3 = 0, find the value of α³ + β³ and form the equation whose roots are α² and β². No calculator — use identities only.",
+            },
+        ],
+        "key_formulas": [
+            "Remainder Theorem: f(x) ÷ (x−a) gives remainder f(a)",
+            "Factor Theorem: (x−a) | f(x) ⟺ f(a) = 0",
+            "For ax² + bx + c = 0: α+β = −b/a, αβ = c/a",
+            "α³ + β³ = (α+β)³ − 3αβ(α+β)",
+            "For ax³ + bx² + cx + d = 0: α+β+γ = −b/a, αβ+βγ+γα = c/a, αβγ = −d/a",
+        ],
+        "common_mistakes": [
+            "Sign error in Remainder Theorem — evaluating f(a) when divisor is (x−a), not (x+a)",
+            "Forgetting the negative sign in sum of roots: α+β = −b/a (not +b/a)",
+            "Incomplete factoring — stopping at one factor instead of factoring the remaining quadratic",
+        ],
+        "practice_prompts": [
+            "Use the Factor Theorem to show (x + 3) is a factor of x³ + 27. Then factor completely.",
+            "If α, β are roots of 2x² − 7x + 5 = 0, find 1/α + 1/β without solving for α, β.",
+            "Find k if (x − 2) is a factor of x³ − kx² + 5x + 2.",
+        ],
+        "real_world_example": "When engineers at Padma Bridge calculated load distribution across supports, they used polynomial equations where the roots represent critical stress points. Factoring tells them exactly where the structure needs reinforcement.",
+    },
+
+    "hm1-02-02": {
+        "title": "Partial Fractions",
+        "learning_objectives": [
+            "Decompose proper rational expressions into partial fractions with linear factors",
+            "Handle repeated linear factors in partial fraction decomposition",
+            "Decompose expressions with irreducible quadratic factors",
+            "Convert improper fractions to proper form before decomposition",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: you know how to add 1/(x+1) + 2/(x−1) into a single fraction. Can you reverse the process? Given (3x−1)/((x+1)(x−1)), can you break it back into simpler fractions?",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Teach the general rule: P(x)/((x−a)(x−b)) = A/(x−a) + B/(x−b). Show the cover-up method and the method of equating coefficients. Ask student to decompose (5x+3)/((x+1)(x+2)).",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Handle repeated factors: P(x)/(x−a)² = A/(x−a) + B/(x−a)². Then irreducible quadratic: P(x)/((x−a)(x²+bx+c)) = A/(x−a) + (Bx+C)/(x²+bx+c). Solve an example of each type.",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Problem: Decompose (3x² + 5x + 2)/((x+1)²(x+2)) into partial fractions. Verify by recombining.",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "BUET-level: Decompose (x⁴ + 1)/(x(x² + 1)²) into partial fractions. Note: check if it is proper first. Then decompose handling the repeated irreducible quadratic factor.",
+            },
+        ],
+        "key_formulas": [
+            "P(x)/((x−a)(x−b)) = A/(x−a) + B/(x−b)",
+            "P(x)/(x−a)ⁿ = A₁/(x−a) + A₂/(x−a)² + ... + Aₙ/(x−a)ⁿ",
+            "For irreducible (ax²+bx+c): numerator is (Ax+B), not just A",
+            "If degree(numerator) ≥ degree(denominator), do polynomial long division first",
+        ],
+        "common_mistakes": [
+            "Using A/(x²+1) instead of (Ax+B)/(x²+1) for irreducible quadratic factors",
+            "Forgetting to do long division when the fraction is improper (degree of numerator ≥ denominator)",
+            "Arithmetic errors when equating coefficients — not checking the answer by recombining fractions",
+        ],
+        "practice_prompts": [
+            "Decompose (2x + 3)/((x − 1)(x + 2)) into partial fractions.",
+            "Find the partial fraction form of (x² + 1)/((x − 1)²(x + 1)).",
+            "Decompose (x³ + x + 1)/(x²(x² + 1)). Is this proper or improper?",
+        ],
+        "real_world_example": "Partial fractions are like breaking a mixed curry into its individual spices — you can taste the whole dish, but to understand (or integrate) it, you need to separate each component. This technique is essential for solving differential equations used in circuit analysis at BUET EEE.",
+    },
+
+    # ══ HIGHER MATHEMATICS — Chapter 3: জ্যামিতি (Geometry / Coordinate Geometry) ══
+    "hm1-03-01": {
+        "title": "Straight Lines: Distance & Section Formulas",
+        "learning_objectives": [
+            "Apply the distance formula between two points in 2D",
+            "Use section formula to find internal and external division points",
+            "Calculate area of a triangle given three vertices",
+            "Determine collinearity of three points using the area method",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: if you are at Motijheel (point A) and your friend is at Uttara (point B), and you know both locations on a grid map, how would you calculate the straight-line distance?",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Derive distance formula d = √((x₂−x₁)² + (y₂−y₁)²) from Pythagoras. Ask: find distance between (3, 4) and (−1, 1). Then teach the section formula for internal division: ((mx₂+nx₁)/(m+n), (my₂+ny₁)/(m+n)).",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Teach external division formula (change + to − in denominator). Then area of triangle with vertices: ½|x₁(y₂−y₃) + x₂(y₃−y₁) + x₃(y₁−y₂)|. Ask: what does area = 0 mean geometrically?",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Problem: A(2, 3), B(8, 11). Find the point dividing AB in ratio 3:1 internally and externally. Then find the midpoint and verify it equals the 1:1 division.",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "BUET-level: Show that points (1, 1), (3, 5), (5, 9) are collinear. Then find the ratio in which (3, 5) divides the line joining (1, 1) and (5, 9). Also find the area of triangle formed by (0, 0), (4, 0), (0, 3).",
+            },
+        ],
+        "key_formulas": [
+            "Distance: d = √((x₂−x₁)² + (y₂−y₁)²)",
+            "Internal division: P = ((mx₂+nx₁)/(m+n), (my₂+ny₁)/(m+n))",
+            "External division: P = ((mx₂−nx₁)/(m−n), (my₂−ny₁)/(m−n))",
+            "Area of △ = ½|x₁(y₂−y₃) + x₂(y₃−y₁) + x₃(y₁−y₂)|",
+            "Midpoint: M = ((x₁+x₂)/2, (y₁+y₂)/2)",
+        ],
+        "common_mistakes": [
+            "Sign errors in the distance formula — forgetting that squaring eliminates negatives, so order of subtraction does not matter",
+            "Mixing up internal and external division — using + in denominator for external division instead of −",
+            "Forgetting the absolute value in the area formula, leading to negative area values",
+        ],
+        "practice_prompts": [
+            "Find the distance between (−2, 5) and (4, −3).",
+            "The point P(4, m) divides the line joining A(2, 3) and B(6, 7) in the ratio 1:1. Find m.",
+            "Prove that the points (2, −2), (8, 4), (5, 7), (−1, 1) form a rhombus by showing all sides are equal.",
+        ],
+        "real_world_example": "When Bangladesh Survey maps land boundaries, they use coordinate geometry. If a piece of land has corners at known GPS coordinates, the area formula gives the exact plot area — crucial for land registration and disputes that are so common in Bangladesh.",
+    },
+
+    "hm1-03-02": {
+        "title": "Equations of Straight Lines & Line Properties",
+        "learning_objectives": [
+            "Write equations of lines in slope-intercept, point-slope, and two-point forms",
+            "Find slope, intercepts, and angle between two lines",
+            "Calculate perpendicular distance from a point to a line",
+            "Determine conditions for parallel and perpendicular lines",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: if a road goes uphill — for every 10 meters horizontally, it rises 3 meters. What is the slope? How would you describe the road's equation if it starts at height 5 meters?",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Teach slope m = (y₂−y₁)/(x₂−x₁). Then three forms: y = mx + c (slope-intercept), y − y₁ = m(x − x₁) (point-slope), (y−y₁)/(y₂−y₁) = (x−x₁)/(x₂−x₁) (two-point). Ask student to convert between forms.",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Teach general form ax + by + c = 0. Conditions: parallel lines have equal slopes (m₁ = m₂), perpendicular lines have m₁ × m₂ = −1. Angle between lines: tan θ = |(m₁−m₂)/(1+m₁m₂)|. Perpendicular distance: d = |ax₁+by₁+c|/√(a²+b²).",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Problem: Find the equation of the line through (3, −2) perpendicular to 2x − 3y + 5 = 0. Then find the distance from origin to this new line.",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "BUET-level: Two lines are 3x + 4y = 12 and 4x − 3y = 6. Find: (a) angle between them, (b) point of intersection, (c) equation of the line through their intersection parallel to x − 2y = 5. Use the family of lines concept: L₁ + λL₂ = 0.",
+            },
+        ],
+        "key_formulas": [
+            "Slope: m = (y₂−y₁)/(x₂−x₁) = −a/b (for ax+by+c=0)",
+            "Slope-intercept: y = mx + c",
+            "Point-slope: y − y₁ = m(x − x₁)",
+            "Perpendicular distance: d = |ax₁ + by₁ + c| / √(a² + b²)",
+            "Angle between lines: tan θ = |(m₁ − m₂)/(1 + m₁m₂)|",
+            "Parallel: m₁ = m₂ | Perpendicular: m₁ × m₂ = −1",
+        ],
+        "common_mistakes": [
+            "Computing slope as (x₂−x₁)/(y₂−y₁) instead of (y₂−y₁)/(x₂−x₁) — swapping numerator and denominator",
+            "Forgetting the absolute value in perpendicular distance formula, getting negative distances",
+            "For perpendicular lines, using m₁ × m₂ = 1 instead of m₁ × m₂ = −1 (missing the negative sign)",
+        ],
+        "practice_prompts": [
+            "Find the equation of the line passing through (1, 2) and (4, 8) in all three forms.",
+            "Find the perpendicular distance from the point (3, 4) to the line 3x + 4y − 5 = 0.",
+            "Lines 2x + 3y = 6 and 4x + 6y = k are parallel. For what value of k is the distance between them equal to 1?",
+        ],
+        "real_world_example": "When BUET civil engineers design roads in Dhaka, they calculate slopes for drainage — water must flow at a minimum gradient. The perpendicular distance formula helps determine how far a building is from the road centerline, essential for setback rules in RAJUK building codes.",
+    },
+
+    # ══════════════════════════════════════════════════════════════
+    # ══ BIOLOGY — Chapter 1: কোষ ও এর গঠন (Cell & Its Structure) ══
+    # ══════════════════════════════════════════════════════════════
+
+    "bio1-01-01": {
+        "title": "Prokaryotic vs Eukaryotic Cells & Cell Theory",
+        "learning_objectives": [
+            "Compare structural differences between prokaryotic and eukaryotic cells",
+            "Explain the cell theory and contributions of Schleiden, Schwann, and Virchow",
+            "Identify membrane-bound organelles present only in eukaryotes",
+            "Classify organisms (bacteria, cyanobacteria, fungi, protists, plants, animals) as prokaryotic or eukaryotic",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Start by asking: what do you think is the smallest living unit? Can something alive exist without a cell? Relate to bacteria in curd (doi) we eat every day.",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Explain the 3 postulates of cell theory. Ask: which scientist said 'Omnis cellula e cellula'? Then introduce the key differences — prokaryotes lack a true nucleus and membrane-bound organelles. Ask student to name 2 examples of prokaryotes.",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Compare prokaryotic and eukaryotic cells systematically: nucleus (nucleoid vs true nucleus), ribosomes (70S vs 80S), DNA (circular vs linear), cell wall composition (peptidoglycan vs cellulose/chitin), membrane-bound organelles. Draw a comparison table with the student.",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Give a classification exercise: classify these as prokaryotic or eukaryotic — E. coli, Amoeba, Nostoc (cyanobacteria), mushroom, rice plant cell, Plasmodium (malaria parasite). Ask which of these are relevant to Bangladesh (Nostoc in rice paddies, Plasmodium causing malaria).",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "Medical admission level MCQ: 'Which of the following is found in both prokaryotic and eukaryotic cells? (a) Mitochondria (b) Endoplasmic reticulum (c) Ribosome (d) Golgi body.' Follow up with: why do prokaryotes have 70S ribosomes while eukaryotes have 80S? What is the medical significance of this difference (hint: antibiotics)?",
+            },
+        ],
+        "key_formulas": [
+            "Prokaryotic ribosome: 70S (50S + 30S subunits)",
+            "Eukaryotic ribosome: 80S (60S + 40S subunits)",
+            "Prokaryotic DNA: single circular chromosome + plasmids",
+            "Eukaryotic DNA: multiple linear chromosomes with histones",
+            "Cell theory: all living things are made of cells; cell is the basic unit of life; cells arise from pre-existing cells",
+        ],
+        "common_mistakes": [
+            "Thinking all bacteria are harmful — many are beneficial (e.g., Lactobacillus in doi/yogurt, nitrogen-fixing bacteria in rice paddies)",
+            "Confusing 70S and 80S ribosome subunit values — students add 50+30=80 and think prokaryotes have 80S (Svedberg units are not additive)",
+            "Forgetting that prokaryotes CAN have cell walls (peptidoglycan) — students wrongly think only plant cells have walls",
+        ],
+        "practice_prompts": [
+            "A cell has no nuclear membrane, has 70S ribosomes, and a circular DNA. Identify the cell type and give two examples of organisms with this cell type.",
+            "Explain why antibiotics like streptomycin target 70S ribosomes but do not harm human cells. What is the clinical significance?",
+            "Compare the genetic material organization in E. coli and a human cheek cell. Include at least 4 differences.",
+        ],
+        "real_world_example": "The doi (yogurt) you eat with rice is made by Lactobacillus — a prokaryote! It converts lactose in milk to lactic acid. Meanwhile, the rice grain itself came from a eukaryotic plant cell. So in one meal of bhat-doi, you are eating products of both prokaryotic and eukaryotic life.",
+    },
+
+    "bio1-01-02": {
+        "title": "Cell Organelles & Plant vs Animal Cells",
+        "learning_objectives": [
+            "Describe the structure and function of each major cell organelle (nucleus, mitochondria, ER, Golgi, ribosome, lysosome, chloroplast, vacuole)",
+            "Explain the fluid mosaic model of cell membrane (Singer-Nicolson model)",
+            "Compare plant and animal cells with at least 5 structural differences",
+            "Relate organelle dysfunction to diseases (e.g., lysosomal storage diseases, mitochondrial disorders)",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: if a cell is like a factory, what would be the manager's office? The power plant? The packaging department? The waste disposal unit? Let the student guess before revealing organelle functions.",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Teach the fluid mosaic model of cell membrane — phospholipid bilayer with embedded proteins, cholesterol for fluidity, glycoproteins for recognition. Ask: why is it called 'fluid' mosaic? What makes the membrane selectively permeable?",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Go through each organelle systematically: Nucleus (double membrane, nucleolus, chromatin), Mitochondria (powerhouse, double membrane, own DNA — endosymbiotic theory), ER (rough with ribosomes for protein synthesis, smooth for lipid synthesis), Golgi (packaging & secretion, cis and trans face), Lysosome (digestive enzymes, pH 4.5-5), Chloroplast (photosynthesis, thylakoid grana, stroma). Ask after each: what happens to the cell if this organelle stops working?",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Create a comparison table: Plant cell vs Animal cell. Key differences — cell wall (present/absent), chloroplast, central vacuole (large in plant), centrioles (present in animal), lysosomes (prominent in animal), shape (fixed rectangular vs irregular). Ask: why do plant cells not need lysosomes as much as animal cells?",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "Medical admission MCQ: 'Which organelle is called the suicide bag of the cell? (a) Ribosome (b) Lysosome (c) Peroxisome (d) Glyoxysome.' Follow up: 'A cell is actively secreting proteins. Which organelles would show increased activity? List them in order of the secretory pathway.' (Answer: Nucleus -> Rough ER -> Golgi -> Cell membrane)",
+            },
+        ],
+        "key_formulas": [
+            "Cell membrane: phospholipid bilayer + integral/peripheral proteins + cholesterol + glycocalyx",
+            "Mitochondria: outer membrane + inner membrane (cristae) + matrix — site of ATP synthesis via oxidative phosphorylation",
+            "Chloroplast: outer membrane + inner membrane + thylakoid (grana + stroma lamellae) + stroma — site of photosynthesis",
+            "Protein secretory pathway: Ribosome -> Rough ER -> Transport vesicle -> Golgi (cis to trans) -> Secretory vesicle -> Cell membrane",
+            "Endosymbiotic theory: mitochondria and chloroplasts were once free-living prokaryotes (have own 70S ribosomes and circular DNA)",
+        ],
+        "common_mistakes": [
+            "Confusing rough ER and smooth ER functions — rough ER has ribosomes for protein synthesis, smooth ER synthesizes lipids and detoxifies drugs (students mix these up)",
+            "Thinking mitochondria are only in animal cells — both plant AND animal cells have mitochondria (plants need cellular respiration too!)",
+            "Confusing centrioles with centromeres — centrioles are organelles for spindle formation (absent in most plant cells), centromeres are regions on chromosomes",
+        ],
+        "practice_prompts": [
+            "Trace the path of a secretory protein from its synthesis to its release outside the cell. Name every organelle involved in order.",
+            "A plant cell and an animal cell are both placed in a hypotonic solution. Predict what happens to each and explain why their fates differ.",
+            "Explain the endosymbiotic theory of mitochondrial origin. Give 3 pieces of evidence that support this theory.",
+        ],
+        "real_world_example": "Think of a paat (jute) fiber cell — it has an extremely thick cell wall made of cellulose, which gives jute its strength for making rope and bags. The cell wall is why plants can stand upright without bones. A mango leaf cell has abundant chloroplasts for photosynthesis, while root cells of the same mango tree have no chloroplasts but many mitochondria for energy to absorb water and minerals.",
+    },
+
+    # ══════════════════════════════════════════════════════════════
+    # ══ BIOLOGY — Chapter 2: কোষ বিভাজন (Cell Division) ══
+    # ══════════════════════════════════════════════════════════════
+
+    "bio1-02-01": {
+        "title": "Mitosis — Stages and Significance",
+        "learning_objectives": [
+            "Describe each phase of the cell cycle (G1, S, G2, M) with duration and events",
+            "Explain the 4 stages of mitosis (prophase, metaphase, anaphase, telophase) with key events in each",
+            "Differentiate cytokinesis in plant cells (cell plate) vs animal cells (cleavage furrow)",
+            "Explain the significance of mitosis in growth, repair, and asexual reproduction",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: when you cut your finger, how does the wound heal? Where do new skin cells come from? When a rice seedling grows from a small shoot to a full plant, where are the new cells coming from?",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Teach the cell cycle: Interphase (G1 — cell growth, protein synthesis; S — DNA replication, chromosome number unchanged but DNA doubles; G2 — preparation for division) and M phase (mitosis + cytokinesis). Ask: a human cell has 46 chromosomes. After S phase, how many chromosomes does it have? (Still 46, but each has 2 chromatids — students often say 92 here!)",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Walk through mitosis step by step: Prophase (chromatin condenses, nucleolus disappears, spindle forms), Metaphase (chromosomes align at metaphase plate, spindle fibers attach to kinetochore), Anaphase (centromeres split, sister chromatids pulled to poles — shortest phase), Telophase (nuclear envelope reforms, chromosomes decondense). Use mnemonic PMAT. Ask student to identify the phase from descriptions.",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Ask: what is different about cytokinesis in plant cells vs animal cells? (Cell plate vs cleavage furrow). Then: a cell with 2n=14 undergoes mitosis. How many chromosomes in each daughter cell? How many daughter cells are produced? Are they genetically identical to the parent?",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "Medical admission MCQ: 'During which phase of mitosis do chromosomes first become visible under a light microscope? (a) Interphase (b) Prophase (c) Metaphase (d) Anaphase.' Follow up: 'Why is uncontrolled mitosis dangerous? How does this relate to cancer?' Ask about the role of checkpoints (G1, G2, M checkpoints) in preventing cancer.",
+            },
+        ],
+        "key_formulas": [
+            "Cell cycle: G1 -> S -> G2 -> M (Prophase -> Metaphase -> Anaphase -> Telophase -> Cytokinesis)",
+            "Mitosis: 1 parent cell (2n) -> 2 daughter cells (2n) — genetically identical",
+            "After S phase: chromosome count unchanged, but each chromosome has 2 sister chromatids (DNA content doubles: 2C -> 4C)",
+            "Shortest phase: Anaphase; Longest phase of mitosis: Prophase; Longest phase of cell cycle: Interphase (especially S phase)",
+            "Cytokinesis: animal cells — cleavage furrow (actin-myosin ring); plant cells — cell plate (vesicles from Golgi)",
+        ],
+        "common_mistakes": [
+            "Saying chromosome number doubles after S phase — it does NOT; each chromosome becomes 2 sister chromatids joined at centromere, but chromosome count stays the same (2n). DNA content doubles, not chromosome number.",
+            "Confusing the order of mitosis phases or mixing up events — e.g., thinking chromosomes align at metaphase plate during prophase, or thinking nuclear envelope breaks in metaphase (it breaks in late prophase/prometaphase)",
+            "Forgetting that cytokinesis is NOT part of mitosis itself — mitosis is nuclear division only; cytokinesis is cytoplasmic division and can be separated",
+        ],
+        "practice_prompts": [
+            "A cell with 2n=24 is undergoing mitosis. State the chromosome number and DNA content (in terms of C) at: (i) G1 phase, (ii) after S phase, (iii) metaphase, (iv) each daughter cell after division.",
+            "A student observing onion root tip cells under a microscope sees most cells in interphase and very few in anaphase. Explain why.",
+            "How is cancer related to failure of cell cycle regulation? Name the phases where checkpoints occur and what each checkpoint monitors.",
+        ],
+        "real_world_example": "When you plant a dhan (rice) seed, it germinates and grows into a full plant with thousands of cells — all produced by mitosis from that one original seed cell. The meristematic tissue at the root tip and shoot tip is where mitosis is most active. That is why when you look at onion root tip slides in your HSC practical, you see so many dividing cells!",
+    },
+
+    "bio1-02-02": {
+        "title": "Meiosis — Stages, Crossing Over & Significance",
+        "learning_objectives": [
+            "Describe the stages of meiosis I (especially prophase I sub-stages) and meiosis II",
+            "Explain crossing over, synapsis, and chiasmata formation during prophase I",
+            "Compare mitosis and meiosis with at least 6 key differences",
+            "Explain the biological significance of meiosis — genetic variation, maintaining chromosome number across generations",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: why don't you look exactly like your siblings even though you have the same parents? If gametes were produced by mitosis, what would happen to chromosome number each generation? (It would double! 46 -> 92 -> 184...) This is why meiosis is essential.",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Explain meiosis I as the reductional division: homologous chromosomes pair (synapsis), form bivalents/tetrads, crossing over occurs at chiasmata. Teach prophase I sub-stages using mnemonic LZPDD: Leptotene (thin threads), Zygotene (synapsis begins), Pachytene (crossing over — thickest chromosomes), Diplotene (chiasmata visible, separation begins), Diakinesis (terminalization of chiasmata). Ask: at which sub-stage does genetic recombination actually occur?",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Complete meiosis I (metaphase I — bivalents align, independent assortment; anaphase I — homologous chromosomes separate; telophase I — two haploid cells). Then teach meiosis II — similar to mitosis but starts with haploid cells. End result: 4 haploid cells. Compare: in males all 4 become sperm; in females only 1 becomes ovum (other 3 are polar bodies). Ask: why is meiosis I called reductional and meiosis II called equational?",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Comparison exercise: make a table comparing mitosis vs meiosis on: number of divisions, number of daughter cells, chromosome number in daughters, genetic variation, where it occurs, crossing over (yes/no), synapsis (yes/no). Then ask: a cell with 2n=46 undergoes meiosis. What is the chromosome number after meiosis I? After meiosis II?",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "Medical admission MCQ: 'Crossing over occurs between: (a) sister chromatids (b) non-sister chromatids of homologous chromosomes (c) non-homologous chromosomes (d) any two chromatids.' Follow up: 'Explain how both crossing over AND independent assortment contribute to genetic variation. Calculate: with n=23 chromosomes, how many possible gamete combinations from independent assortment alone?' (2^23 = 8,388,608)",
+            },
+        ],
+        "key_formulas": [
+            "Meiosis: 1 parent cell (2n) -> 4 daughter cells (n) — genetically different",
+            "Prophase I sub-stages: Leptotene -> Zygotene -> Pachytene -> Diplotene -> Diakinesis (LZPDD)",
+            "Crossing over: exchange of genetic material between non-sister chromatids of homologous chromosomes at chiasmata",
+            "Independent assortment: possible combinations = 2^n (where n = haploid chromosome number)",
+            "Human: 2n=46, so n=23; after meiosis I: 23 chromosomes per cell; after meiosis II: 23 chromosomes per cell (but single chromatids)",
+        ],
+        "common_mistakes": [
+            "Confusing crossing over between sister chromatids (does not produce variation) with crossing over between non-sister chromatids of homologous chromosomes (produces genetic recombination)",
+            "Mixing up meiosis I and meiosis II — students forget that homologous chromosomes separate in meiosis I (reductional) while sister chromatids separate in meiosis II (equational, like mitosis)",
+            "Forgetting the sub-stages of prophase I — this is a very common Medical admission question; LZPDD mnemonic is essential and students often mix up the order or events of Pachytene vs Diplotene",
+        ],
+        "practice_prompts": [
+            "A cell with 2n=8 undergoes meiosis. Draw or describe the chromosome arrangement at: (i) metaphase I, (ii) anaphase I, (iii) metaphase II, (iv) anaphase II. State chromosome count at each stage.",
+            "Explain why meiosis is called the basis of sexual reproduction. What would happen to a species if meiosis did not occur but sexual reproduction continued?",
+            "During oogenesis in a human female, one primary oocyte produces how many functional ova? Explain the formation of polar bodies and their fate.",
+        ],
+        "real_world_example": "Think about Bangladeshi rice varieties — BRRI has developed over 100 dhan varieties (BRRI dhan28, BRRI dhan29, etc.) by cross-breeding. This works because meiosis creates genetic variation through crossing over and independent assortment. Each rice grain from a cross is genetically unique, letting breeders select for flood resistance, salt tolerance, or higher yield — all crucial for Bangladesh's food security.",
+    },
+
+    # ══════════════════════════════════════════════════════════════
+    # ══ BIOLOGY — Chapter 3: কোষ রসায়ন (Cell Chemistry / Biochemistry) ══
+    # ══════════════════════════════════════════════════════════════
+
+    "bio1-03-01": {
+        "title": "Carbohydrates, Lipids & Proteins — Structure and Function",
+        "learning_objectives": [
+            "Classify carbohydrates into monosaccharides, disaccharides, and polysaccharides with examples and bonding",
+            "Describe the structure of lipids — triglycerides, phospholipids, and steroids — and distinguish saturated from unsaturated fatty acids",
+            "Explain protein structure at all 4 levels (primary, secondary, tertiary, quaternary) and the role of peptide bonds",
+            "Relate the structure of each biomolecule to its biological function",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: what did you eat for breakfast? Probably bhat (rice), dal (lentils), and maybe an egg or fish. Which one gives you energy quickly? Which builds your muscles? Which is stored as fat? Connect food to biomolecules — carbohydrates, proteins, lipids.",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Teach carbohydrates: general formula Cn(H2O)n. Monosaccharides (glucose, fructose, galactose — all C6H12O6 but different structures), Disaccharides (sucrose = glucose + fructose via glycosidic bond; maltose = glucose + glucose; lactose = glucose + galactose), Polysaccharides (starch — plant storage in rice/potato; glycogen — animal storage in liver/muscle; cellulose — structural in plant cell wall; chitin — in insect exoskeleton/fungal wall). Ask: why can humans digest starch but not cellulose, even though both are made of glucose?",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Teach lipids: triglyceride = glycerol + 3 fatty acids via ester bonds. Saturated (no double bonds, solid at room temperature — ghee, butter) vs unsaturated (double bonds, liquid — soyabean oil, mustard oil/sorsher tel). Phospholipids: glycerol + 2 fatty acids + phosphate group — amphipathic, forms cell membrane bilayer. Then teach proteins: amino acids joined by peptide bonds (CO-NH). 4 levels of structure: primary (sequence), secondary (alpha-helix, beta-sheet via H-bonds), tertiary (3D folding via disulfide bonds, hydrophobic interactions), quaternary (multiple polypeptides, e.g., hemoglobin has 4 subunits). Ask: what level of protein structure is disrupted when you boil an egg?",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Identification exercise: classify these as carbohydrate, lipid, or protein — hemoglobin, cellulose, cholesterol, insulin, starch, phospholipid, glycogen, keratin, chitin, triglyceride. Then ask: which bond links (a) two amino acids, (b) two monosaccharides, (c) glycerol and fatty acid? (peptide bond, glycosidic bond, ester bond)",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "Medical admission MCQ: 'Which of the following is a reducing sugar? (a) Sucrose (b) Starch (c) Maltose (d) Cellulose.' Follow up: 'Sickle cell anemia is caused by a change in which level of protein structure? Explain how a single amino acid substitution (Glu -> Val) in hemoglobin leads to the disease.' This tests understanding of how primary structure determines all higher levels.",
+            },
+        ],
+        "key_formulas": [
+            "General formula of carbohydrates: Cn(H2O)n — e.g., glucose C6H12O6",
+            "Sucrose = glucose + fructose (non-reducing sugar, 1-2 glycosidic bond)",
+            "Maltose = glucose + glucose (reducing sugar, 1-4 glycosidic bond)",
+            "Starch: amylose (unbranched, 1-4 bonds) + amylopectin (branched, 1-4 and 1-6 bonds)",
+            "Triglyceride = glycerol + 3 fatty acids (ester bonds, via condensation/dehydration reaction)",
+            "Peptide bond: -CO-NH- bond between carboxyl of one amino acid and amino group of another (with release of H2O)",
+            "Protein levels: primary (peptide bonds) -> secondary (H-bonds) -> tertiary (disulfide, ionic, hydrophobic) -> quaternary (multiple polypeptides)",
+        ],
+        "common_mistakes": [
+            "Thinking sucrose is a reducing sugar — it is NOT because the glycosidic bond involves the anomeric carbons of BOTH glucose and fructose, leaving no free aldehyde/ketone group. Maltose and lactose ARE reducing sugars.",
+            "Confusing starch and cellulose — both are polymers of glucose but starch has alpha-1,4 glycosidic bonds (digestible by humans) while cellulose has beta-1,4 bonds (indigestible by humans, requires cellulase enzyme found in ruminants and termites)",
+            "Mixing up the 4 levels of protein structure — especially confusing secondary (local H-bonding: alpha-helix, beta-sheet) with tertiary (overall 3D shape from R-group interactions: disulfide bonds, hydrophobic interactions, ionic bonds)",
+        ],
+        "practice_prompts": [
+            "Compare starch, glycogen, and cellulose in terms of: monomer, type of glycosidic bond, branching, biological function, and which organisms use them for what purpose.",
+            "Explain why phospholipids spontaneously form bilayers in water. How does this property relate to cell membrane formation? What role does cholesterol play in the membrane?",
+            "A patient has sickle cell disease. Explain the molecular basis at each level of hemoglobin structure — from the DNA mutation to the final effect on red blood cell shape and oxygen transport.",
+        ],
+        "real_world_example": "Your bhat (rice) is mostly starch — a polysaccharide that your amylase enzyme breaks into glucose for energy. The mach (fish) you eat with rice provides protein — amino acids for building muscle. The sorsher tel (mustard oil) your mother cooks with is a lipid — triglycerides with unsaturated fatty acids. Even the paan (betel leaf) you might see elders chewing has cellulose cell walls your body cannot digest. Every Bangladeshi meal is a biochemistry lesson!",
+    },
+
+    "bio1-03-02": {
+        "title": "Nucleic Acids (DNA & RNA) and Enzymes",
+        "learning_objectives": [
+            "Describe the structure of DNA (double helix model of Watson & Crick) and RNA with their chemical components",
+            "Explain base pairing rules (A-T with 2 H-bonds, G-C with 3 H-bonds) and Chargaff's rules",
+            "Compare DNA and RNA in terms of sugar, bases, structure, location, and function",
+            "Explain enzyme action using lock-and-key and induced fit models, including factors affecting enzyme activity",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: what carries the instructions to build your entire body? How does a single fertilized egg know how to become a complete human with eyes, heart, and brain? This is the role of DNA — the blueprint of life. Then ask: have you heard of DNA testing in crime investigation or paternity tests?",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Teach nucleotide structure: phosphate + sugar (deoxyribose in DNA, ribose in RNA) + nitrogenous base. Purines: Adenine (A) and Guanine (G) — double ring. Pyrimidines: Cytosine (C), Thymine (T in DNA), Uracil (U in RNA) — single ring. Mnemonic: PURe As Gold (purines = A, G). Teach Chargaff's rules: A=T, G=C, so A+G = T+C (purines = pyrimidines). Ask: if a DNA strand has 30% adenine, what percentage of guanine does it have?",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Describe the Watson-Crick double helix model: two antiparallel polynucleotide strands (5'->3' and 3'->5'), sugar-phosphate backbone on outside, bases inside paired by H-bonds (A=T with 2 H-bonds, G-C with 3 H-bonds), one complete turn = 3.4 nm with 10 base pairs, distance between base pairs = 0.34 nm, diameter = 2 nm. Then compare DNA vs RNA in a table (5 differences minimum). Then teach enzymes: biological catalysts (mostly proteins), lock-and-key model vs induced fit model, active site, substrate specificity. Factors: temperature, pH, substrate concentration, enzyme concentration, inhibitors (competitive vs non-competitive).",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Problem: A DNA sample has 20% cytosine. Calculate the percentages of all 4 bases. (C=20%, G=20%, A=30%, T=30%). Then: if one strand of DNA has the sequence 5'-ATGCCGTA-3', write the complementary strand with correct polarity. For enzymes: explain why pepsin works in the stomach (pH 2) but trypsin works in the intestine (pH 8). What happens to pepsin at pH 8?",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "Medical admission MCQ: 'Which of the following is TRUE about DNA? (a) It contains ribose sugar (b) A-T base pair has 3 hydrogen bonds (c) The two strands run in the same direction (d) One complete turn has 10 base pairs.' Follow up: 'A DNA molecule has 1000 base pairs. If 200 of them are adenine-thymine pairs, how many hydrogen bonds are in this DNA? (200 A-T pairs x 2 = 400, plus 800 G-C pairs x 3 = 2400, total = 2800 H-bonds).' For enzymes: 'Explain competitive inhibition with a medical example — how do sulfa drugs work as antibiotics?'",
+            },
+        ],
+        "key_formulas": [
+            "Nucleotide = phosphate group + pentose sugar + nitrogenous base",
+            "Chargaff's rule: A = T, G = C; therefore %A + %G = %T + %C = 50%",
+            "DNA double helix: 1 turn = 3.4 nm = 10 base pairs; distance between base pairs = 0.34 nm; diameter = 2 nm",
+            "H-bonds: A=T (2 hydrogen bonds), G-C (3 hydrogen bonds) — GC-rich DNA is more thermally stable",
+            "Total H-bonds in DNA = (2 x number of A-T pairs) + (3 x number of G-C pairs)",
+            "Types of RNA: mRNA (carries genetic message), tRNA (carries amino acids, has anticodon), rRNA (structural component of ribosomes)",
+            "Enzyme kinetics: Vmax = maximum rate at substrate saturation; Km = substrate concentration at half Vmax (Michaelis-Menten)",
+        ],
+        "common_mistakes": [
+            "Applying Chargaff's rule to single-stranded RNA — Chargaff's rule (A=T, G=C) applies ONLY to double-stranded DNA, NOT to single-stranded RNA where A does not necessarily equal U",
+            "Confusing the number of hydrogen bonds — A-T has 2 H-bonds (not 3) and G-C has 3 H-bonds (not 2); students frequently reverse these. Remember: C and G are 'stronger' (3 bonds) so GC-rich DNA needs higher temperature to denature",
+            "Thinking enzymes are consumed in reactions — enzymes are catalysts that are NOT used up; they lower activation energy and are recycled. Also confusing competitive inhibition (blocks active site, overcome by more substrate) with non-competitive inhibition (binds allosteric site, cannot be overcome by more substrate)",
+        ],
+        "practice_prompts": [
+            "A double-stranded DNA molecule has 1500 base pairs. If adenine constitutes 35% of total bases, calculate: (i) percentage of each base, (ii) number of each type of base pair, (iii) total number of hydrogen bonds in this DNA molecule.",
+            "Compare DNA and RNA in a table with at least 6 differences covering: sugar type, bases, number of strands, location in cell, stability, and function.",
+            "Explain with a diagram how a competitive inhibitor differs from a non-competitive inhibitor. Give a medical/pharmacological example of each type. Why can competitive inhibition be reversed by increasing substrate concentration but non-competitive cannot?",
+        ],
+        "real_world_example": "Forensic DNA testing is now used in Bangladeshi courts for paternity disputes and criminal cases. The technique works because everyone's DNA base sequence is unique (except identical twins). Enzymes are everywhere in daily life too — the papain enzyme in raw kacha papaya (pepe) tenderizes meat, which is why Bangladeshi cooks add papaya paste to tough beef before cooking. Your saliva contains amylase enzyme that starts digesting the starch in bhat right in your mouth — try chewing plain rice for 30 seconds and it starts tasting sweet as starch breaks into maltose!",
+    },
+
+    # ══ PHYSICS — Chapters 4-10 ══
+    "phy1-02-02": {
+        "title": "Scalar & Vector Products",
+        "learning_objectives": [
+                "Calculate dot product and find angle between vectors",
+                "Calculate cross product and find area of parallelogram",
+                "Apply scalar product in work calculations",
+                "Apply vector product in torque calculations"
         ],
         "teaching_steps": [
                 {
                         "step": 1,
                         "type": "intro",
-                        "prompt": "Ask: why do flowers exist? They're beautiful, but what's their actual biological purpose?"
+                        "prompt": "Ask: when you push a box at an angle, not all your force moves it forward. How do we calculate the useful part of the force?"
                 },
                 {
                         "step": 2,
                         "type": "concept",
-                        "prompt": "Flower parts: sepal, petal, stamen (male: anther + filament), pistil (female: stigma + style + ovary). Ask: which part produces pollen? Which contains ovules?"
+                        "prompt": "Teach dot product: A·B = AB cos θ (scalar result). Ask: what is the dot product when vectors are perpendicular?"
                 },
                 {
                         "step": 3,
                         "type": "teach",
-                        "prompt": "Double fertilization: one sperm + egg → zygote (2n), other sperm + polar nuclei → endosperm (3n). Unique to angiosperms. Ask: why is endosperm triploid (3n)?"
+                        "prompt": "Teach cross product: A×B = AB sin θ n̂ (vector result). Explain right-hand rule. Ask: what is cross product when vectors are parallel?"
                 },
                 {
                         "step": 4,
                         "type": "practice",
-                        "prompt": "Compare self-pollination vs cross-pollination. Which produces more genetic variation? Which is more reliable?"
+                        "prompt": "Find dot product of A=(3,4) and B=(2,-1). Then find the angle between them."
                 },
                 {
                         "step": 5,
                         "type": "mastery",
-                        "prompt": "Medical admission MCQ about double fertilization or flower structure."
+                        "prompt": "BUET MCQ: if A×B = 0 and A·B = AB, what is the angle between A and B?"
                 }
         ],
         "key_formulas": [
-                "Pollen grain: 2 sperm cells",
-                "Double fertilization: sperm + egg = zygote (2n), sperm + 2 polar nuclei = endosperm (3n)",
-                "Ovary → fruit, ovule → seed",
-                "Self-pollination: same flower, Cross: different flower/plant"
+                "A·B = AB cos θ = a₁b₁ + a₂b₂ + a₃b₃",
+                "A×B = AB sin θ n̂",
+                "|A×B| = area of parallelogram"
         ],
         "common_mistakes": [
-                "Thinking pollen IS the male gamete (pollen contains the gametes)",
-                "Confusing pollination (pollen transfer) with fertilization (fusion of gametes)",
-                "Forgetting that endosperm is triploid (3n), not diploid"
+                "Confusing dot product (scalar) with cross product (vector)",
+                "Wrong sign in cross product (not commutative: A×B = -B×A)",
+                "Forgetting that perpendicular vectors have zero dot product"
         ],
         "practice_prompts": [
-                "What develops from the ovary after fertilization?",
-                "Why is cross-pollination more advantageous than self-pollination?"
+                "If A=(1,2,3) and B=(4,-1,2), find A·B",
+                "Two forces 5N and 8N act at 60°. Find A×B magnitude."
         ],
-        "real_world_example": "The আম (mango) flowers you see in spring are pollinated by insects and wind. After double fertilization, the ovary becomes the juicy mango fruit, and the seed inside is the fertilized ovule. Bangladesh's famous ফজলি and ল্যাংড়া mangoes from Rajshahi exist because of cross-pollination creating genetic diversity!"
+        "real_world_example": "When you pull a rickshaw with a rope at an angle, only the horizontal component (F cos θ) moves it forward — that's the dot product of force and displacement giving you work done."
 },
+
+    "phy1-04-01": {
+        "title": "Newton's Laws of Motion",
+        "learning_objectives": [
+                "State and apply all three Newton's laws",
+                "Draw free body diagrams for complex systems",
+                "Solve problems with connected bodies",
+                "Apply Newton's laws to lift/elevator problems"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: why does your body jerk forward when a bus suddenly stops? Which Newton's law explains this?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach all 3 laws with examples. 1st: inertia (bus example). 2nd: F=ma (pushing cart). 3rd: action-reaction (walking). Ask student to identify which law applies in each scenario."
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Teach free body diagrams. Draw FBD for a block on an incline. Identify normal force, weight components, friction. Solve for acceleration."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "Two blocks (3kg and 5kg) connected by string on frictionless surface. Force 40N applied on 5kg block. Find acceleration and tension."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "Elevator problem: a 60kg person in a lift accelerating upward at 2 m/s². What does the scale read? BUET-level."
+                }
+        ],
+        "key_formulas": [
+                "F = ma",
+                "Weight W = mg",
+                "Apparent weight in lift: N = m(g ± a)",
+                "Connected bodies: same acceleration, tension is internal force"
+        ],
+        "common_mistakes": [
+                "Confusing mass and weight",
+                "Forgetting that action-reaction forces act on DIFFERENT bodies",
+                "Not resolving forces into components on inclined planes"
+        ],
+        "practice_prompts": [
+                "A 10kg box on a smooth surface is pushed with 50N. Find acceleration.",
+                "In a lift going up with acceleration 3 m/s², what is the apparent weight of a 50kg person?"
+        ],
+        "real_world_example": "When a CNG auto-rickshaw suddenly brakes, you slide forward — that's Newton's 1st law. The harder the driver brakes (more force), the faster you decelerate (2nd law). Your feet push backward on the floor, floor pushes you forward (3rd law)."
+},
+
+    "phy1-04-02": {
+        "title": "Friction & Circular Motion",
+        "learning_objectives": [
+                "Calculate static and kinetic friction",
+                "Solve problems on banked roads and circular motion",
+                "Apply centripetal force concept",
+                "Understand the role of friction in daily life"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: why is it easier to push a box once it starts moving than to start pushing it? What's the difference between static and kinetic friction?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach f = μN. Static friction ≤ μₛN, kinetic friction = μₖN. Ask: why is μₛ > μₖ always?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Circular motion: centripetal force F = mv²/r. For car on banked road: tan θ = v²/rg. Derive step by step."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "A car turns on a flat road (μ=0.4, r=50m). Find maximum safe speed. Then: what if the road is banked at 30°?"
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about friction on incline or centripetal force in vertical circular motion."
+                }
+        ],
+        "key_formulas": [
+                "f = μN",
+                "Centripetal force F = mv²/r",
+                "Banked road: tan θ = v²/rg",
+                "Min speed at top of loop: v = √(rg)"
+        ],
+        "common_mistakes": [
+                "Using μmg for friction on incline (should be μN = μmg cos θ)",
+                "Confusing centripetal (real) with centrifugal (pseudo) force",
+                "Forgetting that static friction has a maximum value, not a fixed value"
+        ],
+        "practice_prompts": [
+                "A 5kg block on a surface with μ=0.3. Find friction when 10N horizontal force applied.",
+                "Find the banking angle for a road curve (r=100m) at speed 72 km/h."
+        ],
+        "real_world_example": "The flyover curves in Dhaka are slightly banked — the road tilts inward so cars don't need to rely only on tire friction. Same reason why cricket bowlers can make the ball curve — friction and circular motion!"
+},
+
+    "phy1-05-01": {
+        "title": "Work & Energy",
+        "learning_objectives": [
+                "Calculate work done by constant and variable forces",
+                "Apply work-energy theorem",
+                "Understand potential and kinetic energy",
+                "Apply conservation of energy to solve problems"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: if you carry a heavy bag horizontally across a room, have you done any work on it (in physics terms)? Why or why not?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach W = Fd cos θ. When θ=90°, W=0 (carrying bag horizontally). KE = ½mv², PE = mgh. Ask: what type of energy does a flying bird have?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Work-energy theorem: net work = change in KE. Solve: a 2kg ball falls from 10m. Find velocity just before hitting ground using energy conservation."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "A 1000kg car accelerates from 10 m/s to 30 m/s. Find the work done by the engine."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ: a pendulum released from height h. Find velocity at lowest point. Then: if string is cut at lowest point, what path does it follow?"
+                }
+        ],
+        "key_formulas": [
+                "W = Fd cos θ",
+                "KE = ½mv²",
+                "PE = mgh",
+                "Conservation: KE₁ + PE₁ = KE₂ + PE₂"
+        ],
+        "common_mistakes": [
+                "Saying you do work when carrying a bag horizontally (W=0 since F⊥d)",
+                "Forgetting that work can be negative (friction does negative work)",
+                "Not using energy conservation when it's simpler than force equations"
+        ],
+        "practice_prompts": [
+                "A 50kg boy climbs 10m stairs. How much work against gravity?",
+                "A spring (k=200 N/m) compressed 0.1m. Find stored PE."
+        ],
+        "real_world_example": "When water falls at Kaptai Dam from height h, its PE converts to KE, which spins turbines to generate electricity. The higher the dam, the more energy — that's why Kaptai was built in the hills of Rangamati."
+},
+
+    "phy1-05-02": {
+        "title": "Power & Collisions",
+        "learning_objectives": [
+                "Calculate power as rate of work done",
+                "Distinguish elastic and inelastic collisions",
+                "Apply momentum conservation in collisions",
+                "Solve problems involving coefficient of restitution"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: two people carry the same weight up stairs — one takes 1 minute, the other takes 5 minutes. Who does more work? Who has more power?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Power P = W/t = Fv. 1 HP = 746 W. Teach elastic (KE conserved) vs inelastic (KE not conserved) collisions."
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Collision formulas: m₁u₁ + m₂u₂ = m₁v₁ + m₂v₂. For perfectly inelastic: bodies stick together. Solve: 2kg ball at 3m/s hits stationary 1kg ball elastically."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "A 1500kg car at 20 m/s collides with stationary 1000kg car. They stick together. Find final velocity and energy lost."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about collision or power calculation."
+                }
+        ],
+        "key_formulas": [
+                "P = W/t = Fv",
+                "1 HP = 746 W",
+                "Coefficient of restitution e = (v₂-v₁)/(u₁-u₂)",
+                "Elastic: e=1, Perfectly inelastic: e=0"
+        ],
+        "common_mistakes": [
+                "Confusing work (same for both) with power (different if time differs)",
+                "Thinking momentum is not conserved in inelastic collisions (it IS, only KE isn't)",
+                "Forgetting that in 2D collisions, momentum is conserved in each direction separately"
+        ],
+        "practice_prompts": [
+                "A pump lifts 500kg water to 10m in 5 seconds. Find power in watts and HP.",
+                "Two identical balls collide elastically head-on. What happens?"
+        ],
+        "real_world_example": "When a truck hits a small car, both have the same momentum change (Newton's 3rd law) — but the small car gets much more acceleration because F=ma and its mass is less. That's why trucks cause more damage in accidents on the Dhaka-Chittagong highway."
+},
+
+    "phy1-06-01": {
+        "title": "Gravitation",
+        "learning_objectives": [
+                "Apply Newton's law of gravitation",
+                "Calculate gravitational field strength at different altitudes",
+                "Derive orbital velocity and escape velocity",
+                "Apply Kepler's laws of planetary motion"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: why does the Moon orbit the Earth instead of flying away? What force keeps it in orbit?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach F = GMm/r². Surface gravity g = GM/R². Ask: what happens to g if you go to a mountain top? What about deep inside Earth?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Derive orbital velocity v = √(GM/r) and escape velocity vₑ = √(2GM/R) = √(2gR). Ask: why is escape velocity √2 times orbital velocity?"
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "Calculate g at height equal to Earth's radius. Then: find escape velocity from Earth (R=6400km, g=9.8)."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about satellite period or variation of g with altitude/depth."
+                }
+        ],
+        "key_formulas": [
+                "F = GMm/r²",
+                "g = GM/R²",
+                "Orbital velocity v₀ = √(GM/r)",
+                "Escape velocity vₑ = √(2gR)",
+                "Kepler's T² ∝ r³"
+        ],
+        "common_mistakes": [
+                "Using r (distance from center) vs h (height above surface) — g at height h: g'=g(R/(R+h))²",
+                "Forgetting that inside Earth, g decreases linearly with depth",
+                "Confusing orbital velocity with escape velocity"
+        ],
+        "practice_prompts": [
+                "At what height above Earth is g reduced to g/4?",
+                "Find the time period of a satellite orbiting just above Earth's surface."
+        ],
+        "real_world_example": "Bangladesh's Bangabandhu-1 satellite orbits at 35,786 km (geostationary orbit) — at that height, it takes exactly 24 hours to orbit, so it stays over the same spot above Bangladesh. That's Kepler's third law in action!"
+},
+
+    "phy1-07-01": {
+        "title": "Elasticity & Fluid Mechanics",
+        "learning_objectives": [
+                "Define stress, strain, and Young's modulus",
+                "Apply Hooke's law within elastic limit",
+                "Apply Pascal's law and Archimedes' principle",
+                "Use Bernoulli's equation for fluid flow"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: why does a rubber band return to its original shape but clay doesn't? What's the difference?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach stress = F/A, strain = ΔL/L, Young's modulus Y = stress/strain. Hooke's law: F = kx. Ask: what happens beyond the elastic limit?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Fluid statics: Pascal's law (hydraulic press), Archimedes' principle (buoyancy). Bernoulli's: P + ½ρv² + ρgh = constant."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "A steel wire (Y=2×10¹¹ Pa, L=2m, A=1mm²) stretched by 100N. Find extension."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about buoyancy or Bernoulli's application."
+                }
+        ],
+        "key_formulas": [
+                "Stress = F/A, Strain = ΔL/L",
+                "Young's modulus Y = Stress/Strain",
+                "Pascal's law: pressure transmitted equally",
+                "Bernoulli: P + ½ρv² + ρgh = constant"
+        ],
+        "common_mistakes": [
+                "Confusing stress (force per unit area) with pressure (same unit but different concept)",
+                "Forgetting that Bernoulli's equation only applies to ideal (inviscid) fluids",
+                "Using weight instead of mass in buoyancy calculations"
+        ],
+        "practice_prompts": [
+                "A hydraulic press has pistons of area 10 cm² and 100 cm². Force on small piston is 50N. Find force on large piston.",
+                "A block of wood (density 600 kg/m³) floats in water. What fraction is submerged?"
+        ],
+        "real_world_example": "The hydraulic brakes in buses work on Pascal's law — a small force on the brake pedal creates a large force on the brake pads. And country boats (নৌকা) float because of Archimedes' principle — the water pushes up with a force equal to the weight of water displaced."
+},
+
+    "phy1-08-01": {
+        "title": "Simple Harmonic Motion",
+        "learning_objectives": [
+                "Define SHM and identify SHM systems",
+                "Derive equations of SHM (displacement, velocity, acceleration)",
+                "Calculate time period of simple pendulum and spring-mass system",
+                "Understand energy in SHM"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: a swing in a playground goes back and forth. Is the motion uniform? What pattern does it follow?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Define SHM: acceleration proportional to displacement, directed toward mean position. a = -ω²x. Ask: is uniform circular motion related to SHM?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Equations: x = A sin(ωt), v = Aω cos(ωt), a = -Aω² sin(ωt). For pendulum: T = 2π√(l/g). For spring: T = 2π√(m/k)."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "A spring (k=100 N/m) with 0.5kg mass. Find time period and maximum velocity if amplitude is 0.1m."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ: energy variation in SHM — KE and PE as function of displacement."
+                }
+        ],
+        "key_formulas": [
+                "x = A sin(ωt + φ)",
+                "T = 2π/ω",
+                "Pendulum: T = 2π√(l/g)",
+                "Spring: T = 2π√(m/k)",
+                "Total energy E = ½kA² = ½mω²A²"
+        ],
+        "common_mistakes": [
+                "Thinking pendulum period depends on mass (it doesn't for simple pendulum)",
+                "Confusing amplitude with displacement at a given time",
+                "Forgetting that at mean position KE=max and PE=0, at extreme PE=max and KE=0"
+        ],
+        "practice_prompts": [
+                "A pendulum has T=2s. Find its length.",
+                "In SHM, at what displacement is KE equal to PE?"
+        ],
+        "real_world_example": "The clock pendulums in old Bangladeshi homes (দেয়াল ঘড়ি) are SHM — the longer the pendulum, the slower it swings. That's why grandfather clocks are tall!"
+},
+
+    "phy1-09-01": {
+        "title": "Wave Properties",
+        "learning_objectives": [
+                "Distinguish transverse and longitudinal waves",
+                "Apply v = fλ relationship",
+                "Understand superposition and standing waves",
+                "Calculate frequency of vibrating strings and air columns"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: when you throw a stone in a pond, ripples spread out. Is the water actually moving outward, or is it something else?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach transverse (particle ⊥ wave direction) vs longitudinal (particle ∥ wave direction). v = fλ. Ask: is sound transverse or longitudinal?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Standing waves on string: harmonics. f_n = n(v/2L). For closed pipe: only odd harmonics. Open pipe: all harmonics."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "A string (L=1m, μ=0.01 kg/m) under tension 40N. Find fundamental frequency and first three harmonics."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about standing waves in pipes or strings."
+                }
+        ],
+        "key_formulas": [
+                "v = fλ",
+                "String: v = √(T/μ)",
+                "String harmonics: fₙ = nv/2L",
+                "Open pipe: fₙ = nv/2L (all n)",
+                "Closed pipe: fₙ = nv/4L (odd n only)"
+        ],
+        "common_mistakes": [
+                "Thinking wave speed depends on frequency (it depends on medium)",
+                "Forgetting closed pipe has only odd harmonics",
+                "Confusing nodes and antinodes in standing waves"
+        ],
+        "practice_prompts": [
+                "Sound speed is 340 m/s. Find wavelength of 680 Hz sound.",
+                "A closed pipe has fundamental 200 Hz. What is its 2nd overtone?"
+        ],
+        "real_world_example": "When a বাঁশি (bamboo flute) player covers different holes, they change the effective length of the air column — shorter column = higher frequency = higher pitch. That's standing waves in an open pipe!"
+},
+
+    "phy1-09-02": {
+        "title": "Sound & Doppler Effect",
+        "learning_objectives": [
+                "Calculate beat frequency",
+                "Apply Doppler effect formula for moving source/observer",
+                "Understand resonance and its applications",
+                "Solve problems on speed of sound in different media"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: why does an ambulance siren sound higher-pitched when approaching and lower when moving away?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Doppler effect: f' = f(v ± v₀)/(v ∓ vₛ). Convention: approaching = higher, receding = lower. Ask: what if both source and observer are moving?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Beats: when two frequencies are close, f_beat = |f₁ - f₂|. Resonance: when driving frequency = natural frequency, amplitude is maximum."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "An ambulance (f=500Hz) moves at 30 m/s toward you. Speed of sound = 340 m/s. Find the frequency you hear."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about Doppler effect or beats."
+                }
+        ],
+        "key_formulas": [
+                "Doppler: f' = f(v + v₀)/(v - vₛ) (approaching)",
+                "Beat frequency = |f₁ - f₂|",
+                "Speed of sound in air ≈ 340 m/s at 20°C",
+                "v_sound ∝ √T (temperature in Kelvin)"
+        ],
+        "common_mistakes": [
+                "Getting signs wrong in Doppler formula (remember: approaching = higher frequency)",
+                "Thinking beats frequency = average of two frequencies (it's the difference)",
+                "Forgetting speed of sound changes with temperature"
+        ],
+        "practice_prompts": [
+                "Two tuning forks of 256 Hz and 260 Hz are sounded together. How many beats per second?",
+                "A train (speed 36 km/h) blows whistle at 500 Hz. Find frequency heard by stationary observer as train approaches."
+        ],
+        "real_world_example": "Next time you hear a motorcycle zooming past on the highway, notice how the pitch drops as it passes you — that's the Doppler effect. Astronomers use the same principle to tell if a star is moving toward or away from us (red shift/blue shift)."
+},
+
+    "phy1-10-01": {
+        "title": "Gas Laws & Kinetic Theory",
+        "learning_objectives": [
+                "Apply ideal gas equation PV = nRT",
+                "Derive kinetic energy from kinetic theory",
+                "Understand Maxwell-Boltzmann distribution",
+                "Apply gas laws to solve problems"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: why does a balloon expand when you heat it? What's happening to the gas molecules inside?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach PV = nRT. Gas laws: Boyle's (P∝1/V), Charles's (V∝T), Gay-Lussac's (P∝T). Ask: what is an ideal gas?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Kinetic theory: KE = (3/2)kT. RMS speed v_rms = √(3RT/M). Ask: which gas molecules move faster at same temperature — hydrogen or oxygen?"
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "2 moles of ideal gas at 300K in 10L container. Find pressure. Then: if temperature doubles at constant volume, new pressure?"
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about KE of gas molecules or gas law application."
+                }
+        ],
+        "key_formulas": [
+                "PV = nRT (R = 8.314 J/mol·K)",
+                "KE_avg = (3/2)kT",
+                "v_rms = √(3RT/M)",
+                "Boyle: P₁V₁ = P₂V₂",
+                "Charles: V₁/T₁ = V₂/T₂"
+        ],
+        "common_mistakes": [
+                "Using Celsius instead of Kelvin in gas law calculations",
+                "Confusing R (gas constant) with k (Boltzmann constant) — k = R/Nₐ",
+                "Thinking all gas molecules move at the same speed (they have a distribution)"
+        ],
+        "practice_prompts": [
+                "Find the RMS speed of N₂ molecules at 27°C. (M=28 g/mol)",
+                "A gas at 2 atm and 300K is heated to 600K at constant volume. Find new pressure."
+        ],
+        "real_world_example": "The pressure cooker in every Bangladeshi kitchen works on Gay-Lussac's law — as temperature increases at constant volume, pressure increases. That's why food cooks faster inside — higher pressure means higher boiling point of water!"
+},
+
+
+    # ══ PHYSICS — Chapters 4-10 ══
+    "phy1-02-02": {
+        "title": "Scalar & Vector Products",
+        "learning_objectives": [
+                "Calculate dot product and find angle between vectors",
+                "Calculate cross product and find area of parallelogram",
+                "Apply scalar product in work calculations",
+                "Apply vector product in torque calculations"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: when you push a box at an angle, not all your force moves it forward. How do we calculate the useful part of the force?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach dot product: A·B = AB cos θ (scalar result). Ask: what is the dot product when vectors are perpendicular?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Teach cross product: A×B = AB sin θ n̂ (vector result). Explain right-hand rule. Ask: what is cross product when vectors are parallel?"
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "Find dot product of A=(3,4) and B=(2,-1). Then find the angle between them."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ: if A×B = 0 and A·B = AB, what is the angle between A and B?"
+                }
+        ],
+        "key_formulas": [
+                "A·B = AB cos θ = a₁b₁ + a₂b₂ + a₃b₃",
+                "A×B = AB sin θ n̂",
+                "|A×B| = area of parallelogram"
+        ],
+        "common_mistakes": [
+                "Confusing dot product (scalar) with cross product (vector)",
+                "Wrong sign in cross product (not commutative: A×B = -B×A)",
+                "Forgetting that perpendicular vectors have zero dot product"
+        ],
+        "practice_prompts": [
+                "If A=(1,2,3) and B=(4,-1,2), find A·B",
+                "Two forces 5N and 8N act at 60°. Find A×B magnitude."
+        ],
+        "real_world_example": "When you pull a rickshaw with a rope at an angle, only the horizontal component (F cos θ) moves it forward — that's the dot product of force and displacement giving you work done."
+},
+
+    "phy1-04-01": {
+        "title": "Newton's Laws of Motion",
+        "learning_objectives": [
+                "State and apply all three Newton's laws",
+                "Draw free body diagrams for complex systems",
+                "Solve problems with connected bodies",
+                "Apply Newton's laws to lift/elevator problems"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: why does your body jerk forward when a bus suddenly stops? Which Newton's law explains this?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach all 3 laws with examples. 1st: inertia (bus example). 2nd: F=ma (pushing cart). 3rd: action-reaction (walking). Ask student to identify which law applies in each scenario."
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Teach free body diagrams. Draw FBD for a block on an incline. Identify normal force, weight components, friction. Solve for acceleration."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "Two blocks (3kg and 5kg) connected by string on frictionless surface. Force 40N applied on 5kg block. Find acceleration and tension."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "Elevator problem: a 60kg person in a lift accelerating upward at 2 m/s². What does the scale read? BUET-level."
+                }
+        ],
+        "key_formulas": [
+                "F = ma",
+                "Weight W = mg",
+                "Apparent weight in lift: N = m(g ± a)",
+                "Connected bodies: same acceleration, tension is internal force"
+        ],
+        "common_mistakes": [
+                "Confusing mass and weight",
+                "Forgetting that action-reaction forces act on DIFFERENT bodies",
+                "Not resolving forces into components on inclined planes"
+        ],
+        "practice_prompts": [
+                "A 10kg box on a smooth surface is pushed with 50N. Find acceleration.",
+                "In a lift going up with acceleration 3 m/s², what is the apparent weight of a 50kg person?"
+        ],
+        "real_world_example": "When a CNG auto-rickshaw suddenly brakes, you slide forward — that's Newton's 1st law. The harder the driver brakes (more force), the faster you decelerate (2nd law). Your feet push backward on the floor, floor pushes you forward (3rd law)."
+},
+
+    "phy1-04-02": {
+        "title": "Friction & Circular Motion",
+        "learning_objectives": [
+                "Calculate static and kinetic friction",
+                "Solve problems on banked roads and circular motion",
+                "Apply centripetal force concept",
+                "Understand the role of friction in daily life"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: why is it easier to push a box once it starts moving than to start pushing it? What's the difference between static and kinetic friction?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach f = μN. Static friction ≤ μₛN, kinetic friction = μₖN. Ask: why is μₛ > μₖ always?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Circular motion: centripetal force F = mv²/r. For car on banked road: tan θ = v²/rg. Derive step by step."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "A car turns on a flat road (μ=0.4, r=50m). Find maximum safe speed. Then: what if the road is banked at 30°?"
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about friction on incline or centripetal force in vertical circular motion."
+                }
+        ],
+        "key_formulas": [
+                "f = μN",
+                "Centripetal force F = mv²/r",
+                "Banked road: tan θ = v²/rg",
+                "Min speed at top of loop: v = √(rg)"
+        ],
+        "common_mistakes": [
+                "Using μmg for friction on incline (should be μN = μmg cos θ)",
+                "Confusing centripetal (real) with centrifugal (pseudo) force",
+                "Forgetting that static friction has a maximum value, not a fixed value"
+        ],
+        "practice_prompts": [
+                "A 5kg block on a surface with μ=0.3. Find friction when 10N horizontal force applied.",
+                "Find the banking angle for a road curve (r=100m) at speed 72 km/h."
+        ],
+        "real_world_example": "The flyover curves in Dhaka are slightly banked — the road tilts inward so cars don't need to rely only on tire friction. Same reason why cricket bowlers can make the ball curve — friction and circular motion!"
+},
+
+    "phy1-05-01": {
+        "title": "Work & Energy",
+        "learning_objectives": [
+                "Calculate work done by constant and variable forces",
+                "Apply work-energy theorem",
+                "Understand potential and kinetic energy",
+                "Apply conservation of energy to solve problems"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: if you carry a heavy bag horizontally across a room, have you done any work on it (in physics terms)? Why or why not?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach W = Fd cos θ. When θ=90°, W=0 (carrying bag horizontally). KE = ½mv², PE = mgh. Ask: what type of energy does a flying bird have?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Work-energy theorem: net work = change in KE. Solve: a 2kg ball falls from 10m. Find velocity just before hitting ground using energy conservation."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "A 1000kg car accelerates from 10 m/s to 30 m/s. Find the work done by the engine."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ: a pendulum released from height h. Find velocity at lowest point. Then: if string is cut at lowest point, what path does it follow?"
+                }
+        ],
+        "key_formulas": [
+                "W = Fd cos θ",
+                "KE = ½mv²",
+                "PE = mgh",
+                "Conservation: KE₁ + PE₁ = KE₂ + PE₂"
+        ],
+        "common_mistakes": [
+                "Saying you do work when carrying a bag horizontally (W=0 since F⊥d)",
+                "Forgetting that work can be negative (friction does negative work)",
+                "Not using energy conservation when it's simpler than force equations"
+        ],
+        "practice_prompts": [
+                "A 50kg boy climbs 10m stairs. How much work against gravity?",
+                "A spring (k=200 N/m) compressed 0.1m. Find stored PE."
+        ],
+        "real_world_example": "When water falls at Kaptai Dam from height h, its PE converts to KE, which spins turbines to generate electricity. The higher the dam, the more energy — that's why Kaptai was built in the hills of Rangamati."
+},
+
+    "phy1-05-02": {
+        "title": "Power & Collisions",
+        "learning_objectives": [
+                "Calculate power as rate of work done",
+                "Distinguish elastic and inelastic collisions",
+                "Apply momentum conservation in collisions",
+                "Solve problems involving coefficient of restitution"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: two people carry the same weight up stairs — one takes 1 minute, the other takes 5 minutes. Who does more work? Who has more power?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Power P = W/t = Fv. 1 HP = 746 W. Teach elastic (KE conserved) vs inelastic (KE not conserved) collisions."
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Collision formulas: m₁u₁ + m₂u₂ = m₁v₁ + m₂v₂. For perfectly inelastic: bodies stick together. Solve: 2kg ball at 3m/s hits stationary 1kg ball elastically."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "A 1500kg car at 20 m/s collides with stationary 1000kg car. They stick together. Find final velocity and energy lost."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about collision or power calculation."
+                }
+        ],
+        "key_formulas": [
+                "P = W/t = Fv",
+                "1 HP = 746 W",
+                "Coefficient of restitution e = (v₂-v₁)/(u₁-u₂)",
+                "Elastic: e=1, Perfectly inelastic: e=0"
+        ],
+        "common_mistakes": [
+                "Confusing work (same for both) with power (different if time differs)",
+                "Thinking momentum is not conserved in inelastic collisions (it IS, only KE isn't)",
+                "Forgetting that in 2D collisions, momentum is conserved in each direction separately"
+        ],
+        "practice_prompts": [
+                "A pump lifts 500kg water to 10m in 5 seconds. Find power in watts and HP.",
+                "Two identical balls collide elastically head-on. What happens?"
+        ],
+        "real_world_example": "When a truck hits a small car, both have the same momentum change (Newton's 3rd law) — but the small car gets much more acceleration because F=ma and its mass is less. That's why trucks cause more damage in accidents on the Dhaka-Chittagong highway."
+},
+
+    "phy1-06-01": {
+        "title": "Gravitation",
+        "learning_objectives": [
+                "Apply Newton's law of gravitation",
+                "Calculate gravitational field strength at different altitudes",
+                "Derive orbital velocity and escape velocity",
+                "Apply Kepler's laws of planetary motion"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: why does the Moon orbit the Earth instead of flying away? What force keeps it in orbit?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach F = GMm/r². Surface gravity g = GM/R². Ask: what happens to g if you go to a mountain top? What about deep inside Earth?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Derive orbital velocity v = √(GM/r) and escape velocity vₑ = √(2GM/R) = √(2gR). Ask: why is escape velocity √2 times orbital velocity?"
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "Calculate g at height equal to Earth's radius. Then: find escape velocity from Earth (R=6400km, g=9.8)."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about satellite period or variation of g with altitude/depth."
+                }
+        ],
+        "key_formulas": [
+                "F = GMm/r²",
+                "g = GM/R²",
+                "Orbital velocity v₀ = √(GM/r)",
+                "Escape velocity vₑ = √(2gR)",
+                "Kepler's T² ∝ r³"
+        ],
+        "common_mistakes": [
+                "Using r (distance from center) vs h (height above surface) — g at height h: g'=g(R/(R+h))²",
+                "Forgetting that inside Earth, g decreases linearly with depth",
+                "Confusing orbital velocity with escape velocity"
+        ],
+        "practice_prompts": [
+                "At what height above Earth is g reduced to g/4?",
+                "Find the time period of a satellite orbiting just above Earth's surface."
+        ],
+        "real_world_example": "Bangladesh's Bangabandhu-1 satellite orbits at 35,786 km (geostationary orbit) — at that height, it takes exactly 24 hours to orbit, so it stays over the same spot above Bangladesh. That's Kepler's third law in action!"
+},
+
+    "phy1-07-01": {
+        "title": "Elasticity & Fluid Mechanics",
+        "learning_objectives": [
+                "Define stress, strain, and Young's modulus",
+                "Apply Hooke's law within elastic limit",
+                "Apply Pascal's law and Archimedes' principle",
+                "Use Bernoulli's equation for fluid flow"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: why does a rubber band return to its original shape but clay doesn't? What's the difference?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach stress = F/A, strain = ΔL/L, Young's modulus Y = stress/strain. Hooke's law: F = kx. Ask: what happens beyond the elastic limit?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Fluid statics: Pascal's law (hydraulic press), Archimedes' principle (buoyancy). Bernoulli's: P + ½ρv² + ρgh = constant."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "A steel wire (Y=2×10¹¹ Pa, L=2m, A=1mm²) stretched by 100N. Find extension."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about buoyancy or Bernoulli's application."
+                }
+        ],
+        "key_formulas": [
+                "Stress = F/A, Strain = ΔL/L",
+                "Young's modulus Y = Stress/Strain",
+                "Pascal's law: pressure transmitted equally",
+                "Bernoulli: P + ½ρv² + ρgh = constant"
+        ],
+        "common_mistakes": [
+                "Confusing stress (force per unit area) with pressure (same unit but different concept)",
+                "Forgetting that Bernoulli's equation only applies to ideal (inviscid) fluids",
+                "Using weight instead of mass in buoyancy calculations"
+        ],
+        "practice_prompts": [
+                "A hydraulic press has pistons of area 10 cm² and 100 cm². Force on small piston is 50N. Find force on large piston.",
+                "A block of wood (density 600 kg/m³) floats in water. What fraction is submerged?"
+        ],
+        "real_world_example": "The hydraulic brakes in buses work on Pascal's law — a small force on the brake pedal creates a large force on the brake pads. And country boats (নৌকা) float because of Archimedes' principle — the water pushes up with a force equal to the weight of water displaced."
+},
+
+    "phy1-08-01": {
+        "title": "Simple Harmonic Motion",
+        "learning_objectives": [
+                "Define SHM and identify SHM systems",
+                "Derive equations of SHM (displacement, velocity, acceleration)",
+                "Calculate time period of simple pendulum and spring-mass system",
+                "Understand energy in SHM"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: a swing in a playground goes back and forth. Is the motion uniform? What pattern does it follow?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Define SHM: acceleration proportional to displacement, directed toward mean position. a = -ω²x. Ask: is uniform circular motion related to SHM?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Equations: x = A sin(ωt), v = Aω cos(ωt), a = -Aω² sin(ωt). For pendulum: T = 2π√(l/g). For spring: T = 2π√(m/k)."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "A spring (k=100 N/m) with 0.5kg mass. Find time period and maximum velocity if amplitude is 0.1m."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ: energy variation in SHM — KE and PE as function of displacement."
+                }
+        ],
+        "key_formulas": [
+                "x = A sin(ωt + φ)",
+                "T = 2π/ω",
+                "Pendulum: T = 2π√(l/g)",
+                "Spring: T = 2π√(m/k)",
+                "Total energy E = ½kA² = ½mω²A²"
+        ],
+        "common_mistakes": [
+                "Thinking pendulum period depends on mass (it doesn't for simple pendulum)",
+                "Confusing amplitude with displacement at a given time",
+                "Forgetting that at mean position KE=max and PE=0, at extreme PE=max and KE=0"
+        ],
+        "practice_prompts": [
+                "A pendulum has T=2s. Find its length.",
+                "In SHM, at what displacement is KE equal to PE?"
+        ],
+        "real_world_example": "The clock pendulums in old Bangladeshi homes (দেয়াল ঘড়ি) are SHM — the longer the pendulum, the slower it swings. That's why grandfather clocks are tall!"
+},
+
+    "phy1-09-01": {
+        "title": "Wave Properties",
+        "learning_objectives": [
+                "Distinguish transverse and longitudinal waves",
+                "Apply v = fλ relationship",
+                "Understand superposition and standing waves",
+                "Calculate frequency of vibrating strings and air columns"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: when you throw a stone in a pond, ripples spread out. Is the water actually moving outward, or is it something else?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach transverse (particle ⊥ wave direction) vs longitudinal (particle ∥ wave direction). v = fλ. Ask: is sound transverse or longitudinal?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Standing waves on string: harmonics. f_n = n(v/2L). For closed pipe: only odd harmonics. Open pipe: all harmonics."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "A string (L=1m, μ=0.01 kg/m) under tension 40N. Find fundamental frequency and first three harmonics."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about standing waves in pipes or strings."
+                }
+        ],
+        "key_formulas": [
+                "v = fλ",
+                "String: v = √(T/μ)",
+                "String harmonics: fₙ = nv/2L",
+                "Open pipe: fₙ = nv/2L (all n)",
+                "Closed pipe: fₙ = nv/4L (odd n only)"
+        ],
+        "common_mistakes": [
+                "Thinking wave speed depends on frequency (it depends on medium)",
+                "Forgetting closed pipe has only odd harmonics",
+                "Confusing nodes and antinodes in standing waves"
+        ],
+        "practice_prompts": [
+                "Sound speed is 340 m/s. Find wavelength of 680 Hz sound.",
+                "A closed pipe has fundamental 200 Hz. What is its 2nd overtone?"
+        ],
+        "real_world_example": "When a বাঁশি (bamboo flute) player covers different holes, they change the effective length of the air column — shorter column = higher frequency = higher pitch. That's standing waves in an open pipe!"
+},
+
+    "phy1-09-02": {
+        "title": "Sound & Doppler Effect",
+        "learning_objectives": [
+                "Calculate beat frequency",
+                "Apply Doppler effect formula for moving source/observer",
+                "Understand resonance and its applications",
+                "Solve problems on speed of sound in different media"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: why does an ambulance siren sound higher-pitched when approaching and lower when moving away?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Doppler effect: f' = f(v ± v₀)/(v ∓ vₛ). Convention: approaching = higher, receding = lower. Ask: what if both source and observer are moving?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Beats: when two frequencies are close, f_beat = |f₁ - f₂|. Resonance: when driving frequency = natural frequency, amplitude is maximum."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "An ambulance (f=500Hz) moves at 30 m/s toward you. Speed of sound = 340 m/s. Find the frequency you hear."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about Doppler effect or beats."
+                }
+        ],
+        "key_formulas": [
+                "Doppler: f' = f(v + v₀)/(v - vₛ) (approaching)",
+                "Beat frequency = |f₁ - f₂|",
+                "Speed of sound in air ≈ 340 m/s at 20°C",
+                "v_sound ∝ √T (temperature in Kelvin)"
+        ],
+        "common_mistakes": [
+                "Getting signs wrong in Doppler formula (remember: approaching = higher frequency)",
+                "Thinking beats frequency = average of two frequencies (it's the difference)",
+                "Forgetting speed of sound changes with temperature"
+        ],
+        "practice_prompts": [
+                "Two tuning forks of 256 Hz and 260 Hz are sounded together. How many beats per second?",
+                "A train (speed 36 km/h) blows whistle at 500 Hz. Find frequency heard by stationary observer as train approaches."
+        ],
+        "real_world_example": "Next time you hear a motorcycle zooming past on the highway, notice how the pitch drops as it passes you — that's the Doppler effect. Astronomers use the same principle to tell if a star is moving toward or away from us (red shift/blue shift)."
+},
+
+    "phy1-10-01": {
+        "title": "Gas Laws & Kinetic Theory",
+        "learning_objectives": [
+                "Apply ideal gas equation PV = nRT",
+                "Derive kinetic energy from kinetic theory",
+                "Understand Maxwell-Boltzmann distribution",
+                "Apply gas laws to solve problems"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: why does a balloon expand when you heat it? What's happening to the gas molecules inside?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach PV = nRT. Gas laws: Boyle's (P∝1/V), Charles's (V∝T), Gay-Lussac's (P∝T). Ask: what is an ideal gas?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Kinetic theory: KE = (3/2)kT. RMS speed v_rms = √(3RT/M). Ask: which gas molecules move faster at same temperature — hydrogen or oxygen?"
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "2 moles of ideal gas at 300K in 10L container. Find pressure. Then: if temperature doubles at constant volume, new pressure?"
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about KE of gas molecules or gas law application."
+                }
+        ],
+        "key_formulas": [
+                "PV = nRT (R = 8.314 J/mol·K)",
+                "KE_avg = (3/2)kT",
+                "v_rms = √(3RT/M)",
+                "Boyle: P₁V₁ = P₂V₂",
+                "Charles: V₁/T₁ = V₂/T₂"
+        ],
+        "common_mistakes": [
+                "Using Celsius instead of Kelvin in gas law calculations",
+                "Confusing R (gas constant) with k (Boltzmann constant) — k = R/Nₐ",
+                "Thinking all gas molecules move at the same speed (they have a distribution)"
+        ],
+        "practice_prompts": [
+                "Find the RMS speed of N₂ molecules at 27°C. (M=28 g/mol)",
+                "A gas at 2 atm and 300K is heated to 600K at constant volume. Find new pressure."
+        ],
+        "real_world_example": "The pressure cooker in every Bangladeshi kitchen works on Gay-Lussac's law — as temperature increases at constant volume, pressure increases. That's why food cooks faster inside — higher pressure means higher boiling point of water!"
+},
+
 
     "chem1-03-02": {
         "title": "Chemical Bonding",
