@@ -531,6 +531,337 @@ LESSON_CONTENT: dict[str, dict] = {
         ],
         "real_world_example": "The reason table salt (NaCl) forms so readily is explained by periodic trends. Na has very low ionization energy (easy to lose its electron) and Cl has very high electron affinity (eager to gain one). This huge difference in electronegativity across period 3 drives the formation of ionic bonds — the same chemistry that preserves fish (shutki) in Cox's Bazar.",
     },
+
+    # ══ HIGHER MATHEMATICS — Chapter 1: সেট ও ফাংশন (Sets & Functions) ══
+    "hm1-01-01": {
+        "title": "Sets, Subsets & Set Operations",
+        "learning_objectives": [
+            "Define sets using roster and set-builder notation and identify types (finite, infinite, empty, universal)",
+            "Determine subsets, proper subsets, and power sets of a given set",
+            "Perform union, intersection, difference, and complement operations",
+            "Apply De Morgan's laws and verify results using Venn diagrams",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: if I say 'the set of all rivers in Bangladesh', how would you list its elements? What if I say 'the set of all even numbers' — can you list them all?",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Explain roster vs set-builder notation. Ask student to write {x ∈ ℕ : x < 6} in roster form and vice versa. Introduce empty set ∅ and universal set U.",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Teach subset (⊆), proper subset (⊂), and power set P(A). Ask: if A = {1, 2, 3}, how many elements does P(A) have? Then introduce A ∪ B, A ∩ B, A − B, and A' with Venn diagrams.",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Problem: Let U = {1,2,3,...,10}, A = {1,2,3,4,5}, B = {3,4,5,6,7}. Find A ∪ B, A ∩ B, A − B, A', and verify (A ∪ B)' = A' ∩ B' (De Morgan's law).",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "BUET-level: If n(A) = 40, n(B) = 35, n(A ∪ B) = 60, n(U) = 80, find n(A ∩ B), n(A' ∩ B'), and n(A − B). Ask student to draw the Venn diagram with cardinalities in each region.",
+            },
+        ],
+        "key_formulas": [
+            "|P(A)| = 2ⁿ where n = |A|",
+            "n(A ∪ B) = n(A) + n(B) − n(A ∩ B)",
+            "(A ∪ B)' = A' ∩ B' and (A ∩ B)' = A' ∪ B' — De Morgan's laws",
+            "n(A ∪ B ∪ C) = n(A) + n(B) + n(C) − n(A∩B) − n(B∩C) − n(A∩C) + n(A∩B∩C)",
+        ],
+        "common_mistakes": [
+            "Confusing ∈ (element of) with ⊆ (subset of) — e.g., writing {1} ∈ {1,2} instead of {1} ⊆ {1,2}",
+            "Forgetting that ∅ is a subset of every set, and every set is a subset of itself",
+            "Errors in De Morgan's law — swapping union and intersection without also taking complements",
+        ],
+        "practice_prompts": [
+            "If A = {a, b, c}, list all subsets of A. How many are proper subsets?",
+            "In a class of 100 students, 60 take Physics, 50 take Math, 20 take both. How many take neither?",
+            "Prove using set algebra that A − (B ∩ C) = (A − B) ∪ (A − C).",
+        ],
+        "real_world_example": "Think of mobile phone plans in Bangladesh — Grameenphone's 4G coverage area is set A, Robi's is set B. The intersection A ∩ B is where both have 4G. The union A ∪ B is total 4G coverage. Areas with no coverage at all are (A ∪ B)'.",
+    },
+
+    "hm1-01-02": {
+        "title": "Functions, Domain & Range",
+        "learning_objectives": [
+            "Define a function as a special relation and distinguish from general relations",
+            "Determine domain, co-domain, and range of a function",
+            "Classify functions as one-one (injective), onto (surjective), and bijective",
+            "Compute composite functions (f∘g) and inverse functions (f⁻¹)",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: if every student in your class is assigned exactly one roll number, is this a function? What if two students share the same roll number — is it still a function from students to roll numbers?",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Define function f: A → B as a relation where every element of A maps to exactly one element of B. Explain domain, co-domain, range. Ask: if f(x) = √(x−2), what is the domain?",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Teach one-one, onto, bijective with arrow diagrams. Then introduce composite function: if f(x) = 2x+1 and g(x) = x², find (f∘g)(x) and (g∘f)(x). Ask: are they equal?",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Problem: f(x) = (3x−2)/(x+1). Find domain of f, then find f⁻¹(x). Verify that f(f⁻¹(x)) = x.",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "BUET-level: Let f: ℝ→ℝ, f(x) = x² − 4x + 3. Find the range of f. Is f one-one? If we restrict domain to [2, ∞), find f⁻¹(x) and state its domain.",
+            },
+        ],
+        "key_formulas": [
+            "Domain of f(x) = √(g(x)) requires g(x) ≥ 0",
+            "Domain of f(x) = 1/g(x) requires g(x) ≠ 0",
+            "(f∘g)(x) = f(g(x))",
+            "f⁻¹ exists iff f is bijective; solve y = f(x) for x to get f⁻¹(y)",
+        ],
+        "common_mistakes": [
+            "Confusing co-domain with range — range is the actual output set, co-domain is the declared target set",
+            "Assuming f∘g = g∘f — composite functions are generally not commutative",
+            "Forgetting to check domain restrictions when finding inverse (e.g., for quadratics, must restrict domain first)",
+        ],
+        "practice_prompts": [
+            "Find the domain and range of f(x) = 1/(x² − 9).",
+            "If f(x) = 2x + 3 and g(x) = (x − 3)/2, show that f and g are inverses of each other.",
+            "Is f(x) = |x| one-one? Is it onto when f: ℝ → ℝ? What about f: ℝ → [0, ∞)?",
+        ],
+        "real_world_example": "Think of your National ID card system — each citizen maps to exactly one NID number (function). If no two people share an NID, it is one-one. If every possible NID is assigned, it is onto. Bangladesh's NID is designed to be bijective — a perfect one-to-one correspondence.",
+    },
+
+    # ══ HIGHER MATHEMATICS — Chapter 2: বীজগাণিতিক রাশি (Algebraic Expressions) ══
+    "hm1-02-01": {
+        "title": "Polynomials & Factoring",
+        "learning_objectives": [
+            "Classify polynomials by degree and number of terms",
+            "Apply Factor Theorem and Remainder Theorem to find factors and remainders",
+            "Factor polynomials using grouping, identities, and synthetic division",
+            "Solve polynomial equations and find relationships between roots and coefficients",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: what is the remainder when you divide x³ − 3x² + 2x − 5 by (x − 1)? Can you guess without doing long division?",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Teach Remainder Theorem: f(a) = remainder when f(x) ÷ (x−a). Then Factor Theorem: (x−a) is a factor iff f(a) = 0. Ask student to check if (x−2) is a factor of x³ − 6x² + 11x − 6.",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Demonstrate synthetic division to factor x³ − 6x² + 11x − 6 completely. Teach sum/product of roots: for ax² + bx + c = 0, α+β = −b/a, αβ = c/a. Extend to cubic equations.",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Problem: Factor 2x³ + x² − 13x + 6 completely. Then find all roots. Verify using sum and product of roots.",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "BUET-level: If α, β are roots of x² − 5x + 3 = 0, find the value of α³ + β³ and form the equation whose roots are α² and β². No calculator — use identities only.",
+            },
+        ],
+        "key_formulas": [
+            "Remainder Theorem: f(x) ÷ (x−a) gives remainder f(a)",
+            "Factor Theorem: (x−a) | f(x) ⟺ f(a) = 0",
+            "For ax² + bx + c = 0: α+β = −b/a, αβ = c/a",
+            "α³ + β³ = (α+β)³ − 3αβ(α+β)",
+            "For ax³ + bx² + cx + d = 0: α+β+γ = −b/a, αβ+βγ+γα = c/a, αβγ = −d/a",
+        ],
+        "common_mistakes": [
+            "Sign error in Remainder Theorem — evaluating f(a) when divisor is (x−a), not (x+a)",
+            "Forgetting the negative sign in sum of roots: α+β = −b/a (not +b/a)",
+            "Incomplete factoring — stopping at one factor instead of factoring the remaining quadratic",
+        ],
+        "practice_prompts": [
+            "Use the Factor Theorem to show (x + 3) is a factor of x³ + 27. Then factor completely.",
+            "If α, β are roots of 2x² − 7x + 5 = 0, find 1/α + 1/β without solving for α, β.",
+            "Find k if (x − 2) is a factor of x³ − kx² + 5x + 2.",
+        ],
+        "real_world_example": "When engineers at Padma Bridge calculated load distribution across supports, they used polynomial equations where the roots represent critical stress points. Factoring tells them exactly where the structure needs reinforcement.",
+    },
+
+    "hm1-02-02": {
+        "title": "Partial Fractions",
+        "learning_objectives": [
+            "Decompose proper rational expressions into partial fractions with linear factors",
+            "Handle repeated linear factors in partial fraction decomposition",
+            "Decompose expressions with irreducible quadratic factors",
+            "Convert improper fractions to proper form before decomposition",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: you know how to add 1/(x+1) + 2/(x−1) into a single fraction. Can you reverse the process? Given (3x−1)/((x+1)(x−1)), can you break it back into simpler fractions?",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Teach the general rule: P(x)/((x−a)(x−b)) = A/(x−a) + B/(x−b). Show the cover-up method and the method of equating coefficients. Ask student to decompose (5x+3)/((x+1)(x+2)).",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Handle repeated factors: P(x)/(x−a)² = A/(x−a) + B/(x−a)². Then irreducible quadratic: P(x)/((x−a)(x²+bx+c)) = A/(x−a) + (Bx+C)/(x²+bx+c). Solve an example of each type.",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Problem: Decompose (3x² + 5x + 2)/((x+1)²(x+2)) into partial fractions. Verify by recombining.",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "BUET-level: Decompose (x⁴ + 1)/(x(x² + 1)²) into partial fractions. Note: check if it is proper first. Then decompose handling the repeated irreducible quadratic factor.",
+            },
+        ],
+        "key_formulas": [
+            "P(x)/((x−a)(x−b)) = A/(x−a) + B/(x−b)",
+            "P(x)/(x−a)ⁿ = A₁/(x−a) + A₂/(x−a)² + ... + Aₙ/(x−a)ⁿ",
+            "For irreducible (ax²+bx+c): numerator is (Ax+B), not just A",
+            "If degree(numerator) ≥ degree(denominator), do polynomial long division first",
+        ],
+        "common_mistakes": [
+            "Using A/(x²+1) instead of (Ax+B)/(x²+1) for irreducible quadratic factors",
+            "Forgetting to do long division when the fraction is improper (degree of numerator ≥ denominator)",
+            "Arithmetic errors when equating coefficients — not checking the answer by recombining fractions",
+        ],
+        "practice_prompts": [
+            "Decompose (2x + 3)/((x − 1)(x + 2)) into partial fractions.",
+            "Find the partial fraction form of (x² + 1)/((x − 1)²(x + 1)).",
+            "Decompose (x³ + x + 1)/(x²(x² + 1)). Is this proper or improper?",
+        ],
+        "real_world_example": "Partial fractions are like breaking a mixed curry into its individual spices — you can taste the whole dish, but to understand (or integrate) it, you need to separate each component. This technique is essential for solving differential equations used in circuit analysis at BUET EEE.",
+    },
+
+    # ══ HIGHER MATHEMATICS — Chapter 3: জ্যামিতি (Geometry / Coordinate Geometry) ══
+    "hm1-03-01": {
+        "title": "Straight Lines: Distance & Section Formulas",
+        "learning_objectives": [
+            "Apply the distance formula between two points in 2D",
+            "Use section formula to find internal and external division points",
+            "Calculate area of a triangle given three vertices",
+            "Determine collinearity of three points using the area method",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: if you are at Motijheel (point A) and your friend is at Uttara (point B), and you know both locations on a grid map, how would you calculate the straight-line distance?",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Derive distance formula d = √((x₂−x₁)² + (y₂−y₁)²) from Pythagoras. Ask: find distance between (3, 4) and (−1, 1). Then teach the section formula for internal division: ((mx₂+nx₁)/(m+n), (my₂+ny₁)/(m+n)).",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Teach external division formula (change + to − in denominator). Then area of triangle with vertices: ½|x₁(y₂−y₃) + x₂(y₃−y₁) + x₃(y₁−y₂)|. Ask: what does area = 0 mean geometrically?",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Problem: A(2, 3), B(8, 11). Find the point dividing AB in ratio 3:1 internally and externally. Then find the midpoint and verify it equals the 1:1 division.",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "BUET-level: Show that points (1, 1), (3, 5), (5, 9) are collinear. Then find the ratio in which (3, 5) divides the line joining (1, 1) and (5, 9). Also find the area of triangle formed by (0, 0), (4, 0), (0, 3).",
+            },
+        ],
+        "key_formulas": [
+            "Distance: d = √((x₂−x₁)² + (y₂−y₁)²)",
+            "Internal division: P = ((mx₂+nx₁)/(m+n), (my₂+ny₁)/(m+n))",
+            "External division: P = ((mx₂−nx₁)/(m−n), (my₂−ny₁)/(m−n))",
+            "Area of △ = ½|x₁(y₂−y₃) + x₂(y₃−y₁) + x₃(y₁−y₂)|",
+            "Midpoint: M = ((x₁+x₂)/2, (y₁+y₂)/2)",
+        ],
+        "common_mistakes": [
+            "Sign errors in the distance formula — forgetting that squaring eliminates negatives, so order of subtraction does not matter",
+            "Mixing up internal and external division — using + in denominator for external division instead of −",
+            "Forgetting the absolute value in the area formula, leading to negative area values",
+        ],
+        "practice_prompts": [
+            "Find the distance between (−2, 5) and (4, −3).",
+            "The point P(4, m) divides the line joining A(2, 3) and B(6, 7) in the ratio 1:1. Find m.",
+            "Prove that the points (2, −2), (8, 4), (5, 7), (−1, 1) form a rhombus by showing all sides are equal.",
+        ],
+        "real_world_example": "When Bangladesh Survey maps land boundaries, they use coordinate geometry. If a piece of land has corners at known GPS coordinates, the area formula gives the exact plot area — crucial for land registration and disputes that are so common in Bangladesh.",
+    },
+
+    "hm1-03-02": {
+        "title": "Equations of Straight Lines & Line Properties",
+        "learning_objectives": [
+            "Write equations of lines in slope-intercept, point-slope, and two-point forms",
+            "Find slope, intercepts, and angle between two lines",
+            "Calculate perpendicular distance from a point to a line",
+            "Determine conditions for parallel and perpendicular lines",
+        ],
+        "teaching_steps": [
+            {
+                "step": 1,
+                "type": "intro",
+                "prompt": "Ask: if a road goes uphill — for every 10 meters horizontally, it rises 3 meters. What is the slope? How would you describe the road's equation if it starts at height 5 meters?",
+            },
+            {
+                "step": 2,
+                "type": "concept",
+                "prompt": "Teach slope m = (y₂−y₁)/(x₂−x₁). Then three forms: y = mx + c (slope-intercept), y − y₁ = m(x − x₁) (point-slope), (y−y₁)/(y₂−y₁) = (x−x₁)/(x₂−x₁) (two-point). Ask student to convert between forms.",
+            },
+            {
+                "step": 3,
+                "type": "teach",
+                "prompt": "Teach general form ax + by + c = 0. Conditions: parallel lines have equal slopes (m₁ = m₂), perpendicular lines have m₁ × m₂ = −1. Angle between lines: tan θ = |(m₁−m₂)/(1+m₁m₂)|. Perpendicular distance: d = |ax₁+by₁+c|/√(a²+b²).",
+            },
+            {
+                "step": 4,
+                "type": "practice",
+                "prompt": "Problem: Find the equation of the line through (3, −2) perpendicular to 2x − 3y + 5 = 0. Then find the distance from origin to this new line.",
+            },
+            {
+                "step": 5,
+                "type": "mastery",
+                "prompt": "BUET-level: Two lines are 3x + 4y = 12 and 4x − 3y = 6. Find: (a) angle between them, (b) point of intersection, (c) equation of the line through their intersection parallel to x − 2y = 5. Use the family of lines concept: L₁ + λL₂ = 0.",
+            },
+        ],
+        "key_formulas": [
+            "Slope: m = (y₂−y₁)/(x₂−x₁) = −a/b (for ax+by+c=0)",
+            "Slope-intercept: y = mx + c",
+            "Point-slope: y − y₁ = m(x − x₁)",
+            "Perpendicular distance: d = |ax₁ + by₁ + c| / √(a² + b²)",
+            "Angle between lines: tan θ = |(m₁ − m₂)/(1 + m₁m₂)|",
+            "Parallel: m₁ = m₂ | Perpendicular: m₁ × m₂ = −1",
+        ],
+        "common_mistakes": [
+            "Computing slope as (x₂−x₁)/(y₂−y₁) instead of (y₂−y₁)/(x₂−x₁) — swapping numerator and denominator",
+            "Forgetting the absolute value in perpendicular distance formula, getting negative distances",
+            "For perpendicular lines, using m₁ × m₂ = 1 instead of m₁ × m₂ = −1 (missing the negative sign)",
+        ],
+        "practice_prompts": [
+            "Find the equation of the line passing through (1, 2) and (4, 8) in all three forms.",
+            "Find the perpendicular distance from the point (3, 4) to the line 3x + 4y − 5 = 0.",
+            "Lines 2x + 3y = 6 and 4x + 6y = k are parallel. For what value of k is the distance between them equal to 1?",
+        ],
+        "real_world_example": "When BUET civil engineers design roads in Dhaka, they calculate slopes for drainage — water must flow at a minimum gradient. The perpendicular distance formula helps determine how far a building is from the road centerline, essential for setback rules in RAJUK building codes.",
+    },
 }
 
 
