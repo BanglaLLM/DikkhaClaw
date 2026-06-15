@@ -199,6 +199,424 @@ LESSON_CONTENT: dict[str, dict] = {
         "real_world_example": "Sitting in a train, the trees seem to move backward — that's relative motion. Your velocity relative to the ground is different from your velocity relative to the train.",
     },
 
+    # ══ PHYSICS — Chapter 2 (cont.): Vectors — Scalar & Vector Products ══
+    "phy1-02-02": {
+        "title": "Scalar & Vector Products",
+        "learning_objectives": [
+            "Calculate the dot product of two vectors and interpret it as projection",
+            "Calculate the cross product and determine its direction using the right-hand rule",
+            "Apply dot product to find work done and angle between vectors",
+            "Apply cross product to find torque and area of a parallelogram",
+        ],
+        "teaching_steps": [
+            {"step": 1, "type": "intro", "prompt": "Ask: when you pull a rickshaw at an angle, does all your force contribute to moving it forward? What part of the force actually does the work? This is where dot product comes in."},
+            {"step": 2, "type": "concept", "prompt": "Teach dot product: A·B = AB cos θ = AxBx + AyBy + AzBz. It gives a scalar. Ask: what is the dot product when vectors are perpendicular? (zero) When parallel? (AB). Explain how this relates to work W = F·d = Fd cos θ."},
+            {"step": 3, "type": "teach", "prompt": "Teach cross product: A×B = AB sin θ n̂ (direction by right-hand rule). In component form: A×B = (AyBz − AzBy)î + (AzBx − AxBz)ĵ + (AxBy − AyBx)k̂. Key property: A×B = −B×A (anti-commutative). Ask: what is î×ĵ? What is î×î?"},
+            {"step": 4, "type": "practice", "prompt": "Problem: A = 3î + 4ĵ − 2k̂, B = 2î − ĵ + 3k̂. Find: (a) A·B, (b) angle between A and B, (c) A×B, (d) area of parallelogram formed by A and B."},
+            {"step": 5, "type": "mastery", "prompt": "BUET-level: A force F = (2î + 3ĵ) N acts on a body. The body moves from position r₁ = (î − ĵ) m to r₂ = (4î + 2ĵ) m. Find the work done. Then: find the torque about the origin if the force acts at point (3, 4, 0)."},
+        ],
+        "key_formulas": [
+            "A·B = AB cos θ = AxBx + AyBy + AzBz (scalar result)",
+            "|A×B| = AB sin θ (magnitude of cross product)",
+            "A×B = (AyBz − AzBy)î + (AzBx − AxBz)ĵ + (AxBy − AyBx)k̂",
+            "î·î = ĵ·ĵ = k̂·k̂ = 1; î·ĵ = ĵ·k̂ = k̂·î = 0",
+            "î×ĵ = k̂, ĵ×k̂ = î, k̂×î = ĵ (cyclic); î×î = 0",
+            "Work: W = F·d = Fd cos θ; Torque: τ = r × F",
+        ],
+        "common_mistakes": [
+            "Confusing when to use dot product (gives scalar — work, projection) vs cross product (gives vector — torque, area)",
+            "Forgetting that cross product is anti-commutative: A×B = −B×A, so order matters unlike dot product",
+            "Errors in the determinant expansion of the cross product — mixing up signs in the ĵ component (it has a negative sign in the cofactor expansion)",
+        ],
+        "practice_prompts": [
+            "Find the angle between vectors A = 2î + 3ĵ and B = î − 2ĵ using the dot product.",
+            "A force F = 5î + 2ĵ N displaces a body by d = 3î + 4ĵ m. Calculate the work done and the angle between F and d.",
+            "Find the area of the triangle with vertices at A(1,2,0), B(3,0,0), C(0,1,2) using the cross product.",
+        ],
+        "real_world_example": "When a rickshaw puller in Dhaka pulls the handle at an angle, only the horizontal component (F cos θ) moves the rickshaw forward — that is the dot product F·d. The cross product appears in torque: when you open a door, pushing at the edge (large r) with force perpendicular to the door (sin 90° = 1) gives maximum torque. That is why door handles are placed far from the hinge.",
+    },
+
+    # ══ PHYSICS — Chapter 4: Newton's Laws of Motion ══
+    "phy1-04-01": {
+        "title": "Newton's Laws of Motion",
+        "learning_objectives": [
+            "State and apply Newton's three laws of motion with examples",
+            "Draw free body diagrams (FBD) for objects in various force configurations",
+            "Solve problems using F = ma in one and two dimensions",
+            "Apply Newton's third law to identify action-reaction pairs correctly",
+        ],
+        "teaching_steps": [
+            {"step": 1, "type": "intro", "prompt": "Ask: why do passengers lurch forward when a bus brakes suddenly? Why does a cricket ball hurt more when it comes at 140 km/h than 60 km/h? These are Newton's laws in action."},
+            {"step": 2, "type": "concept", "prompt": "Teach all three laws: 1st law (inertia) — a body remains at rest or in uniform motion unless acted upon by a net external force. 2nd law — F = ma (net force = mass × acceleration). 3rd law — every action has an equal and opposite reaction. Ask: when you stand on the floor, what are the action-reaction pairs? Is normal force the reaction to weight?"},
+            {"step": 3, "type": "teach", "prompt": "Teach free body diagrams: isolate the object, draw all forces acting ON it (weight, normal, tension, friction, applied force). Solve: a 5 kg block on a smooth surface is pulled by a 20 N force at 30° above horizontal. Draw the FBD and find acceleration. Then solve a connected blocks problem: two masses m₁ = 3 kg and m₂ = 5 kg connected by a string over a frictionless pulley (Atwood machine)."},
+            {"step": 4, "type": "practice", "prompt": "Problem: In a lift, a 60 kg person stands on a weighing scale. Find the scale reading when the lift: (a) moves up with acceleration 2 m/s², (b) moves down with acceleration 2 m/s², (c) is in free fall. Draw FBD for each case."},
+            {"step": 5, "type": "mastery", "prompt": "BUET-level: Three blocks of masses 1 kg, 2 kg, and 3 kg are connected by strings on a smooth horizontal surface. A force of 12 N is applied to the 3 kg block. Find: (a) acceleration of the system, (b) tension in each string. Then: if the surface has friction coefficient μ = 0.1, redo the problem."},
+        ],
+        "key_formulas": [
+            "Newton's 2nd law: F_net = ma (vector equation)",
+            "Weight: W = mg (g = 9.8 m/s²)",
+            "Apparent weight in lift: W_app = m(g ± a) (+ for upward acceleration, − for downward)",
+            "Atwood machine: a = (m₁ − m₂)g / (m₁ + m₂), T = 2m₁m₂g / (m₁ + m₂)",
+            "Connected bodies on surface: a = F_net / (m₁ + m₂ + m₃)",
+        ],
+        "common_mistakes": [
+            "Thinking that the normal force is always the reaction to weight — normal force and weight are NOT an action-reaction pair; they act on the SAME body. The reaction to your weight on the floor is the gravitational pull you exert on the Earth.",
+            "Including forces that do not act on the body when drawing FBDs — for example, including the force the block exerts on the table instead of the force the table exerts on the block",
+            "Forgetting to treat the system as a whole first to find acceleration in connected body problems, then isolating individual bodies to find internal tensions",
+        ],
+        "practice_prompts": [
+            "A 10 kg block on a frictionless surface is pushed by a 30 N horizontal force. Find the acceleration. If a 5 kg block is placed on top of it, find the new acceleration.",
+            "In an Atwood machine with masses 8 kg and 6 kg, find the acceleration and the tension in the string. Take g = 10 m/s².",
+            "A person of mass 70 kg stands in a lift. What does the weighing scale read when the lift accelerates upward at 3 m/s²?",
+        ],
+        "real_world_example": "When a BRTC bus in Dhaka brakes suddenly, passengers lurch forward — that is Newton's 1st law (inertia). When Shakib Al Hasan bowls a cricket ball, the force from his arm gives the ball acceleration (F = ma). The ball pushes his hand backward with equal force (3rd law) — that is why fast bowlers sometimes get finger injuries.",
+    },
+
+    "phy1-04-02": {
+        "title": "Friction & Circular Motion",
+        "learning_objectives": [
+            "Distinguish between static and kinetic friction and apply f = μN",
+            "Solve problems involving friction on inclined planes",
+            "Derive and apply centripetal acceleration a = v²/r and centripetal force F = mv²/r",
+            "Analyze motion on banked curves and vertical circular motion",
+        ],
+        "teaching_steps": [
+            {"step": 1, "type": "intro", "prompt": "Ask: why is it harder to start pushing a heavy almari (wardrobe) than to keep it moving? Why do cars slip on wet roads during monsoon? This is friction. And why does a motorcyclist lean inward while turning? That is circular motion."},
+            {"step": 2, "type": "concept", "prompt": "Teach friction: static friction f_s ≤ μ_s N (self-adjusting up to maximum), kinetic friction f_k = μ_k N (constant, less than maximum static). On an inclined plane at angle θ: component along plane = mg sin θ, normal force N = mg cos θ, friction = μN = μmg cos θ. Condition for sliding: tan θ > μ_s (angle of repose)."},
+            {"step": 3, "type": "teach", "prompt": "Teach circular motion: centripetal acceleration a_c = v²/r = ω²r directed toward center. Centripetal force F_c = mv²/r is not a separate force — it is provided by tension, gravity, friction, or normal force. For a car turning on a flat road: friction provides centripetal force, so v_max = √(μrg). For a banked road at angle θ: tan θ = v²/rg (without friction)."},
+            {"step": 4, "type": "practice", "prompt": "Problem: A 2 kg block is on a rough inclined plane at 30°. μ_s = 0.5, μ_k = 0.3. (a) Will the block slide? (b) If it slides, find its acceleration. Then: a car goes around a circular track of radius 50 m. If μ = 0.4, find the maximum safe speed."},
+            {"step": 5, "type": "mastery", "prompt": "BUET-level: A small ball of mass 0.5 kg is attached to a string of length 1 m and whirled in a vertical circle. Find: (a) minimum speed at the top so the string does not go slack, (b) tension at the bottom when speed at top is exactly at minimum, (c) maximum tension in the string. Use energy conservation for (b)."},
+        ],
+        "key_formulas": [
+            "Static friction: f_s ≤ μ_s N (maximum = μ_s N)",
+            "Kinetic friction: f_k = μ_k N (always less than max static friction)",
+            "Angle of repose: tan θ = μ_s",
+            "Centripetal acceleration: a_c = v²/r = ω²r",
+            "Centripetal force: F_c = mv²/r",
+            "Banked road (no friction): tan θ = v²/rg",
+            "Vertical circle minimum speed at top: v_min = √(rg)",
+        ],
+        "common_mistakes": [
+            "Treating centripetal force as a separate force in FBDs — it is not a new force but the net inward force provided by existing forces (friction, tension, gravity, normal force)",
+            "Using mg instead of mg cos θ for the normal force on an inclined plane — the normal force equals mg only on a horizontal surface",
+            "Confusing static and kinetic friction — applying μ_k when the object has not started moving yet, or using μ_s after motion has begun",
+        ],
+        "practice_prompts": [
+            "A 5 kg block sits on a horizontal surface with μ_s = 0.4, μ_k = 0.3. A horizontal force is gradually increased. At what force does the block start to move? What is the acceleration once it starts?",
+            "A car moves on a circular road of radius 100 m at 72 km/h. What is the minimum coefficient of friction needed to prevent skidding?",
+        ],
+        "real_world_example": "The Padma Bridge approach roads have banked curves so heavy trucks do not need to rely entirely on tyre friction to turn safely. During the monsoon, wet roads reduce the friction coefficient dramatically — this is why so many road accidents happen on the Dhaka-Chittagong highway during rain. The banking angle is calculated using tan θ = v²/rg to ensure vehicles can turn safely even with reduced friction.",
+    },
+
+    # ══ PHYSICS — Chapter 5: Work, Energy & Power ══
+    "phy1-05-01": {
+        "title": "Work & Energy",
+        "learning_objectives": [
+            "Calculate work done by constant and variable forces using W = Fd cos θ",
+            "Derive and apply kinetic energy KE = ½mv² and the work-energy theorem",
+            "Apply potential energy PE = mgh and elastic PE = ½kx²",
+            "Solve problems using the law of conservation of mechanical energy",
+        ],
+        "teaching_steps": [
+            {"step": 1, "type": "intro", "prompt": "Ask: if you carry a heavy bag horizontally across a room, do you do work on the bag? (No — force is vertical, displacement is horizontal, so W = Fd cos 90° = 0.) What if you carry it upstairs? This shows work depends on the angle between force and displacement."},
+            {"step": 2, "type": "concept", "prompt": "Teach work: W = Fd cos θ = F·d (dot product). Work done by gravity on a falling body of mass m through height h: W = mgh. Work-energy theorem: net work done on a body = change in kinetic energy: W_net = ½mv² − ½mu². Ask: if a car doubles its speed, by what factor does the braking distance increase? (4 times, since KE ∝ v²)"},
+            {"step": 3, "type": "teach", "prompt": "Teach potential energy: gravitational PE = mgh (with a reference level), elastic PE = ½kx² (spring). Conservation of mechanical energy: KE + PE = constant (when only conservative forces act). Demonstrate with a falling ball: at height h, KE = 0, PE = mgh. At ground, KE = mgh, PE = 0. Total energy is conserved."},
+            {"step": 4, "type": "practice", "prompt": "Problem: A 2 kg ball is dropped from 20 m height. Using energy conservation (no air resistance), find: (a) speed just before hitting the ground, (b) speed at 5 m above ground, (c) the height at which KE = PE. Then: a 0.5 kg ball is thrown upward at 20 m/s. Find the maximum height using energy conservation."},
+            {"step": 5, "type": "mastery", "prompt": "BUET-level: A block of mass 1 kg slides from rest down a smooth curved track from height 5 m onto a rough horizontal surface (μ = 0.2). How far does it travel on the rough surface before stopping? Then: a spring of constant k = 200 N/m is compressed by 0.1 m. A 0.5 kg ball is placed against it and released. Find the speed of the ball when it leaves the spring, and the maximum height it reaches."},
+        ],
+        "key_formulas": [
+            "Work: W = Fd cos θ = F·d",
+            "Kinetic energy: KE = ½mv²",
+            "Work-energy theorem: W_net = ΔKE = ½mv² − ½mu²",
+            "Gravitational PE: PE = mgh",
+            "Elastic PE: PE = ½kx²",
+            "Conservation of energy: KE₁ + PE₁ = KE₂ + PE₂ (no non-conservative forces)",
+            "With friction: KE₁ + PE₁ = KE₂ + PE₂ + W_friction",
+        ],
+        "common_mistakes": [
+            "Forgetting the cos θ factor in work — when a porter carries a load on his head walking horizontally, the work done by the carrying force is zero because force is vertical and displacement is horizontal",
+            "Using KE = mv² instead of KE = ½mv² — missing the ½ factor is a very common calculation error",
+            "Applying conservation of mechanical energy when friction is present — friction is non-conservative, so energy lost to friction must be accounted for: KE₁ + PE₁ = KE₂ + PE₂ + f×d",
+        ],
+        "practice_prompts": [
+            "A 10 kg block is pulled 5 m along a horizontal surface by a 50 N force at 37° above horizontal. μ_k = 0.2. Find the work done by: (a) the applied force, (b) friction, (c) gravity, (d) net work done.",
+            "A ball of mass 0.2 kg is dropped from 10 m. Find its speed at 4 m above the ground using energy conservation.",
+            "A spring with k = 500 N/m is compressed by 0.2 m. How much energy is stored? If this energy is used to launch a 0.1 kg ball vertically, how high does the ball go?",
+        ],
+        "real_world_example": "The Kaptai hydroelectric dam in Rangamati stores water at a height — this is gravitational potential energy (mgh). When water falls through turbines, PE converts to KE of the water, which spins the turbine to generate electricity. The higher the dam and the more water stored, the more energy is available. This is the same principle as a ball falling from a height — energy is conserved, just transformed from one form to another.",
+    },
+
+    "phy1-05-02": {
+        "title": "Power & Collisions",
+        "learning_objectives": [
+            "Calculate power as rate of doing work: P = W/t = Fv",
+            "Distinguish between elastic and inelastic collisions using conservation laws",
+            "Apply conservation of momentum and energy to solve 1D collision problems",
+            "Calculate coefficient of restitution and energy lost in inelastic collisions",
+        ],
+        "teaching_steps": [
+            {"step": 1, "type": "intro", "prompt": "Ask: two workers carry the same load up the same staircase, but one takes 1 minute and the other takes 2 minutes. Who does more work? (Same.) Who is more powerful? (The faster one.) Power is about how fast you do work."},
+            {"step": 2, "type": "concept", "prompt": "Teach power: P = W/t = Fv (instantaneous power when force and velocity are parallel). Unit: Watt (1 W = 1 J/s). 1 horsepower = 746 W. Ask: a pump lifts 200 kg of water per minute to a height of 10 m. Find the power of the pump. Then introduce efficiency: η = useful power output / total power input."},
+            {"step": 3, "type": "teach", "prompt": "Teach collisions. In ALL collisions, momentum is conserved: m₁u₁ + m₂u₂ = m₁v₁ + m₂v₂. In elastic collisions, KE is also conserved. In perfectly inelastic collisions, bodies stick together: m₁u₁ + m₂u₂ = (m₁ + m₂)v. Coefficient of restitution: e = (v₂ − v₁)/(u₁ − u₂). e = 1 for perfectly elastic, e = 0 for perfectly inelastic. Derive: for elastic collision, v₁ = ((m₁−m₂)u₁ + 2m₂u₂)/(m₁+m₂)."},
+            {"step": 4, "type": "practice", "prompt": "Problem: A 2 kg ball moving at 6 m/s collides head-on with a 3 kg ball at rest. (a) If the collision is perfectly elastic, find velocities after collision. (b) If perfectly inelastic, find the common velocity and energy lost. (c) If e = 0.5, find final velocities."},
+            {"step": 5, "type": "mastery", "prompt": "BUET-level: A bullet of mass 20 g moving at 400 m/s embeds in a 2 kg wooden block on a frictionless surface. Find: (a) velocity of block+bullet, (b) KE lost, (c) percentage of energy lost. Then: the block+bullet slides onto a rough patch (μ = 0.3). How far does it travel before stopping?"},
+        ],
+        "key_formulas": [
+            "Power: P = W/t = Fv (unit: Watt, 1 hp = 746 W)",
+            "Efficiency: η = P_output / P_input × 100%",
+            "Conservation of momentum: m₁u₁ + m₂u₂ = m₁v₁ + m₂v₂",
+            "Elastic collision: v₁ = ((m₁−m₂)u₁ + 2m₂u₂)/(m₁+m₂)",
+            "Perfectly inelastic: v = (m₁u₁ + m₂u₂)/(m₁+m₂)",
+            "Coefficient of restitution: e = (v₂ − v₁)/(u₁ − u₂)",
+            "KE lost in perfectly inelastic collision: ΔKE = ½(m₁m₂/(m₁+m₂))(u₁ − u₂)²",
+        ],
+        "common_mistakes": [
+            "Thinking kinetic energy is always conserved in collisions — KE is conserved ONLY in perfectly elastic collisions; momentum is conserved in ALL collisions (when no external force acts)",
+            "Sign errors in collision problems — forgetting to assign negative velocity to objects moving in the opposite direction",
+            "Confusing power with work — doing more work does not mean more power; a crane lifting a load slowly does the same work as one lifting it quickly, but the fast crane has more power",
+        ],
+        "practice_prompts": [
+            "A pump lifts 500 liters of water per minute to a height of 15 m. Find the power of the pump in watts and horsepower. (1 liter of water = 1 kg)",
+            "A 1 kg ball moving at 10 m/s hits a 2 kg ball at rest elastically. Find the final velocities of both balls.",
+            "Two clay balls of masses 2 kg and 3 kg move toward each other at 4 m/s and 2 m/s respectively. They stick together. Find the velocity and KE lost.",
+        ],
+        "real_world_example": "In cricket, when Mashrafe or Mustafizur bowls a bouncer and it hits the batsman's helmet, it is an inelastic collision — the ball slows down dramatically and the KE lost is absorbed by the helmet (and unfortunately the batsman's head). Helmet design uses the physics of collisions to maximize the collision time and minimize the impact force. The power concept is visible in CNG auto-rickshaws: a CNG with a 10 hp engine can climb hills, but slowly; a bus with 200 hp climbs the same hill much faster.",
+    },
+
+    # ══ PHYSICS — Chapter 6: Gravitation ══
+    "phy1-06-01": {
+        "title": "Gravitation",
+        "learning_objectives": [
+            "State and apply Newton's law of universal gravitation: F = GMm/r²",
+            "Derive and apply the relation g = GM/R² and its variation with altitude and depth",
+            "Explain Kepler's three laws of planetary motion and derive the third law",
+            "Calculate orbital velocity, escape velocity, and gravitational potential energy",
+        ],
+        "teaching_steps": [
+            {"step": 1, "type": "intro", "prompt": "Ask: why does a mango fall downward and not sideways? Why does the Moon not fall onto the Earth? (It IS falling — constantly, toward Earth, but its tangential velocity keeps it in orbit.) Newton realized the same force that pulls the mango also keeps the Moon in orbit."},
+            {"step": 2, "type": "concept", "prompt": "Teach Newton's law of gravitation: F = GMm/r² where G = 6.67 × 10⁻¹¹ Nm²/kg². Derive g = GM/R² at the Earth's surface. Show variation: g at height h: g_h = g(R/(R+h))², and at depth d: g_d = g(1 − d/R). Ask: where is g maximum — on the surface, above, or below? (On the surface.)"},
+            {"step": 3, "type": "teach", "prompt": "Teach Kepler's laws: 1st — planets move in elliptical orbits with the Sun at one focus. 2nd — the line joining planet and Sun sweeps equal areas in equal times (conservation of angular momentum). 3rd — T² ∝ r³ (T²/r³ = constant for all planets). Derive: for circular orbit, GMm/r² = mv²/r, so v = √(GM/r). Also v_escape = √(2GM/R) = √(2gR) ≈ 11.2 km/s for Earth."},
+            {"step": 4, "type": "practice", "prompt": "Problem: Find the acceleration due to gravity at: (a) 200 km above Earth's surface (R = 6400 km), (b) 3200 km below the surface. Then: a satellite orbits at height h = R above Earth. Find its orbital velocity and time period. Compare with a satellite at the surface."},
+            {"step": 5, "type": "mastery", "prompt": "BUET-level: Two stars of masses M and 2M are separated by distance d. Find the point where the gravitational field is zero. Then: a planet has twice the radius and twice the mass of Earth. Find the escape velocity from this planet in terms of Earth's escape velocity. Finally: if a satellite's orbital radius is doubled, by what factor does its time period change? (Use Kepler's 3rd law.)"},
+        ],
+        "key_formulas": [
+            "Newton's gravitation: F = GMm/r² (G = 6.67 × 10⁻¹¹ Nm²/kg²)",
+            "Surface gravity: g = GM/R²",
+            "At height h: g_h = g(R/(R+h))² ≈ g(1 − 2h/R) for h << R",
+            "At depth d: g_d = g(1 − d/R)",
+            "Orbital velocity: v₀ = √(GM/r) = √(gR²/r)",
+            "Escape velocity: v_e = √(2GM/R) = √(2gR) ≈ 11.2 km/s",
+            "Kepler's 3rd law: T² = (4π²/GM)r³, so T² ∝ r³",
+            "Gravitational PE: U = −GMm/r",
+        ],
+        "common_mistakes": [
+            "Confusing r (distance from center of Earth) with h (height above surface) — the formula F = GMm/r² uses the distance from the CENTER, not from the surface; for height h above surface, r = R + h",
+            "Forgetting the negative sign in gravitational potential energy U = −GMm/r — the PE is negative because work must be done against gravity to separate masses to infinity",
+            "Applying the formula g_d = g(1 − d/R) for depth and g_h = g(R/(R+h))² for height but mixing them up — at depth g decreases linearly, at height it decreases inversely with r²",
+        ],
+        "practice_prompts": [
+            "The mass of the Moon is 1/81 of Earth's mass and its radius is 1/4 of Earth's. Find the acceleration due to gravity on the Moon's surface if g on Earth is 9.8 m/s².",
+            "Calculate the escape velocity from the Moon given g_moon = 1.6 m/s² and R_moon = 1740 km.",
+            "A geostationary satellite has a time period of 24 hours. If the Moon's orbital period is 27.3 days, find the ratio of the Moon's orbital radius to the geostationary orbit radius using Kepler's 3rd law.",
+        ],
+        "real_world_example": "Bangabandhu Satellite-1, Bangladesh's first geostationary communication satellite, orbits at about 35,786 km above the equator. At that height, its orbital period matches Earth's rotation (24 hours), so it appears stationary over Bangladesh. The orbital velocity and height are precisely calculated using v = √(GM/r) and Kepler's 3rd law — a direct application of what you are learning in this chapter.",
+    },
+
+    # ══ PHYSICS — Chapter 7: Elasticity & Fluid Mechanics ══
+    "phy1-07-01": {
+        "title": "Elasticity & Fluid Mechanics",
+        "learning_objectives": [
+            "Define stress, strain, and Young's modulus and solve problems using Y = stress/strain",
+            "Distinguish between three types of elastic moduli: Young's, Bulk, and Shear modulus",
+            "Apply Pascal's law and Archimedes' principle to fluid statics problems",
+            "Derive and apply Bernoulli's equation and the equation of continuity",
+        ],
+        "teaching_steps": [
+            {"step": 1, "type": "intro", "prompt": "Ask: why does a rubber band return to its original shape when stretched, but a piece of clay does not? Why does an iron rod break if bent too much? This is the study of elasticity. And why does a ship float while a nail sinks? That is fluid mechanics."},
+            {"step": 2, "type": "concept", "prompt": "Teach stress (F/A, unit: Pa), strain (ΔL/L, dimensionless), and Hooke's law: stress ∝ strain within elastic limit. Young's modulus Y = stress/strain = FL/(AΔL). Also teach the stress-strain curve: proportional limit, elastic limit, yield point, breaking point. Ask: which has a higher Young's modulus — rubber or steel? (Steel — it requires more stress for the same strain.)"},
+            {"step": 3, "type": "teach", "prompt": "Teach fluid statics: pressure P = F/A = ρgh (at depth h). Pascal's law: pressure applied to an enclosed fluid is transmitted equally in all directions. Archimedes' principle: buoyant force = weight of displaced fluid. Condition for floating: ρ_object < ρ_fluid. Then fluid dynamics: equation of continuity A₁v₁ = A₂v₂ and Bernoulli's equation: P + ½ρv² + ρgh = constant."},
+            {"step": 4, "type": "practice", "prompt": "Problem: A steel wire of length 2 m and cross-section area 1 mm² is stretched by a 100 N force. Y for steel = 2 × 10¹¹ Pa. Find the extension. Then: a hydraulic press has pistons of area 10 cm² and 100 cm². A force of 50 N is applied on the small piston. What force acts on the large piston?"},
+            {"step": 5, "type": "mastery", "prompt": "BUET-level: Water flows through a horizontal pipe. At one end, the cross-section is 40 cm², speed is 2 m/s, and pressure is 3 × 10⁵ Pa. At the other end, the cross-section is 20 cm². Find the speed and pressure at the narrow end using the equation of continuity and Bernoulli's equation. Then: a block of wood (ρ = 600 kg/m³) of volume 0.1 m³ is placed in water. What fraction is submerged? What mass must be placed on it to just submerge it fully?"},
+        ],
+        "key_formulas": [
+            "Stress = F/A (unit: Pascal, N/m²)",
+            "Strain = ΔL/L (dimensionless)",
+            "Young's modulus: Y = stress/strain = FL/(AΔL)",
+            "Pressure at depth: P = P₀ + ρgh",
+            "Pascal's law: F₁/A₁ = F₂/A₂ (hydraulic press)",
+            "Archimedes: Buoyant force = ρ_fluid × V_submerged × g",
+            "Equation of continuity: A₁v₁ = A₂v₂",
+            "Bernoulli's equation: P + ½ρv² + ρgh = constant",
+        ],
+        "common_mistakes": [
+            "Confusing stress (force per unit area) with pressure — while dimensionally the same, stress is an internal restoring force per area in a solid, while pressure is the force per area exerted by a fluid",
+            "Forgetting to convert units — cross-section area is often given in mm² or cm² but must be converted to m² for SI calculations; 1 mm² = 10⁻⁶ m²",
+            "Applying Bernoulli's equation without checking assumptions — it requires steady, incompressible, non-viscous flow along a streamline; students often apply it to turbulent flow or compressible gases",
+        ],
+        "practice_prompts": [
+            "A copper wire of length 3 m and diameter 1 mm is stretched by a 50 N force. Find the extension if Y for copper = 1.2 × 10¹¹ Pa.",
+            "An ice cube of mass 0.5 kg floats in water. What volume of ice is above the water surface? (ρ_ice = 900 kg/m³, ρ_water = 1000 kg/m³)",
+            "Water flows through a pipe at 3 m/s in a section with area 20 cm². The pipe narrows to 10 cm². Find the speed in the narrow section and, using Bernoulli's equation, the pressure difference if the pipe is horizontal.",
+        ],
+        "real_world_example": "The Padma Bridge's steel cables must support enormous loads without permanent deformation — engineers use Young's modulus to calculate exactly how much each cable stretches under load and ensure it stays within the elastic limit. Bernoulli's principle is why country boats (nouka) in Bangladesh's rivers move faster in narrow channels — as the river narrows, water speeds up and pressure drops, which is also why tin roofs blow off during nor'westers (kalboishakhi): fast wind over the roof creates low pressure above, and higher pressure inside pushes the roof up.",
+    },
+
+    # ══ PHYSICS — Chapter 8: Simple Harmonic Motion ══
+    "phy1-08-01": {
+        "title": "Simple Harmonic Motion",
+        "learning_objectives": [
+            "Define SHM and derive the equation x = A sin(ωt + φ) from restoring force F = −kx",
+            "Calculate time period of a simple pendulum T = 2π√(l/g) and spring-mass system T = 2π√(m/k)",
+            "Analyze velocity, acceleration, and energy at any position in SHM",
+            "Solve problems involving combinations of springs (series and parallel)",
+        ],
+        "teaching_steps": [
+            {"step": 1, "type": "intro", "prompt": "Ask: push a book on a table — it does not come back. But pull a pendulum and release — it swings back and forth. What is special about the restoring force that brings it back? This is simple harmonic motion: the force is proportional to displacement and directed toward the mean position."},
+            {"step": 2, "type": "concept", "prompt": "Teach SHM: restoring force F = −kx (Hooke's law), so a = −ω²x where ω = √(k/m). Solution: x = A sin(ωt + φ). Velocity v = Aω cos(ωt + φ) = ω√(A² − x²). Acceleration a = −ω²x. Time period T = 2π/ω. Ask: at what position is velocity maximum? (Mean position, x = 0.) At what position is acceleration maximum? (Extreme position, x = ±A.)"},
+            {"step": 3, "type": "teach", "prompt": "Teach simple pendulum: T = 2π√(l/g) — independent of mass and amplitude (for small angles). Spring-mass system: T = 2π√(m/k). Energy in SHM: KE = ½mω²(A² − x²), PE = ½mω²x², Total E = ½mω²A² = constant. At mean position: all KE. At extreme: all PE. Ask: at what position is KE = PE? (x = A/√2)."},
+            {"step": 4, "type": "practice", "prompt": "Problem: A 0.5 kg mass on a spring (k = 200 N/m) oscillates with amplitude 0.1 m. Find: (a) time period, (b) maximum velocity, (c) maximum acceleration, (d) velocity and acceleration at x = 0.05 m. Then: a simple pendulum of length 1 m. Find its time period. If taken to the Moon (g_moon = g/6), what is the new period?"},
+            {"step": 5, "type": "mastery", "prompt": "BUET-level: Two springs of constants k₁ = 100 N/m and k₂ = 200 N/m are connected in series and a 1 kg mass is attached. Find the effective spring constant and time period. Then repeat for parallel combination. Also: a particle in SHM has velocity 8 cm/s when at 3 cm from mean position, and velocity 6 cm/s when at 4 cm. Find the amplitude and time period."},
+        ],
+        "key_formulas": [
+            "Restoring force: F = −kx, acceleration: a = −ω²x",
+            "Displacement: x = A sin(ωt + φ)",
+            "Velocity: v = Aω cos(ωt + φ) = ω√(A² − x²)",
+            "Max velocity: v_max = Aω (at mean position)",
+            "Max acceleration: a_max = Aω² (at extreme position)",
+            "Simple pendulum: T = 2π√(l/g)",
+            "Spring-mass: T = 2π√(m/k), ω = √(k/m)",
+            "Energy: KE = ½mω²(A² − x²), PE = ½mω²x², Total E = ½mω²A²",
+            "Springs in series: 1/k_eff = 1/k₁ + 1/k₂; in parallel: k_eff = k₁ + k₂",
+        ],
+        "common_mistakes": [
+            "Confusing the conditions for maximum velocity and maximum acceleration — velocity is maximum at the MEAN position (x = 0), acceleration is maximum at the EXTREME position (x = ±A); students often reverse these",
+            "Forgetting that the pendulum formula T = 2π√(l/g) is valid ONLY for small angle oscillations — for large angles, the period depends on amplitude",
+            "Incorrectly combining springs — for springs in series, effective k is LESS than either individual k (1/k_eff = 1/k₁ + 1/k₂); for parallel, k_eff = k₁ + k₂. Students often swap these (confused with capacitor formulas)",
+        ],
+        "practice_prompts": [
+            "A particle in SHM has amplitude 10 cm and period 2 s. Find the velocity and acceleration at x = 5 cm from the mean position.",
+            "A pendulum clock keeps correct time at sea level. If taken to a hill where g is 0.1% less, how many seconds does it lose per day?",
+            "At what displacement from the mean position is the kinetic energy of a particle in SHM equal to its potential energy?",
+        ],
+        "real_world_example": "The large pendulum clocks (ghori) you see in old Dhaka homes work on T = 2π√(l/g). If you take such a clock from Dhaka (near sea level) to the top of Keokradong (the highest peak in Bangladesh, ~1230 m), g decreases slightly and the pendulum swings slower — the clock loses time. This is also why earthquake-resistant buildings in Bangladesh are designed to avoid resonance — if the building's natural frequency matches the earthquake's frequency, oscillations amplify dangerously.",
+    },
+
+    # ══ PHYSICS — Chapter 9: Waves ══
+    "phy1-09-01": {
+        "title": "Wave Properties",
+        "learning_objectives": [
+            "Classify waves as transverse and longitudinal with examples",
+            "Apply the wave equation v = fλ and relate to wave parameters (amplitude, frequency, wavelength, time period)",
+            "Write and interpret the equation of a progressive wave: y = A sin(ωt − kx)",
+            "Explain superposition principle, standing waves, and resonance",
+        ],
+        "teaching_steps": [
+            {"step": 1, "type": "intro", "prompt": "Ask: when you throw a stone into a pukur (pond), you see ripples spreading outward. Does the water itself travel outward, or just the disturbance? (Just the disturbance — that is a wave.) What about sound — when someone calls you from far away, does air travel from them to you?"},
+            {"step": 2, "type": "concept", "prompt": "Teach wave types: transverse (vibration perpendicular to propagation — water waves, light, string waves) vs longitudinal (vibration parallel — sound in air, compression waves in a spring). Teach wave parameters: amplitude A, wavelength λ, frequency f, time period T = 1/f, velocity v = fλ. Ask: if a wave has f = 500 Hz and λ = 0.68 m, what is its speed? (340 m/s — this is the speed of sound in air.)"},
+            {"step": 3, "type": "teach", "prompt": "Teach the progressive wave equation: y = A sin(ωt − kx) where ω = 2πf (angular frequency) and k = 2π/λ (wave number). Direction: (ωt − kx) means wave travels in +x direction; (ωt + kx) means −x direction. Then teach superposition: when two waves meet, the resultant displacement is the sum. Standing waves form when two waves of equal amplitude and frequency travel in opposite directions: y = 2A sin(kx) cos(ωt). Nodes (zero displacement) at x = nλ/2, antinodes (maximum displacement) at x = (2n+1)λ/4."},
+            {"step": 4, "type": "practice", "prompt": "Problem: A wave is described by y = 0.02 sin(100πt − 2πx) m. Find: (a) amplitude, (b) frequency, (c) wavelength, (d) wave speed, (e) direction of propagation. Then: a string of length 1 m is fixed at both ends. If the speed of the wave is 200 m/s, find the fundamental frequency and the first three harmonics."},
+            {"step": 5, "type": "mastery", "prompt": "BUET-level: A string of length 0.5 m and mass 5 g is stretched by a tension of 80 N. Find: (a) the speed of transverse waves, (b) the fundamental frequency, (c) the frequency of the 3rd harmonic. Then: two waves y₁ = 3 sin(ωt − kx) and y₂ = 3 sin(ωt + kx) superpose. Write the equation of the resulting standing wave and find the positions of nodes and antinodes."},
+        ],
+        "key_formulas": [
+            "Wave speed: v = fλ = λ/T",
+            "Progressive wave: y = A sin(ωt − kx) (+x direction)",
+            "ω = 2πf = 2π/T (angular frequency)",
+            "k = 2π/λ (wave number)",
+            "v = ω/k = fλ",
+            "Speed on a string: v = √(T/μ) where T = tension, μ = mass per unit length",
+            "Standing wave: y = 2A sin(kx) cos(ωt)",
+            "String fixed at both ends: f_n = nv/(2L), n = 1, 2, 3...",
+        ],
+        "common_mistakes": [
+            "Confusing the motion of the medium particles with the motion of the wave — in a transverse wave, particles move up and down but the wave travels horizontally; the wave carries energy, not matter",
+            "Errors in reading wave equation parameters — confusing ω with f (ω = 2πf, not f), and k with 1/λ (k = 2π/λ, not 1/λ)",
+            "Thinking standing waves do not carry energy — standing waves have nodes that do not move and energy is trapped between nodes; this is different from progressive waves that transport energy continuously",
+        ],
+        "practice_prompts": [
+            "A wave has the equation y = 0.05 sin(200t − 5x) m. Find the amplitude, frequency, wavelength, and velocity.",
+            "A guitar string of length 60 cm vibrates in its fundamental mode at 440 Hz. What is the speed of the wave on the string?",
+            "Explain why you can hear someone around a corner but cannot see them around a corner. (Hint: diffraction depends on wavelength relative to obstacle size.)",
+        ],
+        "real_world_example": "During a nouka baich (boat race) in rural Bangladesh, when one person makes a wave in the water, you can see the wave travel across the river but the water itself stays roughly in place — this shows waves carry energy, not matter. The harmonics of waves on a string are what create music on the dotara or ektara (traditional Bangladeshi instruments). The different modes of vibration (fundamental, 2nd harmonic, etc.) create the rich tones that make folk music so distinctive.",
+    },
+
+    "phy1-09-02": {
+        "title": "Sound & Doppler Effect",
+        "learning_objectives": [
+            "Explain sound as a longitudinal mechanical wave and describe its characteristics (pitch, loudness, quality)",
+            "Apply the Doppler effect formula for moving source and/or observer",
+            "Calculate beat frequency from two close frequencies",
+            "Solve problems involving resonance in open and closed pipes",
+        ],
+        "teaching_steps": [
+            {"step": 1, "type": "intro", "prompt": "Ask: have you noticed that a train's horn sounds higher-pitched as it approaches and lower as it moves away? Or the siren of an ambulance? This is the Doppler effect. Also: when two harmonium notes are slightly off-tune, you hear a 'wah-wah' pulsating sound — those are beats."},
+            {"step": 2, "type": "concept", "prompt": "Teach sound properties: speed of sound in air ≈ 340 m/s (varies with temperature: v = 331 + 0.6T m/s where T in °C). Pitch depends on frequency, loudness on amplitude, quality/timbre on harmonics. Beats: when two waves of slightly different frequencies superpose, beat frequency f_beat = |f₁ − f₂|. Audible beats when f_beat < ~10 Hz."},
+            {"step": 3, "type": "teach", "prompt": "Teach Doppler effect: f' = f × (v ± v_o)/(v ∓ v_s) where upper signs when source and observer approach, lower when they recede. Convention: v_o positive toward source, v_s positive toward observer. For source moving toward observer: f' = fv/(v − v_s). For observer moving toward source: f' = f(v + v_o)/v. Then teach resonance in pipes: open pipe harmonics f_n = nv/(2L), n = 1, 2, 3...; closed pipe (one end closed) f_n = nv/(4L), n = 1, 3, 5... (odd harmonics only)."},
+            {"step": 4, "type": "practice", "prompt": "Problem: A train moving at 72 km/h sounds a whistle at 600 Hz. Find the frequency heard by a person standing ahead of the train and behind the train. (v_sound = 340 m/s.) Then: two tuning forks have frequencies 256 Hz and 260 Hz. What is the beat frequency? How many beats per second?"},
+            {"step": 5, "type": "mastery", "prompt": "BUET-level: A car and an ambulance approach each other. The car moves at 20 m/s and the ambulance at 30 m/s. The siren frequency is 800 Hz. Find the frequency heard by the car driver. After they cross, find the new frequency. (v = 340 m/s.) Then: a closed pipe of length 85 cm. Find its fundamental frequency and the first two overtones (v = 340 m/s). Why are only odd harmonics produced in a closed pipe?"},
+        ],
+        "key_formulas": [
+            "Speed of sound in air: v ≈ 331 + 0.6T m/s (T in °C)",
+            "Doppler effect: f' = f(v ± v_o)/(v ∓ v_s)",
+            "Source approaching: f' = fv/(v − v_s) (frequency increases)",
+            "Source receding: f' = fv/(v + v_s) (frequency decreases)",
+            "Beat frequency: f_beat = |f₁ − f₂|",
+            "Open pipe: f_n = nv/(2L), n = 1, 2, 3... (all harmonics)",
+            "Closed pipe: f_n = nv/(4L), n = 1, 3, 5... (odd harmonics only)",
+            "Resonance tube: first resonance at L₁ = λ/4, second at L₂ = 3λ/4, so λ = 2(L₂ − L₁)",
+        ],
+        "common_mistakes": [
+            "Getting the Doppler effect signs wrong — the most common error; remember: frequency INCREASES when source and observer approach (shorter wavelength), DECREASES when they separate. Use the sign convention consistently.",
+            "Thinking closed pipes produce all harmonics — a closed pipe (one end closed) produces ONLY odd harmonics (1st, 3rd, 5th...) because a node must form at the closed end and an antinode at the open end",
+            "Confusing beats with interference — beats occur when two waves of SLIGHTLY different frequencies superpose (temporal variation in loudness), while constructive/destructive interference occurs when waves of the SAME frequency meet at different path differences (spatial pattern)",
+        ],
+        "practice_prompts": [
+            "A train moving at 90 km/h approaches a stationary observer and sounds a 500 Hz horn. What frequency does the observer hear? After the train passes, what frequency is heard? (v = 340 m/s)",
+            "Two organ pipes have lengths 80 cm and 81 cm. Both are open. If the speed of sound is 340 m/s, find the beat frequency between their fundamentals.",
+            "In a resonance tube experiment, the first and second resonance positions are at 17 cm and 51 cm. Find the wavelength and the frequency of the tuning fork used. (v = 340 m/s)",
+        ],
+        "real_world_example": "You hear the Doppler effect every day in Dhaka — when a bus honks and zooms past you on Mirpur Road, the pitch clearly drops as it passes. In cricket, the 'snickometer' used in DRS (Decision Review System) detects the tiny sound of ball hitting bat using sound wave analysis. Beats are used by instrument tuners — when a harmonium player in Bangladesh tunes their instrument, they listen for beats between their note and a reference pitch; when the beats disappear (f_beat = 0), the notes are perfectly in tune.",
+    },
+
+    # ══ PHYSICS — Chapter 10: Gas Laws & Kinetic Theory ══
+    "phy1-10-01": {
+        "title": "Gas Laws & Kinetic Theory",
+        "learning_objectives": [
+            "State and apply Boyle's law, Charles's law, and the ideal gas equation PV = nRT",
+            "Derive the kinetic theory expression for gas pressure: P = ⅓ρc²",
+            "Relate temperature to average kinetic energy: KE = (3/2)kT",
+            "Explain concepts of rms speed, mean speed, and degrees of freedom",
+        ],
+        "teaching_steps": [
+            {"step": 1, "type": "intro", "prompt": "Ask: why does a balloon expand when heated? Why does a bicycle tyre feel harder in summer than winter? Why does the pressure inside a pressure cooker increase? These are all explained by gas laws and kinetic theory."},
+            {"step": 2, "type": "concept", "prompt": "Teach gas laws: Boyle's law (T constant): PV = constant (P₁V₁ = P₂V₂). Charles's law (P constant): V/T = constant (V₁/T₁ = V₂/T₂, T in Kelvin!). Gay-Lussac's law (V constant): P/T = constant. Combined: P₁V₁/T₁ = P₂V₂/T₂. Ideal gas equation: PV = nRT where R = 8.314 J/(mol·K). Ask: at STP (273 K, 1 atm), what volume does 1 mole of gas occupy? (22.4 L.)"},
+            {"step": 3, "type": "teach", "prompt": "Teach kinetic theory of gases: assumptions (large number of molecules, random motion, elastic collisions, negligible intermolecular forces, volume of molecules negligible compared to container). Derive P = ⅓ρc̄² = ⅓(Nm/V)c̄² where c̄² is mean square speed. From PV = nRT and P = ⅓ρc̄², derive: ½mc̄² = (3/2)kT where k = R/Nₐ = 1.38 × 10⁻²³ J/K (Boltzmann constant). So rms speed: c_rms = √(3kT/m) = √(3RT/M)."},
+            {"step": 4, "type": "practice", "prompt": "Problem: A gas at 27°C and 2 atm occupies 500 mL. Find its volume at STP. Then: find the rms speed of oxygen molecules at 27°C (M = 32 g/mol = 0.032 kg/mol, R = 8.314). Also: find the average kinetic energy of a gas molecule at 300 K."},
+            {"step": 5, "type": "mastery", "prompt": "BUET-level: An ideal gas is at temperature 300 K. (a) Find the rms speed of N₂ molecules (M = 28 g/mol). (b) At what temperature would the rms speed double? (c) Find the ratio of rms speeds of H₂ and O₂ at the same temperature. (d) A container has a mixture of He and Ar. Which gas molecules have higher average KE? (Neither — average KE depends only on T, not on molecular mass.) Which have higher rms speed? (He — lighter molecules move faster.)"},
+        ],
+        "key_formulas": [
+            "Ideal gas equation: PV = nRT (R = 8.314 J/(mol·K))",
+            "Boyle's law (T const): P₁V₁ = P₂V₂",
+            "Charles's law (P const): V₁/T₁ = V₂/T₂ (T in Kelvin)",
+            "Kinetic theory pressure: P = ⅓ρc̄² = ⅓(nM/V)c̄²",
+            "Average KE per molecule: KE = (3/2)kT (k = 1.38 × 10⁻²³ J/K)",
+            "RMS speed: c_rms = √(3RT/M) = √(3kT/m)",
+            "For f degrees of freedom: KE = (f/2)kT per molecule",
+            "At STP (0°C, 1 atm): 1 mol of ideal gas occupies 22.4 L",
+        ],
+        "common_mistakes": [
+            "Using Celsius instead of Kelvin in gas law calculations — ALL gas law formulas require ABSOLUTE temperature (Kelvin); T(K) = T(°C) + 273. This is the single most common error in gas problems.",
+            "Confusing rms speed with average speed — rms speed (c_rms = √(3RT/M)) is always slightly higher than average speed (c_avg = √(8RT/πM)); they are different statistical measures",
+            "Thinking heavier gas molecules have more kinetic energy at the same temperature — average KE = (3/2)kT depends ONLY on temperature, not on molecular mass; heavier molecules just move slower to have the same KE",
+        ],
+        "practice_prompts": [
+            "A gas at 300 K has rms speed 500 m/s. At what temperature will the rms speed become 1000 m/s?",
+            "Find the rms speed of hydrogen molecules (M = 2 g/mol) at 27°C. Compare with the speed of sound in air (340 m/s).",
+            "A vessel contains a mixture of O₂ and H₂ at the same temperature. Find the ratio of their rms speeds. Which gas escapes faster through a small hole (effusion)?",
+        ],
+        "real_world_example": "In Bangladesh's garment factories, industrial pressure cookers (autoclaves) use Gay-Lussac's law — as the sealed container is heated, temperature rises and so does pressure (P/T = constant), which sterilizes fabrics and equipment. The kinetic theory explains why ceiling fans cool you in Bangladesh's summer — the fan does not lower air temperature but moves air faster across your skin, increasing evaporation rate. The RMS speed formula also explains why hydrogen gas rises quickly from a leaking CNG cylinder — H₂ molecules are light and move at very high speeds (~1900 m/s at room temperature), much faster than air molecules.",
+    },
+
     # ══ CHEMISTRY — Chapter 1: পরিবেশ রসায়ন (Environmental Chemistry) ══
     "chem1-01-01": {
         "title": "Atmosphere, Pollutants & Air Quality",
@@ -1208,6 +1626,1182 @@ LESSON_CONTENT: dict[str, dict] = {
         ],
         "real_world_example": "Forensic DNA testing is now used in Bangladeshi courts for paternity disputes and criminal cases. The technique works because everyone's DNA base sequence is unique (except identical twins). Enzymes are everywhere in daily life too — the papain enzyme in raw kacha papaya (pepe) tenderizes meat, which is why Bangladeshi cooks add papaya paste to tough beef before cooking. Your saliva contains amylase enzyme that starts digesting the starch in bhat right in your mouth — try chewing plain rice for 30 seconds and it starts tasting sweet as starch breaks into maltose!",
     },
+
+    # ══ PHYSICS — Chapters 4-10 ══
+    "phy1-02-02": {
+        "title": "Scalar & Vector Products",
+        "learning_objectives": [
+                "Calculate dot product and find angle between vectors",
+                "Calculate cross product and find area of parallelogram",
+                "Apply scalar product in work calculations",
+                "Apply vector product in torque calculations"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: when you push a box at an angle, not all your force moves it forward. How do we calculate the useful part of the force?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach dot product: A·B = AB cos θ (scalar result). Ask: what is the dot product when vectors are perpendicular?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Teach cross product: A×B = AB sin θ n̂ (vector result). Explain right-hand rule. Ask: what is cross product when vectors are parallel?"
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "Find dot product of A=(3,4) and B=(2,-1). Then find the angle between them."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ: if A×B = 0 and A·B = AB, what is the angle between A and B?"
+                }
+        ],
+        "key_formulas": [
+                "A·B = AB cos θ = a₁b₁ + a₂b₂ + a₃b₃",
+                "A×B = AB sin θ n̂",
+                "|A×B| = area of parallelogram"
+        ],
+        "common_mistakes": [
+                "Confusing dot product (scalar) with cross product (vector)",
+                "Wrong sign in cross product (not commutative: A×B = -B×A)",
+                "Forgetting that perpendicular vectors have zero dot product"
+        ],
+        "practice_prompts": [
+                "If A=(1,2,3) and B=(4,-1,2), find A·B",
+                "Two forces 5N and 8N act at 60°. Find A×B magnitude."
+        ],
+        "real_world_example": "When you pull a rickshaw with a rope at an angle, only the horizontal component (F cos θ) moves it forward — that's the dot product of force and displacement giving you work done."
+},
+
+    "phy1-04-01": {
+        "title": "Newton's Laws of Motion",
+        "learning_objectives": [
+                "State and apply all three Newton's laws",
+                "Draw free body diagrams for complex systems",
+                "Solve problems with connected bodies",
+                "Apply Newton's laws to lift/elevator problems"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: why does your body jerk forward when a bus suddenly stops? Which Newton's law explains this?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach all 3 laws with examples. 1st: inertia (bus example). 2nd: F=ma (pushing cart). 3rd: action-reaction (walking). Ask student to identify which law applies in each scenario."
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Teach free body diagrams. Draw FBD for a block on an incline. Identify normal force, weight components, friction. Solve for acceleration."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "Two blocks (3kg and 5kg) connected by string on frictionless surface. Force 40N applied on 5kg block. Find acceleration and tension."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "Elevator problem: a 60kg person in a lift accelerating upward at 2 m/s². What does the scale read? BUET-level."
+                }
+        ],
+        "key_formulas": [
+                "F = ma",
+                "Weight W = mg",
+                "Apparent weight in lift: N = m(g ± a)",
+                "Connected bodies: same acceleration, tension is internal force"
+        ],
+        "common_mistakes": [
+                "Confusing mass and weight",
+                "Forgetting that action-reaction forces act on DIFFERENT bodies",
+                "Not resolving forces into components on inclined planes"
+        ],
+        "practice_prompts": [
+                "A 10kg box on a smooth surface is pushed with 50N. Find acceleration.",
+                "In a lift going up with acceleration 3 m/s², what is the apparent weight of a 50kg person?"
+        ],
+        "real_world_example": "When a CNG auto-rickshaw suddenly brakes, you slide forward — that's Newton's 1st law. The harder the driver brakes (more force), the faster you decelerate (2nd law). Your feet push backward on the floor, floor pushes you forward (3rd law)."
+},
+
+    "phy1-04-02": {
+        "title": "Friction & Circular Motion",
+        "learning_objectives": [
+                "Calculate static and kinetic friction",
+                "Solve problems on banked roads and circular motion",
+                "Apply centripetal force concept",
+                "Understand the role of friction in daily life"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: why is it easier to push a box once it starts moving than to start pushing it? What's the difference between static and kinetic friction?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach f = μN. Static friction ≤ μₛN, kinetic friction = μₖN. Ask: why is μₛ > μₖ always?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Circular motion: centripetal force F = mv²/r. For car on banked road: tan θ = v²/rg. Derive step by step."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "A car turns on a flat road (μ=0.4, r=50m). Find maximum safe speed. Then: what if the road is banked at 30°?"
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about friction on incline or centripetal force in vertical circular motion."
+                }
+        ],
+        "key_formulas": [
+                "f = μN",
+                "Centripetal force F = mv²/r",
+                "Banked road: tan θ = v²/rg",
+                "Min speed at top of loop: v = √(rg)"
+        ],
+        "common_mistakes": [
+                "Using μmg for friction on incline (should be μN = μmg cos θ)",
+                "Confusing centripetal (real) with centrifugal (pseudo) force",
+                "Forgetting that static friction has a maximum value, not a fixed value"
+        ],
+        "practice_prompts": [
+                "A 5kg block on a surface with μ=0.3. Find friction when 10N horizontal force applied.",
+                "Find the banking angle for a road curve (r=100m) at speed 72 km/h."
+        ],
+        "real_world_example": "The flyover curves in Dhaka are slightly banked — the road tilts inward so cars don't need to rely only on tire friction. Same reason why cricket bowlers can make the ball curve — friction and circular motion!"
+},
+
+    "phy1-05-01": {
+        "title": "Work & Energy",
+        "learning_objectives": [
+                "Calculate work done by constant and variable forces",
+                "Apply work-energy theorem",
+                "Understand potential and kinetic energy",
+                "Apply conservation of energy to solve problems"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: if you carry a heavy bag horizontally across a room, have you done any work on it (in physics terms)? Why or why not?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach W = Fd cos θ. When θ=90°, W=0 (carrying bag horizontally). KE = ½mv², PE = mgh. Ask: what type of energy does a flying bird have?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Work-energy theorem: net work = change in KE. Solve: a 2kg ball falls from 10m. Find velocity just before hitting ground using energy conservation."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "A 1000kg car accelerates from 10 m/s to 30 m/s. Find the work done by the engine."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ: a pendulum released from height h. Find velocity at lowest point. Then: if string is cut at lowest point, what path does it follow?"
+                }
+        ],
+        "key_formulas": [
+                "W = Fd cos θ",
+                "KE = ½mv²",
+                "PE = mgh",
+                "Conservation: KE₁ + PE₁ = KE₂ + PE₂"
+        ],
+        "common_mistakes": [
+                "Saying you do work when carrying a bag horizontally (W=0 since F⊥d)",
+                "Forgetting that work can be negative (friction does negative work)",
+                "Not using energy conservation when it's simpler than force equations"
+        ],
+        "practice_prompts": [
+                "A 50kg boy climbs 10m stairs. How much work against gravity?",
+                "A spring (k=200 N/m) compressed 0.1m. Find stored PE."
+        ],
+        "real_world_example": "When water falls at Kaptai Dam from height h, its PE converts to KE, which spins turbines to generate electricity. The higher the dam, the more energy — that's why Kaptai was built in the hills of Rangamati."
+},
+
+    "phy1-05-02": {
+        "title": "Power & Collisions",
+        "learning_objectives": [
+                "Calculate power as rate of work done",
+                "Distinguish elastic and inelastic collisions",
+                "Apply momentum conservation in collisions",
+                "Solve problems involving coefficient of restitution"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: two people carry the same weight up stairs — one takes 1 minute, the other takes 5 minutes. Who does more work? Who has more power?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Power P = W/t = Fv. 1 HP = 746 W. Teach elastic (KE conserved) vs inelastic (KE not conserved) collisions."
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Collision formulas: m₁u₁ + m₂u₂ = m₁v₁ + m₂v₂. For perfectly inelastic: bodies stick together. Solve: 2kg ball at 3m/s hits stationary 1kg ball elastically."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "A 1500kg car at 20 m/s collides with stationary 1000kg car. They stick together. Find final velocity and energy lost."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about collision or power calculation."
+                }
+        ],
+        "key_formulas": [
+                "P = W/t = Fv",
+                "1 HP = 746 W",
+                "Coefficient of restitution e = (v₂-v₁)/(u₁-u₂)",
+                "Elastic: e=1, Perfectly inelastic: e=0"
+        ],
+        "common_mistakes": [
+                "Confusing work (same for both) with power (different if time differs)",
+                "Thinking momentum is not conserved in inelastic collisions (it IS, only KE isn't)",
+                "Forgetting that in 2D collisions, momentum is conserved in each direction separately"
+        ],
+        "practice_prompts": [
+                "A pump lifts 500kg water to 10m in 5 seconds. Find power in watts and HP.",
+                "Two identical balls collide elastically head-on. What happens?"
+        ],
+        "real_world_example": "When a truck hits a small car, both have the same momentum change (Newton's 3rd law) — but the small car gets much more acceleration because F=ma and its mass is less. That's why trucks cause more damage in accidents on the Dhaka-Chittagong highway."
+},
+
+    "phy1-06-01": {
+        "title": "Gravitation",
+        "learning_objectives": [
+                "Apply Newton's law of gravitation",
+                "Calculate gravitational field strength at different altitudes",
+                "Derive orbital velocity and escape velocity",
+                "Apply Kepler's laws of planetary motion"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: why does the Moon orbit the Earth instead of flying away? What force keeps it in orbit?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach F = GMm/r². Surface gravity g = GM/R². Ask: what happens to g if you go to a mountain top? What about deep inside Earth?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Derive orbital velocity v = √(GM/r) and escape velocity vₑ = √(2GM/R) = √(2gR). Ask: why is escape velocity √2 times orbital velocity?"
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "Calculate g at height equal to Earth's radius. Then: find escape velocity from Earth (R=6400km, g=9.8)."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about satellite period or variation of g with altitude/depth."
+                }
+        ],
+        "key_formulas": [
+                "F = GMm/r²",
+                "g = GM/R²",
+                "Orbital velocity v₀ = √(GM/r)",
+                "Escape velocity vₑ = √(2gR)",
+                "Kepler's T² ∝ r³"
+        ],
+        "common_mistakes": [
+                "Using r (distance from center) vs h (height above surface) — g at height h: g'=g(R/(R+h))²",
+                "Forgetting that inside Earth, g decreases linearly with depth",
+                "Confusing orbital velocity with escape velocity"
+        ],
+        "practice_prompts": [
+                "At what height above Earth is g reduced to g/4?",
+                "Find the time period of a satellite orbiting just above Earth's surface."
+        ],
+        "real_world_example": "Bangladesh's Bangabandhu-1 satellite orbits at 35,786 km (geostationary orbit) — at that height, it takes exactly 24 hours to orbit, so it stays over the same spot above Bangladesh. That's Kepler's third law in action!"
+},
+
+    "phy1-07-01": {
+        "title": "Elasticity & Fluid Mechanics",
+        "learning_objectives": [
+                "Define stress, strain, and Young's modulus",
+                "Apply Hooke's law within elastic limit",
+                "Apply Pascal's law and Archimedes' principle",
+                "Use Bernoulli's equation for fluid flow"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: why does a rubber band return to its original shape but clay doesn't? What's the difference?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach stress = F/A, strain = ΔL/L, Young's modulus Y = stress/strain. Hooke's law: F = kx. Ask: what happens beyond the elastic limit?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Fluid statics: Pascal's law (hydraulic press), Archimedes' principle (buoyancy). Bernoulli's: P + ½ρv² + ρgh = constant."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "A steel wire (Y=2×10¹¹ Pa, L=2m, A=1mm²) stretched by 100N. Find extension."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about buoyancy or Bernoulli's application."
+                }
+        ],
+        "key_formulas": [
+                "Stress = F/A, Strain = ΔL/L",
+                "Young's modulus Y = Stress/Strain",
+                "Pascal's law: pressure transmitted equally",
+                "Bernoulli: P + ½ρv² + ρgh = constant"
+        ],
+        "common_mistakes": [
+                "Confusing stress (force per unit area) with pressure (same unit but different concept)",
+                "Forgetting that Bernoulli's equation only applies to ideal (inviscid) fluids",
+                "Using weight instead of mass in buoyancy calculations"
+        ],
+        "practice_prompts": [
+                "A hydraulic press has pistons of area 10 cm² and 100 cm². Force on small piston is 50N. Find force on large piston.",
+                "A block of wood (density 600 kg/m³) floats in water. What fraction is submerged?"
+        ],
+        "real_world_example": "The hydraulic brakes in buses work on Pascal's law — a small force on the brake pedal creates a large force on the brake pads. And country boats (নৌকা) float because of Archimedes' principle — the water pushes up with a force equal to the weight of water displaced."
+},
+
+    "phy1-08-01": {
+        "title": "Simple Harmonic Motion",
+        "learning_objectives": [
+                "Define SHM and identify SHM systems",
+                "Derive equations of SHM (displacement, velocity, acceleration)",
+                "Calculate time period of simple pendulum and spring-mass system",
+                "Understand energy in SHM"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: a swing in a playground goes back and forth. Is the motion uniform? What pattern does it follow?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Define SHM: acceleration proportional to displacement, directed toward mean position. a = -ω²x. Ask: is uniform circular motion related to SHM?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Equations: x = A sin(ωt), v = Aω cos(ωt), a = -Aω² sin(ωt). For pendulum: T = 2π√(l/g). For spring: T = 2π√(m/k)."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "A spring (k=100 N/m) with 0.5kg mass. Find time period and maximum velocity if amplitude is 0.1m."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ: energy variation in SHM — KE and PE as function of displacement."
+                }
+        ],
+        "key_formulas": [
+                "x = A sin(ωt + φ)",
+                "T = 2π/ω",
+                "Pendulum: T = 2π√(l/g)",
+                "Spring: T = 2π√(m/k)",
+                "Total energy E = ½kA² = ½mω²A²"
+        ],
+        "common_mistakes": [
+                "Thinking pendulum period depends on mass (it doesn't for simple pendulum)",
+                "Confusing amplitude with displacement at a given time",
+                "Forgetting that at mean position KE=max and PE=0, at extreme PE=max and KE=0"
+        ],
+        "practice_prompts": [
+                "A pendulum has T=2s. Find its length.",
+                "In SHM, at what displacement is KE equal to PE?"
+        ],
+        "real_world_example": "The clock pendulums in old Bangladeshi homes (দেয়াল ঘড়ি) are SHM — the longer the pendulum, the slower it swings. That's why grandfather clocks are tall!"
+},
+
+    "phy1-09-01": {
+        "title": "Wave Properties",
+        "learning_objectives": [
+                "Distinguish transverse and longitudinal waves",
+                "Apply v = fλ relationship",
+                "Understand superposition and standing waves",
+                "Calculate frequency of vibrating strings and air columns"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: when you throw a stone in a pond, ripples spread out. Is the water actually moving outward, or is it something else?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach transverse (particle ⊥ wave direction) vs longitudinal (particle ∥ wave direction). v = fλ. Ask: is sound transverse or longitudinal?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Standing waves on string: harmonics. f_n = n(v/2L). For closed pipe: only odd harmonics. Open pipe: all harmonics."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "A string (L=1m, μ=0.01 kg/m) under tension 40N. Find fundamental frequency and first three harmonics."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about standing waves in pipes or strings."
+                }
+        ],
+        "key_formulas": [
+                "v = fλ",
+                "String: v = √(T/μ)",
+                "String harmonics: fₙ = nv/2L",
+                "Open pipe: fₙ = nv/2L (all n)",
+                "Closed pipe: fₙ = nv/4L (odd n only)"
+        ],
+        "common_mistakes": [
+                "Thinking wave speed depends on frequency (it depends on medium)",
+                "Forgetting closed pipe has only odd harmonics",
+                "Confusing nodes and antinodes in standing waves"
+        ],
+        "practice_prompts": [
+                "Sound speed is 340 m/s. Find wavelength of 680 Hz sound.",
+                "A closed pipe has fundamental 200 Hz. What is its 2nd overtone?"
+        ],
+        "real_world_example": "When a বাঁশি (bamboo flute) player covers different holes, they change the effective length of the air column — shorter column = higher frequency = higher pitch. That's standing waves in an open pipe!"
+},
+
+    "phy1-09-02": {
+        "title": "Sound & Doppler Effect",
+        "learning_objectives": [
+                "Calculate beat frequency",
+                "Apply Doppler effect formula for moving source/observer",
+                "Understand resonance and its applications",
+                "Solve problems on speed of sound in different media"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: why does an ambulance siren sound higher-pitched when approaching and lower when moving away?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Doppler effect: f' = f(v ± v₀)/(v ∓ vₛ). Convention: approaching = higher, receding = lower. Ask: what if both source and observer are moving?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Beats: when two frequencies are close, f_beat = |f₁ - f₂|. Resonance: when driving frequency = natural frequency, amplitude is maximum."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "An ambulance (f=500Hz) moves at 30 m/s toward you. Speed of sound = 340 m/s. Find the frequency you hear."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about Doppler effect or beats."
+                }
+        ],
+        "key_formulas": [
+                "Doppler: f' = f(v + v₀)/(v - vₛ) (approaching)",
+                "Beat frequency = |f₁ - f₂|",
+                "Speed of sound in air ≈ 340 m/s at 20°C",
+                "v_sound ∝ √T (temperature in Kelvin)"
+        ],
+        "common_mistakes": [
+                "Getting signs wrong in Doppler formula (remember: approaching = higher frequency)",
+                "Thinking beats frequency = average of two frequencies (it's the difference)",
+                "Forgetting speed of sound changes with temperature"
+        ],
+        "practice_prompts": [
+                "Two tuning forks of 256 Hz and 260 Hz are sounded together. How many beats per second?",
+                "A train (speed 36 km/h) blows whistle at 500 Hz. Find frequency heard by stationary observer as train approaches."
+        ],
+        "real_world_example": "Next time you hear a motorcycle zooming past on the highway, notice how the pitch drops as it passes you — that's the Doppler effect. Astronomers use the same principle to tell if a star is moving toward or away from us (red shift/blue shift)."
+},
+
+    "phy1-10-01": {
+        "title": "Gas Laws & Kinetic Theory",
+        "learning_objectives": [
+                "Apply ideal gas equation PV = nRT",
+                "Derive kinetic energy from kinetic theory",
+                "Understand Maxwell-Boltzmann distribution",
+                "Apply gas laws to solve problems"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: why does a balloon expand when you heat it? What's happening to the gas molecules inside?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach PV = nRT. Gas laws: Boyle's (P∝1/V), Charles's (V∝T), Gay-Lussac's (P∝T). Ask: what is an ideal gas?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Kinetic theory: KE = (3/2)kT. RMS speed v_rms = √(3RT/M). Ask: which gas molecules move faster at same temperature — hydrogen or oxygen?"
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "2 moles of ideal gas at 300K in 10L container. Find pressure. Then: if temperature doubles at constant volume, new pressure?"
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about KE of gas molecules or gas law application."
+                }
+        ],
+        "key_formulas": [
+                "PV = nRT (R = 8.314 J/mol·K)",
+                "KE_avg = (3/2)kT",
+                "v_rms = √(3RT/M)",
+                "Boyle: P₁V₁ = P₂V₂",
+                "Charles: V₁/T₁ = V₂/T₂"
+        ],
+        "common_mistakes": [
+                "Using Celsius instead of Kelvin in gas law calculations",
+                "Confusing R (gas constant) with k (Boltzmann constant) — k = R/Nₐ",
+                "Thinking all gas molecules move at the same speed (they have a distribution)"
+        ],
+        "practice_prompts": [
+                "Find the RMS speed of N₂ molecules at 27°C. (M=28 g/mol)",
+                "A gas at 2 atm and 300K is heated to 600K at constant volume. Find new pressure."
+        ],
+        "real_world_example": "The pressure cooker in every Bangladeshi kitchen works on Gay-Lussac's law — as temperature increases at constant volume, pressure increases. That's why food cooks faster inside — higher pressure means higher boiling point of water!"
+},
+
+
+    # ══ PHYSICS — Chapters 4-10 ══
+    "phy1-02-02": {
+        "title": "Scalar & Vector Products",
+        "learning_objectives": [
+                "Calculate dot product and find angle between vectors",
+                "Calculate cross product and find area of parallelogram",
+                "Apply scalar product in work calculations",
+                "Apply vector product in torque calculations"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: when you push a box at an angle, not all your force moves it forward. How do we calculate the useful part of the force?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach dot product: A·B = AB cos θ (scalar result). Ask: what is the dot product when vectors are perpendicular?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Teach cross product: A×B = AB sin θ n̂ (vector result). Explain right-hand rule. Ask: what is cross product when vectors are parallel?"
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "Find dot product of A=(3,4) and B=(2,-1). Then find the angle between them."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ: if A×B = 0 and A·B = AB, what is the angle between A and B?"
+                }
+        ],
+        "key_formulas": [
+                "A·B = AB cos θ = a₁b₁ + a₂b₂ + a₃b₃",
+                "A×B = AB sin θ n̂",
+                "|A×B| = area of parallelogram"
+        ],
+        "common_mistakes": [
+                "Confusing dot product (scalar) with cross product (vector)",
+                "Wrong sign in cross product (not commutative: A×B = -B×A)",
+                "Forgetting that perpendicular vectors have zero dot product"
+        ],
+        "practice_prompts": [
+                "If A=(1,2,3) and B=(4,-1,2), find A·B",
+                "Two forces 5N and 8N act at 60°. Find A×B magnitude."
+        ],
+        "real_world_example": "When you pull a rickshaw with a rope at an angle, only the horizontal component (F cos θ) moves it forward — that's the dot product of force and displacement giving you work done."
+},
+
+    "phy1-04-01": {
+        "title": "Newton's Laws of Motion",
+        "learning_objectives": [
+                "State and apply all three Newton's laws",
+                "Draw free body diagrams for complex systems",
+                "Solve problems with connected bodies",
+                "Apply Newton's laws to lift/elevator problems"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: why does your body jerk forward when a bus suddenly stops? Which Newton's law explains this?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach all 3 laws with examples. 1st: inertia (bus example). 2nd: F=ma (pushing cart). 3rd: action-reaction (walking). Ask student to identify which law applies in each scenario."
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Teach free body diagrams. Draw FBD for a block on an incline. Identify normal force, weight components, friction. Solve for acceleration."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "Two blocks (3kg and 5kg) connected by string on frictionless surface. Force 40N applied on 5kg block. Find acceleration and tension."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "Elevator problem: a 60kg person in a lift accelerating upward at 2 m/s². What does the scale read? BUET-level."
+                }
+        ],
+        "key_formulas": [
+                "F = ma",
+                "Weight W = mg",
+                "Apparent weight in lift: N = m(g ± a)",
+                "Connected bodies: same acceleration, tension is internal force"
+        ],
+        "common_mistakes": [
+                "Confusing mass and weight",
+                "Forgetting that action-reaction forces act on DIFFERENT bodies",
+                "Not resolving forces into components on inclined planes"
+        ],
+        "practice_prompts": [
+                "A 10kg box on a smooth surface is pushed with 50N. Find acceleration.",
+                "In a lift going up with acceleration 3 m/s², what is the apparent weight of a 50kg person?"
+        ],
+        "real_world_example": "When a CNG auto-rickshaw suddenly brakes, you slide forward — that's Newton's 1st law. The harder the driver brakes (more force), the faster you decelerate (2nd law). Your feet push backward on the floor, floor pushes you forward (3rd law)."
+},
+
+    "phy1-04-02": {
+        "title": "Friction & Circular Motion",
+        "learning_objectives": [
+                "Calculate static and kinetic friction",
+                "Solve problems on banked roads and circular motion",
+                "Apply centripetal force concept",
+                "Understand the role of friction in daily life"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: why is it easier to push a box once it starts moving than to start pushing it? What's the difference between static and kinetic friction?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach f = μN. Static friction ≤ μₛN, kinetic friction = μₖN. Ask: why is μₛ > μₖ always?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Circular motion: centripetal force F = mv²/r. For car on banked road: tan θ = v²/rg. Derive step by step."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "A car turns on a flat road (μ=0.4, r=50m). Find maximum safe speed. Then: what if the road is banked at 30°?"
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about friction on incline or centripetal force in vertical circular motion."
+                }
+        ],
+        "key_formulas": [
+                "f = μN",
+                "Centripetal force F = mv²/r",
+                "Banked road: tan θ = v²/rg",
+                "Min speed at top of loop: v = √(rg)"
+        ],
+        "common_mistakes": [
+                "Using μmg for friction on incline (should be μN = μmg cos θ)",
+                "Confusing centripetal (real) with centrifugal (pseudo) force",
+                "Forgetting that static friction has a maximum value, not a fixed value"
+        ],
+        "practice_prompts": [
+                "A 5kg block on a surface with μ=0.3. Find friction when 10N horizontal force applied.",
+                "Find the banking angle for a road curve (r=100m) at speed 72 km/h."
+        ],
+        "real_world_example": "The flyover curves in Dhaka are slightly banked — the road tilts inward so cars don't need to rely only on tire friction. Same reason why cricket bowlers can make the ball curve — friction and circular motion!"
+},
+
+    "phy1-05-01": {
+        "title": "Work & Energy",
+        "learning_objectives": [
+                "Calculate work done by constant and variable forces",
+                "Apply work-energy theorem",
+                "Understand potential and kinetic energy",
+                "Apply conservation of energy to solve problems"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: if you carry a heavy bag horizontally across a room, have you done any work on it (in physics terms)? Why or why not?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach W = Fd cos θ. When θ=90°, W=0 (carrying bag horizontally). KE = ½mv², PE = mgh. Ask: what type of energy does a flying bird have?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Work-energy theorem: net work = change in KE. Solve: a 2kg ball falls from 10m. Find velocity just before hitting ground using energy conservation."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "A 1000kg car accelerates from 10 m/s to 30 m/s. Find the work done by the engine."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ: a pendulum released from height h. Find velocity at lowest point. Then: if string is cut at lowest point, what path does it follow?"
+                }
+        ],
+        "key_formulas": [
+                "W = Fd cos θ",
+                "KE = ½mv²",
+                "PE = mgh",
+                "Conservation: KE₁ + PE₁ = KE₂ + PE₂"
+        ],
+        "common_mistakes": [
+                "Saying you do work when carrying a bag horizontally (W=0 since F⊥d)",
+                "Forgetting that work can be negative (friction does negative work)",
+                "Not using energy conservation when it's simpler than force equations"
+        ],
+        "practice_prompts": [
+                "A 50kg boy climbs 10m stairs. How much work against gravity?",
+                "A spring (k=200 N/m) compressed 0.1m. Find stored PE."
+        ],
+        "real_world_example": "When water falls at Kaptai Dam from height h, its PE converts to KE, which spins turbines to generate electricity. The higher the dam, the more energy — that's why Kaptai was built in the hills of Rangamati."
+},
+
+    "phy1-05-02": {
+        "title": "Power & Collisions",
+        "learning_objectives": [
+                "Calculate power as rate of work done",
+                "Distinguish elastic and inelastic collisions",
+                "Apply momentum conservation in collisions",
+                "Solve problems involving coefficient of restitution"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: two people carry the same weight up stairs — one takes 1 minute, the other takes 5 minutes. Who does more work? Who has more power?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Power P = W/t = Fv. 1 HP = 746 W. Teach elastic (KE conserved) vs inelastic (KE not conserved) collisions."
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Collision formulas: m₁u₁ + m₂u₂ = m₁v₁ + m₂v₂. For perfectly inelastic: bodies stick together. Solve: 2kg ball at 3m/s hits stationary 1kg ball elastically."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "A 1500kg car at 20 m/s collides with stationary 1000kg car. They stick together. Find final velocity and energy lost."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about collision or power calculation."
+                }
+        ],
+        "key_formulas": [
+                "P = W/t = Fv",
+                "1 HP = 746 W",
+                "Coefficient of restitution e = (v₂-v₁)/(u₁-u₂)",
+                "Elastic: e=1, Perfectly inelastic: e=0"
+        ],
+        "common_mistakes": [
+                "Confusing work (same for both) with power (different if time differs)",
+                "Thinking momentum is not conserved in inelastic collisions (it IS, only KE isn't)",
+                "Forgetting that in 2D collisions, momentum is conserved in each direction separately"
+        ],
+        "practice_prompts": [
+                "A pump lifts 500kg water to 10m in 5 seconds. Find power in watts and HP.",
+                "Two identical balls collide elastically head-on. What happens?"
+        ],
+        "real_world_example": "When a truck hits a small car, both have the same momentum change (Newton's 3rd law) — but the small car gets much more acceleration because F=ma and its mass is less. That's why trucks cause more damage in accidents on the Dhaka-Chittagong highway."
+},
+
+    "phy1-06-01": {
+        "title": "Gravitation",
+        "learning_objectives": [
+                "Apply Newton's law of gravitation",
+                "Calculate gravitational field strength at different altitudes",
+                "Derive orbital velocity and escape velocity",
+                "Apply Kepler's laws of planetary motion"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: why does the Moon orbit the Earth instead of flying away? What force keeps it in orbit?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach F = GMm/r². Surface gravity g = GM/R². Ask: what happens to g if you go to a mountain top? What about deep inside Earth?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Derive orbital velocity v = √(GM/r) and escape velocity vₑ = √(2GM/R) = √(2gR). Ask: why is escape velocity √2 times orbital velocity?"
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "Calculate g at height equal to Earth's radius. Then: find escape velocity from Earth (R=6400km, g=9.8)."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about satellite period or variation of g with altitude/depth."
+                }
+        ],
+        "key_formulas": [
+                "F = GMm/r²",
+                "g = GM/R²",
+                "Orbital velocity v₀ = √(GM/r)",
+                "Escape velocity vₑ = √(2gR)",
+                "Kepler's T² ∝ r³"
+        ],
+        "common_mistakes": [
+                "Using r (distance from center) vs h (height above surface) — g at height h: g'=g(R/(R+h))²",
+                "Forgetting that inside Earth, g decreases linearly with depth",
+                "Confusing orbital velocity with escape velocity"
+        ],
+        "practice_prompts": [
+                "At what height above Earth is g reduced to g/4?",
+                "Find the time period of a satellite orbiting just above Earth's surface."
+        ],
+        "real_world_example": "Bangladesh's Bangabandhu-1 satellite orbits at 35,786 km (geostationary orbit) — at that height, it takes exactly 24 hours to orbit, so it stays over the same spot above Bangladesh. That's Kepler's third law in action!"
+},
+
+    "phy1-07-01": {
+        "title": "Elasticity & Fluid Mechanics",
+        "learning_objectives": [
+                "Define stress, strain, and Young's modulus",
+                "Apply Hooke's law within elastic limit",
+                "Apply Pascal's law and Archimedes' principle",
+                "Use Bernoulli's equation for fluid flow"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: why does a rubber band return to its original shape but clay doesn't? What's the difference?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach stress = F/A, strain = ΔL/L, Young's modulus Y = stress/strain. Hooke's law: F = kx. Ask: what happens beyond the elastic limit?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Fluid statics: Pascal's law (hydraulic press), Archimedes' principle (buoyancy). Bernoulli's: P + ½ρv² + ρgh = constant."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "A steel wire (Y=2×10¹¹ Pa, L=2m, A=1mm²) stretched by 100N. Find extension."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about buoyancy or Bernoulli's application."
+                }
+        ],
+        "key_formulas": [
+                "Stress = F/A, Strain = ΔL/L",
+                "Young's modulus Y = Stress/Strain",
+                "Pascal's law: pressure transmitted equally",
+                "Bernoulli: P + ½ρv² + ρgh = constant"
+        ],
+        "common_mistakes": [
+                "Confusing stress (force per unit area) with pressure (same unit but different concept)",
+                "Forgetting that Bernoulli's equation only applies to ideal (inviscid) fluids",
+                "Using weight instead of mass in buoyancy calculations"
+        ],
+        "practice_prompts": [
+                "A hydraulic press has pistons of area 10 cm² and 100 cm². Force on small piston is 50N. Find force on large piston.",
+                "A block of wood (density 600 kg/m³) floats in water. What fraction is submerged?"
+        ],
+        "real_world_example": "The hydraulic brakes in buses work on Pascal's law — a small force on the brake pedal creates a large force on the brake pads. And country boats (নৌকা) float because of Archimedes' principle — the water pushes up with a force equal to the weight of water displaced."
+},
+
+    "phy1-08-01": {
+        "title": "Simple Harmonic Motion",
+        "learning_objectives": [
+                "Define SHM and identify SHM systems",
+                "Derive equations of SHM (displacement, velocity, acceleration)",
+                "Calculate time period of simple pendulum and spring-mass system",
+                "Understand energy in SHM"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: a swing in a playground goes back and forth. Is the motion uniform? What pattern does it follow?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Define SHM: acceleration proportional to displacement, directed toward mean position. a = -ω²x. Ask: is uniform circular motion related to SHM?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Equations: x = A sin(ωt), v = Aω cos(ωt), a = -Aω² sin(ωt). For pendulum: T = 2π√(l/g). For spring: T = 2π√(m/k)."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "A spring (k=100 N/m) with 0.5kg mass. Find time period and maximum velocity if amplitude is 0.1m."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ: energy variation in SHM — KE and PE as function of displacement."
+                }
+        ],
+        "key_formulas": [
+                "x = A sin(ωt + φ)",
+                "T = 2π/ω",
+                "Pendulum: T = 2π√(l/g)",
+                "Spring: T = 2π√(m/k)",
+                "Total energy E = ½kA² = ½mω²A²"
+        ],
+        "common_mistakes": [
+                "Thinking pendulum period depends on mass (it doesn't for simple pendulum)",
+                "Confusing amplitude with displacement at a given time",
+                "Forgetting that at mean position KE=max and PE=0, at extreme PE=max and KE=0"
+        ],
+        "practice_prompts": [
+                "A pendulum has T=2s. Find its length.",
+                "In SHM, at what displacement is KE equal to PE?"
+        ],
+        "real_world_example": "The clock pendulums in old Bangladeshi homes (দেয়াল ঘড়ি) are SHM — the longer the pendulum, the slower it swings. That's why grandfather clocks are tall!"
+},
+
+    "phy1-09-01": {
+        "title": "Wave Properties",
+        "learning_objectives": [
+                "Distinguish transverse and longitudinal waves",
+                "Apply v = fλ relationship",
+                "Understand superposition and standing waves",
+                "Calculate frequency of vibrating strings and air columns"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: when you throw a stone in a pond, ripples spread out. Is the water actually moving outward, or is it something else?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach transverse (particle ⊥ wave direction) vs longitudinal (particle ∥ wave direction). v = fλ. Ask: is sound transverse or longitudinal?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Standing waves on string: harmonics. f_n = n(v/2L). For closed pipe: only odd harmonics. Open pipe: all harmonics."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "A string (L=1m, μ=0.01 kg/m) under tension 40N. Find fundamental frequency and first three harmonics."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about standing waves in pipes or strings."
+                }
+        ],
+        "key_formulas": [
+                "v = fλ",
+                "String: v = √(T/μ)",
+                "String harmonics: fₙ = nv/2L",
+                "Open pipe: fₙ = nv/2L (all n)",
+                "Closed pipe: fₙ = nv/4L (odd n only)"
+        ],
+        "common_mistakes": [
+                "Thinking wave speed depends on frequency (it depends on medium)",
+                "Forgetting closed pipe has only odd harmonics",
+                "Confusing nodes and antinodes in standing waves"
+        ],
+        "practice_prompts": [
+                "Sound speed is 340 m/s. Find wavelength of 680 Hz sound.",
+                "A closed pipe has fundamental 200 Hz. What is its 2nd overtone?"
+        ],
+        "real_world_example": "When a বাঁশি (bamboo flute) player covers different holes, they change the effective length of the air column — shorter column = higher frequency = higher pitch. That's standing waves in an open pipe!"
+},
+
+    "phy1-09-02": {
+        "title": "Sound & Doppler Effect",
+        "learning_objectives": [
+                "Calculate beat frequency",
+                "Apply Doppler effect formula for moving source/observer",
+                "Understand resonance and its applications",
+                "Solve problems on speed of sound in different media"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: why does an ambulance siren sound higher-pitched when approaching and lower when moving away?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Doppler effect: f' = f(v ± v₀)/(v ∓ vₛ). Convention: approaching = higher, receding = lower. Ask: what if both source and observer are moving?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Beats: when two frequencies are close, f_beat = |f₁ - f₂|. Resonance: when driving frequency = natural frequency, amplitude is maximum."
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "An ambulance (f=500Hz) moves at 30 m/s toward you. Speed of sound = 340 m/s. Find the frequency you hear."
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about Doppler effect or beats."
+                }
+        ],
+        "key_formulas": [
+                "Doppler: f' = f(v + v₀)/(v - vₛ) (approaching)",
+                "Beat frequency = |f₁ - f₂|",
+                "Speed of sound in air ≈ 340 m/s at 20°C",
+                "v_sound ∝ √T (temperature in Kelvin)"
+        ],
+        "common_mistakes": [
+                "Getting signs wrong in Doppler formula (remember: approaching = higher frequency)",
+                "Thinking beats frequency = average of two frequencies (it's the difference)",
+                "Forgetting speed of sound changes with temperature"
+        ],
+        "practice_prompts": [
+                "Two tuning forks of 256 Hz and 260 Hz are sounded together. How many beats per second?",
+                "A train (speed 36 km/h) blows whistle at 500 Hz. Find frequency heard by stationary observer as train approaches."
+        ],
+        "real_world_example": "Next time you hear a motorcycle zooming past on the highway, notice how the pitch drops as it passes you — that's the Doppler effect. Astronomers use the same principle to tell if a star is moving toward or away from us (red shift/blue shift)."
+},
+
+    "phy1-10-01": {
+        "title": "Gas Laws & Kinetic Theory",
+        "learning_objectives": [
+                "Apply ideal gas equation PV = nRT",
+                "Derive kinetic energy from kinetic theory",
+                "Understand Maxwell-Boltzmann distribution",
+                "Apply gas laws to solve problems"
+        ],
+        "teaching_steps": [
+                {
+                        "step": 1,
+                        "type": "intro",
+                        "prompt": "Ask: why does a balloon expand when you heat it? What's happening to the gas molecules inside?"
+                },
+                {
+                        "step": 2,
+                        "type": "concept",
+                        "prompt": "Teach PV = nRT. Gas laws: Boyle's (P∝1/V), Charles's (V∝T), Gay-Lussac's (P∝T). Ask: what is an ideal gas?"
+                },
+                {
+                        "step": 3,
+                        "type": "teach",
+                        "prompt": "Kinetic theory: KE = (3/2)kT. RMS speed v_rms = √(3RT/M). Ask: which gas molecules move faster at same temperature — hydrogen or oxygen?"
+                },
+                {
+                        "step": 4,
+                        "type": "practice",
+                        "prompt": "2 moles of ideal gas at 300K in 10L container. Find pressure. Then: if temperature doubles at constant volume, new pressure?"
+                },
+                {
+                        "step": 5,
+                        "type": "mastery",
+                        "prompt": "BUET MCQ about KE of gas molecules or gas law application."
+                }
+        ],
+        "key_formulas": [
+                "PV = nRT (R = 8.314 J/mol·K)",
+                "KE_avg = (3/2)kT",
+                "v_rms = √(3RT/M)",
+                "Boyle: P₁V₁ = P₂V₂",
+                "Charles: V₁/T₁ = V₂/T₂"
+        ],
+        "common_mistakes": [
+                "Using Celsius instead of Kelvin in gas law calculations",
+                "Confusing R (gas constant) with k (Boltzmann constant) — k = R/Nₐ",
+                "Thinking all gas molecules move at the same speed (they have a distribution)"
+        ],
+        "practice_prompts": [
+                "Find the RMS speed of N₂ molecules at 27°C. (M=28 g/mol)",
+                "A gas at 2 atm and 300K is heated to 600K at constant volume. Find new pressure."
+        ],
+        "real_world_example": "The pressure cooker in every Bangladeshi kitchen works on Gay-Lussac's law — as temperature increases at constant volume, pressure increases. That's why food cooks faster inside — higher pressure means higher boiling point of water!"
+},
+
 }
 
 
