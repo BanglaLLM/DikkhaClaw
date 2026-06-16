@@ -991,6 +991,9 @@ _PRACTICE_SUBJECT_MAP: dict[str, list[str]] = {
     # General Math
     "general_math": ["সাধারণ গণিত", "বীজগণিত", "জ্যামিতি", "পাটিগণিত"],
     "সাধারণ গণিত": ["সাধারণ গণিত", "বীজগণিত", "জ্যামিতি", "পাটিগণিত"],
+    # Math (generic — covers both higher and general)
+    "math": ["গণিত", "ত্রিকোণমিতি", "ক্যালকুলাস", "যোগজীকরণ", "ম্যাট্রিক্স", "ফাংশন", "কনিক", "সমীকরণ", "বীজগণিত", "জ্যামিতি", "পাটিগণিত"],
+    "গণিত": ["গণিত", "ত্রিকোণমিতি", "ক্যালকুলাস", "যোগজীকরণ", "ম্যাট্রিক্স", "ফাংশন", "কনিক", "সমীকরণ", "বীজগণিত", "জ্যামিতি", "পাটিগণিত"],
     # English
     "english": ["English", "Grammar", "Vocabulary", "Sentence", "Preposition", "Verb"],
     "ইংরেজি": ["English", "Grammar", "Vocabulary", "Sentence", "Preposition", "Verb"],
