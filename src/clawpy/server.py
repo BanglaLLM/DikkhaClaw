@@ -972,6 +972,43 @@ _PRACTICE_UNIVERSITY_MAP: dict[str, list[str]] = {
 
 _practice_db_conn = None
 
+# Subject (English id OR the Bangla name the app sends) → list of DB tag
+# fragments. The DB tags questions by chapter, so one subject maps to many
+# chapter keywords that are OR-ed together. Keys are lowercased.
+_PRACTICE_SUBJECT_MAP: dict[str, list[str]] = {
+    # Physics
+    "physics": ["পদার্থ", "গতি", "বল", "তাপ", "আলো", "তরঙ্গ", "তড়িৎ", "চুম্বক", "ভেক্টর", "মহাকর্ষ", "শক্তি", "সেমিকন্ডাক্টর"],
+    "পদার্থবিজ্ঞান": ["পদার্থ", "গতি", "বল", "তাপ", "আলো", "তরঙ্গ", "তড়িৎ", "চুম্বক", "ভেক্টর", "মহাকর্ষ", "শক্তি", "সেমিকন্ডাক্টর"],
+    # Chemistry
+    "chemistry": ["রসায়ন", "জৈব", "অজৈব", "পরমাণু", "মোল", "বন্ধন", "বিক্রিয়া"],
+    "রসায়ন": ["রসায়ন", "জৈব", "অজৈব", "পরমাণু", "মোল", "বন্ধন", "বিক্রিয়া"],
+    # Biology
+    "biology": ["জীব", "উদ্ভিদ", "প্রাণী", "কোষ", "জেনেটিক", "অণুজীব"],
+    "জীববিজ্ঞান": ["জীব", "উদ্ভিদ", "প্রাণী", "কোষ", "জেনেটিক", "অণুজীব"],
+    # Higher Math
+    "higher_math": ["উচ্চতর গণিত", "ত্রিকোণমিতি", "ক্যালকুলাস", "যোগজীকরণ", "ম্যাট্রিক্স", "ফাংশন", "কনিক", "সমীকরণ"],
+    "উচ্চতর গণিত": ["উচ্চতর গণিত", "ত্রিকোণমিতি", "ক্যালকুলাস", "যোগজীকরণ", "ম্যাট্রিক্স", "ফাংশন", "কনিক", "সমীকরণ"],
+    # General Math
+    "general_math": ["সাধারণ গণিত", "বীজগণিত", "জ্যামিতি", "পাটিগণিত"],
+    "সাধারণ গণিত": ["সাধারণ গণিত", "বীজগণিত", "জ্যামিতি", "পাটিগণিত"],
+    # English
+    "english": ["English", "Grammar", "Vocabulary", "Sentence", "Preposition", "Verb"],
+    "ইংরেজি": ["English", "Grammar", "Vocabulary", "Sentence", "Preposition", "Verb"],
+}
+
+
+def _normalize_bangla(text: str) -> str:
+    """Precompose Bengali nukta sequences so decomposed app input matches
+    the precomposed DB form. NFC excludes these compositions (RRA/RHA/YYA),
+    so map them manually."""
+    import unicodedata
+    text = unicodedata.normalize("NFC", text)
+    return (
+        text.replace("\u09a1\u09bc", "\u09dc")
+        .replace("\u09a2\u09bc", "\u09dd")
+        .replace("\u09af\u09bc", "\u09df")
+    )
+
 
 def _get_db_conn():
     """Get or create a shared psycopg2 connection for practice endpoints."""
@@ -1003,8 +1040,18 @@ async def practice_questions(
     params: list = []
 
     if subject:
-        conditions.append("subject ILIKE %s")
-        params.append(f"%{subject.strip()}%")
+        s = _normalize_bangla(subject.strip())
+        # Map the subject (English id or Bangla name) to its chapter keywords.
+        # Normalize each so Bengali nukta forms match the precomposed DB values.
+        patterns = _PRACTICE_SUBJECT_MAP.get(s.lower()) or _PRACTICE_SUBJECT_MAP.get(s)
+        if patterns:
+            normed = [_normalize_bangla(p) for p in patterns]
+            or_clauses = " OR ".join(["subject ILIKE %s"] * len(normed))
+            conditions.append(f"({or_clauses})")
+            params.extend(f"%{p}%" for p in normed)
+        else:
+            conditions.append("subject ILIKE %s")
+            params.append(f"%{s}%")
 
     if university:
         uni = university.strip().lower()
