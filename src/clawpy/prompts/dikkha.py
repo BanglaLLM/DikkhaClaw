@@ -305,7 +305,7 @@ IMPORTANT:
 
 
 def build_lesson_context(lesson_id: str, step: int = 1) -> str | None:
-    from .lesson_content import get_lesson_content
+    from clawpy.curriculum.lesson_content import get_lesson_content
     content = get_lesson_content(lesson_id)
     if not content:
         return None
