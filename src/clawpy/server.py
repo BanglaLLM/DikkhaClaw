@@ -876,6 +876,23 @@ async def get_lesson_content_endpoint(lesson_id: str):
     return {"lesson_id": lesson_id, "has_content": True, **content}
 
 
+@app.post("/admin/lessons/{lesson_id}")
+async def save_lesson_content(lesson_id: str, request: Request):
+    """Save or update lesson content from the dashboard."""
+    from clawpy.curriculum.lesson_content import LESSON_CONTENT
+    body = await request.json()
+    LESSON_CONTENT[lesson_id] = {
+        "title": body.get("title", ""),
+        "learning_objectives": body.get("learning_objectives", []),
+        "teaching_steps": body.get("teaching_steps", []),
+        "key_formulas": body.get("key_formulas", []),
+        "common_mistakes": body.get("common_mistakes", []),
+        "practice_prompts": body.get("practice_prompts", []),
+        "real_world_example": body.get("real_world_example", ""),
+    }
+    return {"ok": True, "lesson_id": lesson_id}
+
+
 @app.get("/curriculum/tracks")
 async def list_tracks(region: str | None = None):
     """List admission tracks for a region. Defaults to Bangladesh."""
