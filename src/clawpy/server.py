@@ -1027,6 +1027,7 @@ def _get_db_conn():
 async def practice_questions(
     subject: str | None = None,
     university: str | None = None,
+    chapter: str | None = None,
     limit: int = 10,
     exclude: str | None = None,
 ):
@@ -1055,6 +1056,11 @@ async def practice_questions(
         else:
             conditions.append("subject ILIKE %s")
             params.append(f"%{s}%")
+
+    if chapter:
+        ch = _normalize_bangla(chapter.strip())
+        conditions.append("subject ILIKE %s")
+        params.append(f"%{ch}%")
 
     if university:
         uni = university.strip().lower()
