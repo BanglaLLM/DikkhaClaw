@@ -1059,8 +1059,17 @@ async def practice_questions(
 
     if chapter:
         ch = _normalize_bangla(chapter.strip())
-        conditions.append("subject ILIKE %s")
-        params.append(f"%{ch}%")
+        # Split into keywords (drop short words like ও, ও, এবং) and OR-match
+        # so "ভৌত জগৎ ও পরিমাপ" matches DB's "ভৌতজগত ও পরিমাপ"
+        _BANGLA_STOP = {"ও", "এবং", "বা", "এর", "তার", "যে", "কি"}
+        words = [w for w in ch.split() if len(w) > 1 and w not in _BANGLA_STOP]
+        if words:
+            or_clauses = " OR ".join(["subject ILIKE %s"] * len(words))
+            conditions.append(f"({or_clauses})")
+            params.extend(f"%{w}%" for w in words)
+        else:
+            conditions.append("subject ILIKE %s")
+            params.append(f"%{ch}%")
 
     if university:
         uni = university.strip().lower()
