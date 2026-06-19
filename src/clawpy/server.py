@@ -877,11 +877,11 @@ async def get_lesson_content_endpoint(lesson_id: str):
 
 
 @app.post("/admin/lessons/{lesson_id}")
-async def save_lesson_content(lesson_id: str, request: Request):
-    """Save or update lesson content from the dashboard."""
-    from clawpy.curriculum.lesson_content import LESSON_CONTENT
+async def save_lesson_content_endpoint(lesson_id: str, request: Request):
+    """Save or update lesson content from the dashboard. Persists to disk."""
+    from clawpy.curriculum.lesson_content import save_lesson_content
     body = await request.json()
-    LESSON_CONTENT[lesson_id] = {
+    content = {
         "title": body.get("title", ""),
         "learning_objectives": body.get("learning_objectives", []),
         "teaching_steps": body.get("teaching_steps", []),
@@ -890,6 +890,7 @@ async def save_lesson_content(lesson_id: str, request: Request):
         "practice_prompts": body.get("practice_prompts", []),
         "real_world_example": body.get("real_world_example", ""),
     }
+    save_lesson_content(lesson_id, content)
     return {"ok": True, "lesson_id": lesson_id}
 
 

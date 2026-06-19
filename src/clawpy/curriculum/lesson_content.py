@@ -6100,12 +6100,55 @@ LESSON_CONTENT: dict[str, dict] = {
 }
 
 
+import json
+import os
+
+_OVERRIDE_DIR = os.path.join(os.path.dirname(__file__), "lesson_overrides")
+
+
+def _load_overrides() -> dict[str, dict]:
+    """Load educator-created lesson content from JSON files."""
+    if not os.path.isdir(_OVERRIDE_DIR):
+        return {}
+    overrides: dict[str, dict] = {}
+    for fname in os.listdir(_OVERRIDE_DIR):
+        if fname.endswith(".json"):
+            lesson_id = fname[:-5]
+            try:
+                with open(os.path.join(_OVERRIDE_DIR, fname)) as f:
+                    overrides[lesson_id] = json.load(f)
+            except Exception:
+                pass
+    return overrides
+
+
+_overrides_cache: dict[str, dict] | None = None
+
+
+def _get_overrides() -> dict[str, dict]:
+    global _overrides_cache
+    if _overrides_cache is None:
+        _overrides_cache = _load_overrides()
+    return _overrides_cache
+
+
+def save_lesson_content(lesson_id: str, content: dict) -> None:
+    """Save lesson content to a JSON file (persists across restarts)."""
+    os.makedirs(_OVERRIDE_DIR, exist_ok=True)
+    path = os.path.join(_OVERRIDE_DIR, f"{lesson_id}.json")
+    with open(path, "w") as f:
+        json.dump(content, f, ensure_ascii=False, indent=2)
+    LESSON_CONTENT[lesson_id] = content
+    _get_overrides()[lesson_id] = content
+
+
 def get_lesson_content(lesson_id: str) -> dict | None:
-    return LESSON_CONTENT.get(lesson_id)
+    overrides = _get_overrides()
+    return overrides.get(lesson_id) or LESSON_CONTENT.get(lesson_id)
 
 
 def get_teaching_prompt(lesson_id: str, step: int = 1) -> str | None:
-    content = LESSON_CONTENT.get(lesson_id)
+    content = get_lesson_content(lesson_id)
     if not content:
         return None
     steps = content.get("teaching_steps", [])
